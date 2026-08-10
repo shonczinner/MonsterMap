@@ -1,0 +1,76 @@
+# MonsterMap
+
+Local tooling that builds a **monster table** (spawns, stats, drops) and an
+**interactive single-file HTML map** of every monster spawn for the rs2b2t /
+Lost City engine in this workspace.
+
+`Server/` and `rs2b0t/` are **untouched** — we only read from them (source
+imports under a bundler / file paths). This folder has its own local git repo.
+
+## Pipeline
+
+Three steps produce `out/monstermap.html`:
+
+1. **`bun lib/maps/bake.ts`** — bakes terrain to PNGs. Runs the *real* rs2b0t
+   `MapView` headless (via `lib/maps/domShim.ts` + a `bun build` bundling step)
+   once per map area, renders the whole area at 1 px/tile, trims the void/sea
+   border, and emits:
+   - `out/maps/surface.png`, `out/maps/dungeon.png`, `out/maps/extra.png`
+   - `out/maps/layout.json` — per area: PNG size + world-tile → pixel mapping
+2. **`bun gen.ts`** — decodes spawn coordinates (`maps-server.zip`, binary),
+   NPC configs (server/client caches), and drop tables (rs2 content scripts) →
+   - `out/data/monsters.tsv`, `out/data/monsters.json`
+3. **`bun map.ts`** — reads the data + layout, stacks the three area PNGs
+   **vertically** (no ocean gaps) and plots every spawn dot → `out/monstermap.html`.
+
+## Usage
+
+```bash
+cd /home/shonc/rs2bot/MonsterMap
+bun install          # fflate + playwright-core (smoke)
+bun lib/maps/bake.ts # → out/maps/{surface,dungeon,extra}.png + layout.json
+bun gen.ts           # → out/data/monsters.{tsv,json}
+bun map.ts           # → out/monstermap.html
+open out/monstermap.html
+bun tools/smoke.ts   # headless Playwright check + screenshots
+```
+
+`lib/config.ts` reads `.env` (bun auto-loads it). All paths are fully expanded
+there from the base dirs. Optional CLI flags override: `--engine/--content/
+--client/--out/--maps-server <dir|path>`.
+
+## Map page controls
+
+- **Areas** — checkboxes to show/hide each of surface / dungeon / extra.
+- **Name filter** — type a name; a unique exact match pulses a golden halo over
+  every spawn of that monster (other spawns dim).
+- **Min level** — slider hides monsters below a vislevel.
+- **Show drop-table monsters** — hides monsters with no drop table.
+- **Hover** — tooltip with name, id, combat level, stats, area, tile, drops.
+- **Drag** to pan, **scroll** to zoom (pivots at the cursor).
+
+## Layout
+
+| File | Purpose |
+|---|---|
+| `.env` | Fully-expanded paths from `ENGINE_DIR` / `CONTENT_DIR` / `CLIENT_DIR` (gitignored). |
+| `lib/config.ts` | Env + CLI-flag loader; expands `${VAR}` refs; validates required paths. |
+| `lib/tiles.ts` | Unzips `maps-server.zip`, parses `n{mapX}_{mapZ}` spawn blocks. |
+| `lib/drops.ts` | Drop-table parser (`[ai_queue3,…]` blocks, recursive `~proc` subtables, `npc_param(death_drop)`) + joiner to NPCs. |
+| `lib/maps/bake.ts` | Bundles `bakeSource.ts` (`#/…` aliases rewritten to rs2b0t's absolute source paths) and runs it with `JAG`/`OUT` env. |
+| `lib/maps/bakeSource.ts` | Headless bake entry: `BakeMapView` (real `MapView` subclass) renders each area, crops, encodes PNGs + `layout.json`. |
+| `lib/maps/domShim.ts` | Fake DOM/canvas for running the real game `MapView` under Node. |
+| `gen.ts` | Spawns + configs + drops → out/data artifacts. |
+| `map.ts` | Builds `out/monstermap.html`: stacks the baked PNGs, plots spawns, pan/zoom/hover/filters. |
+| `tools/smoke.ts` | Playwright smoke test: boots the page, exercises filters, area toggles, zoom; screenshots to `out/smoke*.png`. |
+
+## Constraints
+
+- **rs2b0t and Server are untouched** — nothing is modified, added, or
+  committed inside those repos.
+- **`out/`, `node_modules/`, `.env` are gitignored**; only source/docs are
+  committed here.
+- Dropped spawns: only dot spawns that fall inside a baked area's trimmed tile
+  rectangle appear (~7.3k of 7.3k+; the rest sit in ocean/void tiles).
+
+Roadmap and detailed notes: see `PLAN.md`.

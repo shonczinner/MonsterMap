@@ -118,15 +118,24 @@ the data position by the block size instead of decoding).
 
 `reloadMain`/`reloadDungeon`/`reloadExtra` simply set `mapOriginX/Z`,
 `mapWidth/Height` and re-run `maininit()` — the **same jag, same loader passes**.
-Because the dat loaders key off the absolute mapsquare grid, "surface" is just
-the z-slice `44..63`, "dungeon" is `144..163`, "extra" is `28..48 × 65..80`.
-Conceptually they are the same object set placed at different world-bands (the
-game model: overlays up, dungeons way up), all inside one coordinated grid.
+Because the dat loaders key off the absolute mapsquare grid, the nominal windows
+are: "surface" = the z-slice `44..62`, "dungeon" = `144..162`, "extra" =
+`28..48 × 65..79` (i.e. origin mapsq + size mapsqs). Conceptually they are the
+same object set placed at different world-bands (the game model: overlays up,
+dungeons way up), all inside one coordinated grid.
+
+Note the loaders skip the **outer ring**: the guard `mx > 0 && mz > 0 &&
+mx + 64 < mapWidth && mz + 64 < mapHeight` means the first/last mapsquare row and
+column of the window are skipped (edge data is instead advanced past), so the
+actually-decoded span is inset by one mapsquare on each side — surface x/z
+`33..55 × 45..61`, dungeon x/z `33..55 × 145..161`, extra `29..47 × 66..78`.
 
 ### Applying this to a bigger bake
 
-Wanting all three areas in **one render pass** is valid precisely because the jag
-is a single grid. Instead of reloading per area you can:
+The current `bakeSource.ts` keeps the three slices separate: it runs `maininit()`
+once per area and renders each into its own PNG. Merging all three into **one
+render pass** is valid precisely because the jag is a single grid — instead of
+reloading per area you could:
 
 ```ts
 // load the whole-span slice:
@@ -159,32 +168,67 @@ then draws any sub-rect of that one grid.
      `MapView.shouldDrawMapfunctions`)
    - labels / free / multi layers gated by the respective static `shouldDraw*`
      flags.
-3. `MonsterMap`'s harness (`lib/mapview/harness.ts`) is a `MapView` subclass that:
+3. `renderWorldMap` may render any sub-rect *at any scale*: the first two args
+   are the world-tile rect to cover, and `width`/`height` the output pixel size.
+   The whole render is **north-up** — world tile-Z decreases as the output row
+   increases (the loaders flipped Z at decode time, see §3). It renders purely
+   into whatever `Pix2D` is parked on: in the real client that's the screen
+   canvas, in a bake it's a standalone `PixMap` (see below).
 
-   - overrides `run()`/`drawProgress()` to a no-op (no input/DOM loop),
-   - overrides `loadWorldmap()` to build `JagFile` straight from the embedded
-     base64 bytes we ship in `monstermap.html`,
-   - exposes `start()`, `switchArea(i)` (0 surface / 1 dungeon / 2 extra), and
-     `renderArea(x0, zTop, x1, zBot, outW, outH) -> Int32Array` which points
-     `Pix2D` at a fresh `PixMap` and calls `renderWorldMap`, returning raw
-     `0x00RRGGBB` pixels (0 = transparent).
-   - `padSpriteArrays()` fills undefined `mapscene`/`mapfunction` slots: the jag
-     here contains 56 scene sprites (not the 100 the loader indexes), so without
-     padding a region that references a missing sprite id crashed with
-     `Cannot read properties of undefined (reading 'scalePlotSprite')`.
+### Baked PNGs — how MonsterMap visualizes surface / dungeon / extra
 
-The page (`map.ts`) converts that pixel buffer to an `ImageData`, blits it to an
-offscreen canvas and draws it scaled onto the screen canvas — the terrain you see
-in MonsterMap is generated live on every area/region switch, nothing is stored.
+Terrain is **baked once**, not rendered live. `bun lib/maps/bake.ts` bundles
+`lib/maps/bakeSource.ts` and runs it with `JAG`/`OUT` env; it drives the *real*
+`MapView` headless three times — once per area — and writes
+`out/maps/{surface,dungeon,extra}.png` + `layout.json`:
 
----
+- `lib/maps/domShim.ts` fakes `window`/`document`/`canvas` + a 2D context so the
+  real `GameShell` boots under Node (imported as a side-effect before `MapView`).
+- `BakeMapView extends MapView` (`lib/maps/bakeSource.ts`):
+  - `run()` waits on `initDone` (no input/event loop); `drawProgress()` is a no-op;
+  - `loadWorldmap()` builds `JagFile` from `process.env.JAG` on disk;
+  - `resize()` swaps the render target for a plain `PixMap`;
+  - `padSpriteArrays()` fills undefined `mapscene`/`mapfunction` slots — this jag
+    ships 56 scene / 57 function sprites, not the 100 the loader indexes, so an
+    unpadded reference to a missing sprite id crashed with `Cannot read
+    properties of undefined (reading 'scalePlotSprite')` (instance-only).
+- Each bake pass sets `mapArea`/`mapOriginX`/`mapOriginZ`/`mapWidth`/`mapHeight`
+  to one of the §3 areas, forces `zoom = targetZoom = 1` (so **1 tile = 1 px**),
+  turns every `MapView.shouldDraw*` static flag off (labels, key icons, borders,
+  npc/item dots, multi, free), then calls `maininit()` and
+  `renderWorldMap(0, 0, w, h, 0, 0, w, h)` into a fresh `PixMap(w, h)`.
+- The 0 pixel value doubles as void/sea: a bounding box over non-zero pixels is
+  cropped, and the RGBA (`0x00RRGGBB`, filter-none) PNG is written with the
+  small pure-Node encoder in `bakeSource.ts` (mirrors `rs2b0t/tools/map/
+  encodePng.ts`). Pixel (0, 0) of the cropped image = world tile
+  `(originX + cropLeft, originZ + height − cropTop)`.
 
-## 5. Why `build-basemap.ts` (rs2b0t) renders the same jag to PNG
+`layout.json` records, per area: `ai`, `png`, cropped size `wPx`/`hPx`, and the
+world-tile rectangle `tileX0`/`tileZTop`/`tileX1`/`tileZBot`, so the page maps
+world `(x, z)` → **stack pixel** with just an offset+flip:
 
-`rs2b0t/tools/map/build-basemap.ts` is the sibling of our harness: it installs a
-fake canvas via `@happy-dom/global-registrator`, subclasses `MapView` the same
-way, runs `maininit()` headless, then encodes `pix2dToRgba` output to PNG with
-`encodePng.ts` (pure Node zlib). It bakes a full-world **terrain-only** basemap
-plus pre-baked transparent overlays (label/multi/free/key) for the game-client map
-picker. Our `bundle.ts` instead keeps the harness in the page and renders on the
-fly.
+```
+area band:   px = x − tileX0            py = tileZTop − z      (1 px = 1 tile)
+stack pixel: sx = px                    sy = yOff + py         (yOff = Σ hPx above)
+```
+
+`map.ts` then:
+
+- stacks the three bands top→bottom (**surface, dungeon, extra**) with **no
+  ocean gaps**, drawn as three `drawImage` calls (`image-rendering: pixelated`);
+- shows/hides each band via **area checkboxes**;
+- drops any spawn outside every band's tile rect (`x ∈ [tileX0, tileX1)` and
+  `z ∈ [tileZBot, tileZTop]`);
+- plots each remaining spawn dot coloured by vislevel, with pan/zoom/hover/filters.
+
+So nothing in `monstermap.html` runs `MapView` at load time — the jag is only
+read once during `bake.ts`. Changing what's drawn is a matter of re-baking with
+different `MapView.shouldDraw*` flags (e.g. `shouldDrawLabels = true` for named
+map labels, `shouldDrawMapfunctions` for the key icons, `shouldDrawNpcs` /
+`shouldDrawItems` for the dot layers).
+
+`rs2b0t/tools/map/build-basemap.ts` does the same trick for the game client's
+map picker: happy-dom canvas shim + a `MapView` subclass + `encodePng.ts`. Our
+`bake.ts` differs by wiring `#/…` import aliases to rs2b0t's absolute source
+paths and running the bundle under Node — otherwise it's the same
+"subclass, `maininit()`, render, encode PNG" pattern.

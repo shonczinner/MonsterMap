@@ -106,7 +106,11 @@ alone work. **Stale keys from the old live-render config were removed.**
 ## Data flows
 
 ### 1. Spawn locations — binary
-`maps-server.zip` has one entry per mapsquare `n{mapX}_{mapZ}` (483 files).
+`maps-server.zip` is a **Server run-time artifact**: `engine/tools/pack/map/Pack.js`
+builds it via `openArtifactStore('maps-server')` into
+`$ENGINE_DIR/data/pack/.cache/maps-server.zip` (~15 MB), where it's gitignored
+(never committed). MonsterMap reads it read-only from that path. It has one
+entry per mapsquare `n{mapX}_{mapZ}` (483 files).
 Format (mirror of `GameMap.loadNpc/unpack`):
 
 ```

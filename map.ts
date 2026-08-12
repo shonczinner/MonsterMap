@@ -66,7 +66,7 @@ for (const s of monsters.spawns) {
     const m = monsters.monsters[s.id];
     if (!m) continue;
     const st = storesData.stores[s.id];
-    points.push({ x: s.x, z: s.z, level: s.level, cat: 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops: dropsData.drops[s.id], shop: st, hasShop: !!st });
+    points.push({ x: s.x, z: s.z, level: s.level, cat: st ? 'shop' : 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops: dropsData.drops[s.id], shop: st, hasShop: !!st });
 }
 for (const s of items.spawns) {
     points.push({ x: s.x, z: s.z, level: s.level, cat: 'item', name: s.name, sub: 'x' + s.count, id: s.id });
@@ -127,7 +127,8 @@ for (const l of lbls) nameSet.add(l.name);
 const ALL_NAMES = [...nameSet].sort((a, b) => a.localeCompare(b));
 
 const cats = [
-    { key: 'monster', label: 'Monsters / NPCs', color: '#ffe14d' },
+    { key: 'monster', label: 'Monsters / drops', color: '#ffe14d' },
+    { key: 'shop', label: 'NPCs / stores', color: '#ffb454' },
     { key: 'item', label: 'Item spawns', color: '#ff5b5b' },
     { key: 'mining', label: 'Mining rocks', color: '#9aa0a6' },
     { key: 'woodcut', label: 'Woodcut trees', color: '#54c265' },
@@ -304,7 +305,7 @@ function draw() {
   //   'shop'  (white)  — shopkeeper that sells it
   function flashKind(p) {
     if (!exactName) return null;
-    if (p.name === exactName) return p.cat === 'item' ? 'spawn' : 'drop';
+    if (p.name === exactName) return p.cat === 'item' ? 'spawn' : (p.hasShop ? 'shop' : 'drop');
     if (p.shop) {
       for (var si = 0; si < p.shop.shops.length; si++) {
         var sh = p.shop.shops[si];

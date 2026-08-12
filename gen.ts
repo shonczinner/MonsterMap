@@ -179,11 +179,11 @@ for (const s of maps.locSpawns) {
     const name = type.name ?? debug ?? `loc_${s.id}`;
     if (debug && miningRocks.has(debug)) {
         const r = miningRocks.get(debug)!;
-        resourceSpawns.push({ kind: 'mining', x: s.x, z: s.z, level: s.level, id: s.id, name, group: r.ore, reqLevel: r.level, output: r.output });
+        resourceSpawns.push({ kind: 'mining', x: s.x, z: s.z, level: s.level, id: s.id, name, group: resolveObjDisplay(r.output) || r.ore, reqLevel: r.level, output: r.output });
         miningCount++;
     } else if (debug && woodcutTrees.has(debug)) {
         const t = woodcutTrees.get(debug)!;
-        resourceSpawns.push({ kind: 'woodcut', x: s.x, z: s.z, level: s.level, id: s.id, name, group: t.product, reqLevel: t.level });
+        resourceSpawns.push({ kind: 'woodcut', x: s.x, z: s.z, level: s.level, id: s.id, name, group: resolveObjDisplay(t.product) || t.product, reqLevel: t.level });
         woodcutCount++;
     } else if (debug === 'flax') {
         resourceSpawns.push({ kind: 'flax', x: s.x, z: s.z, level: s.level, id: s.id, name, group: 'flax' });

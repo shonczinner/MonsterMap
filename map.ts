@@ -211,7 +211,7 @@ function render(payload: {
         <div id="suggest"></div>
       </div>
       <div class="hint">type to list matches; click one to flash those dots; &times; clears it</div>
-      <div class="hint">flash colours: <span style="color:#ffd54f">yellow</span> = drops &middot; <span style="color:#ff5f5f">red</span> = spawns &middot; <span style="color:#ffffff">white</span> = shops</div>
+      <div class="hint">flash colours: <span style="color:#ffe14d">yellow</span> = monsters &middot; <span style="color:#ff5b5b">red</span> = drops/spawns &middot; <span style="color:#c46bff">purple</span> = shops</div>
       <div style="margin-top:16px;color:#8b96a3">drag: pan &middot; scroll: zoom &middot; hover: details</div>
     </div>
 </div>
@@ -318,9 +318,9 @@ function draw() {
     return null;
   }
   function flashRGB(kind) {
-    if (kind === 'spawn') return [255, 95, 95];
-    if (kind === 'shop') return [255, 255, 255];
-    return [255, 213, 79];
+    if (kind === 'spawn') return [255, 91, 91];   // red — item spawns / drops
+    if (kind === 'shop') return [196, 107, 255];   // purple — stores (distinct from yellow/red)
+    return [255, 225, 77];                          // yellow — monsters / drop source
   }
 
   // dots
@@ -337,23 +337,37 @@ function draw() {
     if (is) {
       flashing++;
       var c = flashRGB(kind);
-      var fa = kind === 'shop' ? (0.32 + 0.45 * pulse) : (0.12 + 0.30 * pulse);
+      var fc = "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
+      // less-transparent halo
       ctx.beginPath();
-      ctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + fa + ")";
+      ctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + (0.28 + 0.42 * pulse) + ")";
       ctx.arc(px, py, 12 + dot * 2 + (1 - pulse) * 10, 0, Math.PI * 2);
       ctx.fill();
-    }
-    ctx.globalAlpha = is ? 1 : (exactName ? 0.30 : 1);
-    ctx.fillStyle = is ? "rgb(" + flashRGB(kind).join(",") + ")" : (colorOf[p.cat] || "#ffffff");
-    ctx.beginPath();
-    ctx.arc(px, py, is ? dot + 3 : dot, 0, Math.PI * 2);
-    ctx.fill();
-    if (p.hasShop) {
+      // solid dot in its flash colour
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = fc;
       ctx.beginPath();
-      ctx.strokeStyle = is ? "#fff3c4" : "#ffcf4d";
-      ctx.lineWidth = 1.5;
-      ctx.arc(px, py, (is ? dot + 3 : dot) + 3, 0, Math.PI * 2);
+      ctx.arc(px, py, dot + 3, 0, Math.PI * 2);
+      ctx.fill();
+      // coloured ring to make the colour pop
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = fc;
+      ctx.beginPath();
+      ctx.arc(px, py, dot + 5, 0, Math.PI * 2);
       ctx.stroke();
+    } else {
+      ctx.globalAlpha = exactName ? 0.30 : 1;
+      ctx.fillStyle = colorOf[p.cat] || "#ffffff";
+      ctx.beginPath();
+      ctx.arc(px, py, dot, 0, Math.PI * 2);
+      ctx.fill();
+      if (p.hasShop) {
+        ctx.beginPath();
+        ctx.strokeStyle = "#ffcf4d";
+        ctx.lineWidth = 1.5;
+        ctx.arc(px, py, dot + 3, 0, Math.PI * 2);
+        ctx.stroke();
+      }
     }
     shown++;
   }

@@ -52,6 +52,7 @@ type AreaLayout = {
 };
 
 const monsters = JSON.parse(readFileSync(join(dataDir, 'monsters.json'), 'utf8'));
+const dropsData = JSON.parse(readFileSync(join(dataDir, 'drops.json'), 'utf8'));
 const items = JSON.parse(readFileSync(join(dataDir, 'itemspawns.json'), 'utf8'));
 const res = JSON.parse(readFileSync(join(dataDir, 'resources.json'), 'utf8'));
 const locs = JSON.parse(readFileSync(join(dataDir, 'locationnames.json'), 'utf8'));
@@ -63,7 +64,7 @@ const points: any[] = [];
 for (const s of monsters.spawns) {
     const m = monsters.monsters[s.id];
     if (!m) continue;
-    points.push({ x: s.x, z: s.z, level: s.level, cat: 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id });
+    points.push({ x: s.x, z: s.z, level: s.level, cat: 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops: dropsData.drops[s.id] });
 }
 for (const s of items.spawns) {
     points.push({ x: s.x, z: s.z, level: s.level, cat: 'item', name: s.name, sub: 'x' + s.count, id: s.id });
@@ -385,6 +386,7 @@ function showTip(hit) {
   var html = "<b>" + esc(e.name) + "</b> <span class='kv'>#" + e.id + "</span>";
   if (e.cat && e.cat !== "place") html += " <span class='kv'>· " + esc(e.cat) + "</span>";
   if (e.sub) html += "<div class='r kv'>" + esc(e.sub) + "</div>";
+  if (e.drops && e.drops.length) html += "<div class='r kv'>Drops: " + esc(e.drops.join(', ')) + "</div>";
   var ai = spawnAreaIndex(e.x, e.z);
   if (ai >= 0) html += "<div class='r kv'>" + esc(stack[ai].name) + " · tile " + e.x + "," + e.z + " (floor " + e.level + ")</div>";
   tip.innerHTML = html;

@@ -274,7 +274,7 @@ function byX<T extends { x: number; z: number }>(items: T[]): Record<string, Rec
 }
 
 // ---- monsters
-const tsvHeader = ['absX', 'absZ', 'level', 'id', 'name', 'debug', 'vislevel', 'att', 'def', 'str', 'hp', 'rng', 'mage', 'members', 'size', 'attackrange', 'drops'];
+const tsvHeader = ['absX', 'absZ', 'level', 'id', 'name', 'debug', 'vislevel', 'att', 'def', 'str', 'hp', 'rng', 'mage', 'members', 'size', 'attackrange'];
 const tsvRows = maps.spawns
     .filter(s => !isFishingSpot(s.id))
     .map(spawn => {
@@ -284,35 +284,40 @@ const tsvRows = maps.spawns
             spawn.x, spawn.z, spawn.level, spawn.id,
             rec?.name ?? spawn.id, rec?.debug ?? '', rec?.level ?? '',
             att, def, str, hp, rng, mage,
-            rec?.members ?? false, rec?.size ?? 1, rec?.attackrange ?? 0,
-            (rec?.drops ?? []).join(' | ')
+            rec?.members ?? false, rec?.size ?? 1, rec?.attackrange ?? 0
         ].join('\t');
     });
 const tsv = [tsvHeader.join('\t'), ...tsvRows].join('\n') + '\n';
 writeFileSync(join(dataDir, 'monsters.tsv'), tsv);
 
-const monstersJson = monsterRecords.reduce(
-    (acc, m) => {
-        acc[m.id] = m;
-        return acc;
-    },
-    {} as Record<number, any>
-);
+const monstersMeta = {
+    revisionTime: new Date().toISOString(),
+    engine: config.engineDir,
+    content: config.contentDir,
+    bounds,
+    land: [...maps.land].sort(),
+    spawnRecords: stats.spawned,
+    distinctIds: stats.distinctIds,
+    configs: monsterRecords.length
+};
+const monstersJson: Record<number, any> = {};
+const dropsJson: Record<number, any> = {};
+for (const m of monsterRecords) {
+    const rest = { ...m };
+    delete rest.drops;
+    monstersJson[m.id] = rest;
+    if (m.drops && m.drops.length) dropsJson[m.id] = m.drops;
+}
 const monstersOut = {
-    generation: {
-        revisionTime: new Date().toISOString(),
-        engine: config.engineDir,
-        content: config.contentDir,
-        bounds,
-        land: [...maps.land].sort(),
-        spawnRecords: stats.spawned,
-        distinctIds: stats.distinctIds,
-        configs: monsterRecords.length
-    },
+    generation: monstersMeta,
     spawns: maps.spawns.filter(s => !isFishingSpot(s.id)).map(s => ({ x: s.x, z: s.z, level: s.level, id: s.id })),
     monsters: monstersJson
 };
 writeFileSync(join(dataDir, 'monsters.json'), JSON.stringify(monstersOut, null, 2));
+writeFileSync(join(dataDir, 'drops.json'), JSON.stringify({
+    generation: monstersMeta,
+    drops: dropsJson
+}, null, 2));
 
 // ---- item spawns
 const itemTsvHeader = ['absX', 'absZ', 'level', 'id', 'name', 'count'];

@@ -8,20 +8,26 @@
  */
 
 // Does point `p` flash for the active query `exactName`? Returns a source key
-// ('drop' | 'spawn' | 'shop') or null.
+// ('drop' | 'spawn' | 'shop') or null. Matching is exact (the selection always
+// comes from the dropdown, so it's a canonical name) — fishing-spot `sub` is a
+// comma-separated fish list, so it's matched per token.
 function flashKind(p, exactName) {
   if (!exactName) return null;
-  var fl = exactName.toLowerCase();
   if (p.name === exactName) return p.cat === 'item' ? 'spawn' : (p.hasShop ? 'shop' : 'drop');
   if (p.shop) {
     for (var si = 0; si < p.shop.shops.length; si++) {
       var sh = p.shop.shops[si];
-      if (sh.title && sh.title.toLowerCase().indexOf(fl) >= 0) return 'shop';
+      if (sh.title === exactName) return 'shop';
       for (var ii = 0; ii < sh.items.length; ii++) if (sh.items[ii].name === exactName) return 'shop';
     }
   }
   if (p.drops && p.drops.indexOf(exactName) >= 0) return 'drop';
-  if (p.sub && p.sub.toLowerCase().indexOf(fl) >= 0) return 'drop';
+  if (p.sub) {
+    var q = exactName.toLowerCase(), toks = p.sub.split(',');
+    for (var ti = 0; ti < toks.length; ti++) {
+      if (toks[ti].trim().toLowerCase().startsWith(q)) return 'drop';
+    }
+  }
   return null;
 }
 

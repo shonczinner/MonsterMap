@@ -17,10 +17,13 @@ for the rs2b2t / Lost City engine in this workspace.
 
 1. **`lib/maps/bake.ts`** — bake all three worldmap areas to PNGs via the real
    MapView headless → `out/maps/{surface,dungeon,extra}.png` + `layout.json`.
-2. **`gen.ts`** — decode static NPC spawns (binary) + NPC configs (binary) +
-   monster drop tables (rs2 scripts) → `out/data/monsters.tsv` +
-   `out/data/monsters.json`. Spawns: 7,322 records / 1,114 distinct ids / 1,359
-   npc configs.
+ 2. **`gen.ts`** — decode static NPC spawns (`n{}`) + ground-item spawns (`o{}`) +
+    loc spawns (`l{}`) from `maps-server.zip`, plus NPC/Loc/Obj configs (binary)
+    and content scripts (drop tables, skill resource tables) →
+    `out/data/monsters.tsv` + `monsters.json` (NPCs; fishing spots excluded),
+    `out/data/itemspawns.tsv` + `itemspawns.json` (ground items), and
+    `out/data/resources.tsv` + `resources.json` (mining rocks, woodcut trees,
+    flax, fishing spots). Spawns: 7,181 NPC / 1,151 item / 15,985 resource records.
 3. **`map.ts`** — stack the three PNGs vertically (no ocean gaps) and plot
    every spawn → `out/monstermap.html`.
 
@@ -221,12 +224,13 @@ bun tools/smoke.ts     # headless check + screenshots in out/
 9. **Drops wrangling** — recursive table probabilities. e.g. "monster drops
    jewel table with chance 1/128; jewel table drops diamond with chance 1/64"
    → diamond overall chance = `1/(128*64)`.
-10. **Gathering locations** + what/location:
-    - Mining rocks (by ore — copper, iron, …)
-    - Woodcut trees (by tree — willow, …)
-    - Fishing spots (by fish — tuna, …)
-    - Flax locations
-11. **Item spawn locations** table.
+ 10. **Gathering locations** + what/location (DONE — emitted as
+     `out/data/resources.{tsv,json}`; fishing spots moved out of monsters):
+     - Mining rocks (by ore — copper, iron, …)
+     - Woodcut trees (by tree — willow, …)
+     - Fishing spots (by fish — tuna, …)
+     - Flax locations
+ 11. **Item spawn locations** table (DONE — emitted as `out/data/itemspawns.{tsv,json}`).
 
 ### Next — map features
 12. **Category picker**: choose a category → search-filtered dropdown → select a

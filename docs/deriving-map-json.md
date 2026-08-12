@@ -150,9 +150,9 @@ resource-matching subset is exported.
 
 | Export           | Status      | Notes                                          |
 |------------------|-------------|------------------------------------------------|
-| `monsters.json`  | done        | generated; `monsters.tsv` too                  |
-| `itemspawns.json`| designed    | decoder prototyped; not yet committed          |
-| `resources.json` | designed    | classification spec above; not yet implemented |
+| `monsters.json`  | done        | generated; `monsters.tsv` too; fishing spots excluded |
+| `itemspawns.json`| done        | `lib/tiles.ts` `loadMaps` (`o{}`) → `gen.ts`   |
+| `resources.json` | done        | `l{}` + fishing spots; `lib/resources.ts` classification |
 
 ## Where the code lives
 

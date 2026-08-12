@@ -210,6 +210,7 @@ function render(payload: {
         <div id="suggest"></div>
       </div>
       <div class="hint">type to list matches; click one to flash those dots; &times; clears it</div>
+      <div class="hint">flash colours: <span style="color:#ffd54f">yellow</span> = drops &middot; <span style="color:#ff5f5f">red</span> = spawns &middot; <span style="color:#ffffff">white</span> = shops</div>
       <div style="margin-top:16px;color:#8b96a3">drag: pan &middot; scroll: zoom &middot; hover: details</div>
     </div>
 </div>
@@ -297,21 +298,28 @@ function draw() {
   var pulse = 0.5 + 0.5 * Math.sin(performance.now() / 200);
   var flashLower = exactName ? exactName.toLowerCase() : '';
 
-  // does a point flash for the active query? matches by name, fish/loot sub,
-  // shop title, drops it yields, or store items it sells
-  function flashMatch(p) {
-    if (!exactName) return false;
-    if (p.name === exactName) return true;
-    if (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0) return true;
+  // does a point flash for the active query, and in which source colour?
+  //   'drop'  (yellow) — monster that drops it
+  //   'spawn' (red)    — ground spawn of it
+  //   'shop'  (white)  — shopkeeper that sells it
+  function flashKind(p) {
+    if (!exactName) return null;
+    if (p.name === exactName) return p.cat === 'item' ? 'spawn' : 'drop';
     if (p.shop) {
       for (var si = 0; si < p.shop.shops.length; si++) {
         var sh = p.shop.shops[si];
-        if (sh.title && sh.title.toLowerCase().indexOf(flashLower) >= 0) return true;
-        for (var ii = 0; ii < sh.items.length; ii++) if (sh.items[ii].name === exactName) return true;
+        if (sh.title && sh.title.toLowerCase().indexOf(flashLower) >= 0) return 'shop';
+        for (var ii = 0; ii < sh.items.length; ii++) if (sh.items[ii].name === exactName) return 'shop';
       }
     }
-    if (p.drops && p.drops.indexOf(exactName) >= 0) return true;
-    return false;
+    if (p.drops && p.drops.indexOf(exactName) >= 0) return 'drop';
+    if (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0) return 'drop';
+    return null;
+  }
+  function flashRGB(kind) {
+    if (kind === 'spawn') return [255, 95, 95];
+    if (kind === 'shop') return [255, 255, 255];
+    return [255, 213, 79];
   }
 
   // dots
@@ -323,16 +331,18 @@ function draw() {
     var a2 = stack[ai];
     var px = areaScreenX(a2, p.x), py = areaScreenY(a2) + (a2.tileZTop - p.z) * ppt;
     if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
-    var is = flashMatch(p);
+    var kind = flashKind(p);
+    var is = !!kind;
     if (is) {
       flashing++;
+      var c = flashRGB(kind);
       ctx.beginPath();
-      ctx.fillStyle = "rgba(255,213,79," + (0.12 + 0.30 * pulse) + ")";
+      ctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + (0.12 + 0.30 * pulse) + ")";
       ctx.arc(px, py, 12 + dot * 2 + (1 - pulse) * 10, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.globalAlpha = is ? 1 : (exactName ? 0.30 : 1);
-    ctx.fillStyle = colorOf[p.cat] || "#ffffff";
+    ctx.fillStyle = is ? "rgb(" + flashRGB(kind).join(",") + ")" : (colorOf[p.cat] || "#ffffff");
     ctx.beginPath();
     ctx.arc(px, py, is ? dot + 3 : dot, 0, Math.PI * 2);
     ctx.fill();

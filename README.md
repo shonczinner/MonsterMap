@@ -1,3 +1,5 @@
+Live at https://shonczinner.github.io/MonsterMap/monstermap.html
+
 # MonsterMap
 
 Local tooling that builds a **monster table** (spawns, stats, drops) and an

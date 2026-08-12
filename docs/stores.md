@@ -97,71 +97,42 @@ player trades against its `stockobj`/`stockcount` baseline.
 | Shop ↔ NPC link | *(none)* | `**/*.npc` (`param=owned_shop,...`) |
 | Generated combined DB | — | `rs2b0t/src/bot/shops/data/shopdb.ts` |
 
-## Plan: mapping NPCs to their stores
+## Mapping NPCs to their stores (implemented)
 
 Goal: a single lookup of **which NPC(s) run which store, and where they stand**,
-so the map can mark shopkeepers and show the store's stock on hover/click.
+so the map can mark shopkeepers and show the store's stock on hover.
 
-### Why a plan is needed
+### Why it works the way it does
 The NPC→shop edge is not in any engine config — it only exists as
-`param=owned_shop,<inv>` inside content `.npc` files. So the mapping has to be
-derived from the content source, then joined to (a) the shop stock and (b) the
-in-world NPC spawn positions.
+`param=owned_shop,<inv>` inside content `.npc` files. So the mapping is derived
+from the content source, then joined to (a) the shop stock and (b) the in-world
+NPC spawn positions (already plotted as the `monster` category).
 
-### Existing pieces we can reuse (no new parsers required)
-- `rs2b0t/tools/shops/parse.ts`
-  - `parseNpcKeepers(text)` already extracts the edge: `{ npc, name,
-    ownedShops[], sell, buy, delta, title }` — i.e. NPC block id → inv name(s).
-  - `parseInvShops(text)` + `parseObjDefs(text)` + `joinShopDb(...)` already
-    merge keeper → inv → stock → item cost into `SHOP_DB`
-    (`rs2b0t/src/bot/shops/data/shopdb.ts`), keyed by inv, with
-    `keepers: string[]` (NPC display names) per shop.
-- So `SHOP_DB` already *is* the NPC→store mapping at the content level — the
-  only missing link is **world position**.
-
-### Steps to produce NPC → store → location
-1. **Generate/refresh `SHOP_DB`** (if the content pack changed):
-   `cd rs2b0t && bun tools/shops/gen-shopdb.ts` (or `--check` to gate drift).
-   This yields, per shop inv: `title`, `keepers` (NPC names), pricing
-   multipliers, and `items` (name + baseline stock + cost).
-2. **Resolve keeper name → NPC id.** Each keeper's `npc` key is the content
-   `.npc` block id, which equals the NPC's `debugname`. Map it through
-   `NpcType` (`Server/engine/src/cache/config/NpcType.ts`):
-   `NpcType.getId(debugname)` → numeric NPC id. (Banks/party-room are not NPCs,
-   so they have no keeper and are skipped.)
-3. **Resolve NPC id → spawn coordinates.** The engine `World` holds live NPC
-   spawns; for a static snapshot, reuse MonsterMap's spawn extraction
-   (`gen.ts` → `maps.spawns`, already plotted as the `monster` category). Filter
-   `maps.spawns` to the resolved NPC ids to get each keeper's `(x, z, level)`.
-4. **Emit a joined artifact**, e.g. `out/data/npc-stores.json`:
-   ```jsonc
-   {
-     "<npcId>": {
-       "name": "Tiadeche",
-       "shops": [
-         { "inv": "tbwt_tiadeche_final_inventory",
-           "title": "Tiadeche's Karambwan Stall",
-           "x": 2800, "z": 3090, "level": 0,
-           "sell": 550, "buy": 60, "delta": 10,
-           "items": [{ "obj": "raw_karambwan", "name": "Raw karambwan",
-                       "baseline": 5, "restockTicks": 100, "cost": 1 }] }
-       ]
-     }
-   }
-   ```
-   Build it by walking `SHOP_DB`, looking up each keeper in `NpcType`, then in
-   `maps.spawns`.
-5. **(Optional) Surface on the map.** Add a `shop` layer toggle in `map.ts` that
-   plots the keeper NPCs (reusing their spawn coords) with a distinct marker, and
-   on hover/selection shows the store `title` + stock. This reuses the existing
-   per-category toggle + search/flash machinery; no change to how other elements
-   are mapped.
+### Implementation (MonsterMap)
+- `lib/shops.ts` ports the join logic (mirrors `rs2b0t/tools/shops/parse.ts`):
+  `parseNpcKeepers` / `parseInvShops` / `parseObjDefs` walk
+  `config.dropScriptsDir` (`Server/content/scripts`), then `buildStores`
+  resolves each keeper's `[block]` id (the NPC `debugname`) to its id via
+  `NpcType.getId`, and emits a map **keyed by NPC id**.
+- `gen.ts` writes `out/data/stores.json`:
+  ```jsonc
+  { "generation": { ... }, "note": "...", "stores": { "<npcId>": { "name": "Tiadeche", "shops": [ { "inv": "...", "title": "...", "sell": 550, "buy": 60, "delta": 10, "items": [ { "obj": "raw_karambwan", "name": "Raw karambwan", "baseline": 5, "restockTicks": 100, "cost": 1 } ] } ] } } }
+  ```
+- **Stock gating:** only shops (and NPCs) with at least one item whose default
+  stock `baseline > 0` are included — empty-stock shops are not shown on the map.
+- `map.ts` merges `stores.json` into each shopkeeper NPC point by id
+  (`point.shop`, `point.hasShop`). Shopkeepers get a gold ring marker, the hover
+  tooltip shows the store `title` + `name x baseline` stock, and shop titles are
+  added to the search dropdown (typing a shop name flashes its keeper(s)).
 
 ### Notes / edge cases
 - One NPC can own several invs (`ownedShops[]`); one inv can have several keepers
-  (e.g. a stall with multiple NPCs) — the join handles both.
+  (e.g. a stall with multiple NPCs) — the join dedupes per inv per NPC.
 - Some shared invs have no keeper (`gemshop3`, `partyroom_dropinv`) and are
   filled by scripts, not an NPC — they won't appear in the NPC→store map.
 - NPC `debugname` is the stable key; display `name` may repeat across NPCs, so
-  join on `debugname`/id, not on the human name.
+  the join uses `debugname`/id, not the human name.
+- `rs2b0t/tools/shops/` provides an equivalent, inv-keyed `SHOP_DB`
+  (`gen-shopdb.ts`) if you need the shop-centric (rather than NPC-centric) view.
+
 

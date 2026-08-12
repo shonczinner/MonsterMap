@@ -20,6 +20,7 @@ import { pathToFileURL } from 'node:url';
 import { loadConfig } from './lib/config.ts';
 import { loadMaps, boundsOf } from './lib/tiles.ts';
 import { DropResolver } from './lib/drops.ts';
+import { buildStores } from './lib/shops.ts';
 import {
     parseMiningRocks,
     parseWoodcutTrees,
@@ -317,6 +318,14 @@ writeFileSync(join(dataDir, 'monsters.json'), JSON.stringify(monstersOut, null, 
 writeFileSync(join(dataDir, 'drops.json'), JSON.stringify({
     generation: monstersMeta,
     drops: dropsJson
+}, null, 2));
+
+// ---- stores (NPC -> shop, keyed by NPC id; only shops with default stock > 0)
+const storesMap = buildStores(config.dropScriptsDir, NpcType, ObjType);
+writeFileSync(join(dataDir, 'stores.json'), JSON.stringify({
+    generation: monstersMeta,
+    note: 'keyed by NPC id; only shops/items with default stock (baseline) > 0 are included',
+    stores: storesMap
 }, null, 2));
 
 // ---- item spawns

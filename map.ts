@@ -53,6 +53,7 @@ type AreaLayout = {
 
 const monsters = JSON.parse(readFileSync(join(dataDir, 'monsters.json'), 'utf8'));
 const dropsData = JSON.parse(readFileSync(join(dataDir, 'drops.json'), 'utf8'));
+const storesData = JSON.parse(readFileSync(join(dataDir, 'stores.json'), 'utf8'));
 const items = JSON.parse(readFileSync(join(dataDir, 'itemspawns.json'), 'utf8'));
 const res = JSON.parse(readFileSync(join(dataDir, 'resources.json'), 'utf8'));
 const locs = JSON.parse(readFileSync(join(dataDir, 'locationnames.json'), 'utf8'));
@@ -64,7 +65,8 @@ const points: any[] = [];
 for (const s of monsters.spawns) {
     const m = monsters.monsters[s.id];
     if (!m) continue;
-    points.push({ x: s.x, z: s.z, level: s.level, cat: 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops: dropsData.drops[s.id] });
+    const st = storesData.stores[s.id];
+    points.push({ x: s.x, z: s.z, level: s.level, cat: 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops: dropsData.drops[s.id], shop: st, hasShop: !!st });
 }
 for (const s of items.spawns) {
     points.push({ x: s.x, z: s.z, level: s.level, cat: 'item', name: s.name, sub: 'x' + s.count, id: s.id });
@@ -105,12 +107,16 @@ for (const a of stack) {
 }
 type StackArea = AreaLayout & { yOff: number };
 
-// distinct names for the search dropdown (incl. the fish each fishing spot yields)
+// distinct names for the search dropdown (incl. the fish each fishing spot yields,
+// and each shop's title so stores are searchable by name)
 const nameSet = new Set<string>();
 for (const p of pts) {
   nameSet.add(p.name);
   if (p.cat === 'fish' && p.sub) {
     for (const f of p.sub.split(',')) { const t = f.trim(); if (t) nameSet.add(t); }
+  }
+  if (p.shop) {
+    for (const sh of p.shop.shops) if (sh.title) nameSet.add(sh.title);
   }
 }
 for (const l of lbls) nameSet.add(l.name);
@@ -296,7 +302,7 @@ function draw() {
     var a2 = stack[ai];
     var px = areaScreenX(a2, p.x), py = areaScreenY(a2) + (a2.tileZTop - p.z) * ppt;
     if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
-    var is = exactName && (p.name === exactName || (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0));
+    var is = exactName && (p.name === exactName || (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0) || (p.shop && p.shop.shops.some(function (sh) { return sh.title && sh.title.toLowerCase().indexOf(flashLower) >= 0; })));
     if (is) {
       flashing++;
       ctx.beginPath();
@@ -309,6 +315,13 @@ function draw() {
     ctx.beginPath();
     ctx.arc(px, py, is ? dot + 3 : dot, 0, Math.PI * 2);
     ctx.fill();
+    if (p.hasShop) {
+      ctx.beginPath();
+      ctx.strokeStyle = is ? "#fff3c4" : "#ffcf4d";
+      ctx.lineWidth = 1.5;
+      ctx.arc(px, py, (is ? dot + 3 : dot) + 3, 0, Math.PI * 2);
+      ctx.stroke();
+    }
     shown++;
   }
   ctx.globalAlpha = 1;
@@ -387,6 +400,13 @@ function showTip(hit) {
   if (e.cat && e.cat !== "place") html += " <span class='kv'>· " + esc(e.cat) + "</span>";
   if (e.sub) html += "<div class='r kv'>" + esc(e.sub) + "</div>";
   if (e.drops && e.drops.length) html += "<div class='r kv'>Drops: " + esc(e.drops.join(', ')) + "</div>";
+  if (e.shop) {
+    for (var si = 0; si < e.shop.shops.length; si++) {
+      var sh = e.shop.shops[si];
+      html += "<div class='r kv'>Shop: " + esc(sh.title) + "</div>";
+      html += "<div class='r kv'>" + esc(sh.items.map(function (it) { return it.name + " x" + it.baseline; }).join(', ')) + "</div>";
+    }
+  }
   var ai = spawnAreaIndex(e.x, e.z);
   if (ai >= 0) html += "<div class='r kv'>" + esc(stack[ai].name) + " · tile " + e.x + "," + e.z + " (floor " + e.level + ")</div>";
   tip.innerHTML = html;

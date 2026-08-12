@@ -116,8 +116,12 @@ for (const p of pts) {
     for (const f of p.sub.split(',')) { const t = f.trim(); if (t) nameSet.add(t); }
   }
   if (p.shop) {
-    for (const sh of p.shop.shops) if (sh.title) nameSet.add(sh.title);
+    for (const sh of p.shop.shops) {
+      if (sh.title) nameSet.add(sh.title);
+      for (const it of sh.items) if (it.name) nameSet.add(it.name);
+    }
   }
+  if (p.drops) for (const dn of p.drops) if (dn) nameSet.add(dn);
 }
 for (const l of lbls) nameSet.add(l.name);
 const ALL_NAMES = [...nameSet].sort((a, b) => a.localeCompare(b));
@@ -293,6 +297,23 @@ function draw() {
   var pulse = 0.5 + 0.5 * Math.sin(performance.now() / 200);
   var flashLower = exactName ? exactName.toLowerCase() : '';
 
+  // does a point flash for the active query? matches by name, fish/loot sub,
+  // shop title, drops it yields, or store items it sells
+  function flashMatch(p) {
+    if (!exactName) return false;
+    if (p.name === exactName) return true;
+    if (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0) return true;
+    if (p.shop) {
+      for (var si = 0; si < p.shop.shops.length; si++) {
+        var sh = p.shop.shops[si];
+        if (sh.title && sh.title.toLowerCase().indexOf(flashLower) >= 0) return true;
+        for (var ii = 0; ii < sh.items.length; ii++) if (sh.items[ii].name === exactName) return true;
+      }
+    }
+    if (p.drops && p.drops.indexOf(exactName) >= 0) return true;
+    return false;
+  }
+
   // dots
   for (var k = 0; k < pts.length; k++) {
     var p = pts[k];
@@ -302,7 +323,7 @@ function draw() {
     var a2 = stack[ai];
     var px = areaScreenX(a2, p.x), py = areaScreenY(a2) + (a2.tileZTop - p.z) * ppt;
     if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
-    var is = exactName && (p.name === exactName || (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0) || (p.shop && p.shop.shops.some(function (sh) { return sh.title && sh.title.toLowerCase().indexOf(flashLower) >= 0; })));
+    var is = flashMatch(p);
     if (is) {
       flashing++;
       ctx.beginPath();

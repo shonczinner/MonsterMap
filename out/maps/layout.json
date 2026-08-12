@@ -1,0 +1,47 @@
+[
+  {
+    "name": "surface",
+    "ai": 0,
+    "originX": 2048,
+    "originZ": 2816,
+    "w": 1600,
+    "h": 1216,
+    "png": "surface.png",
+    "wPx": 1481,
+    "hPx": 1097,
+    "tileX0": 2107,
+    "tileZTop": 3973,
+    "tileX1": 3588,
+    "tileZBot": 2876
+  },
+  {
+    "name": "dungeon",
+    "ai": 1,
+    "originX": 2048,
+    "originZ": 9216,
+    "w": 1600,
+    "h": 1216,
+    "png": "dungeon.png",
+    "wPx": 1225,
+    "hPx": 1097,
+    "tileX0": 2299,
+    "tileZTop": 10373,
+    "tileX1": 3524,
+    "tileZBot": 9276
+  },
+  {
+    "name": "extra",
+    "ai": 2,
+    "originX": 1792,
+    "originZ": 4160,
+    "w": 1344,
+    "h": 960,
+    "png": "extra.png",
+    "wPx": 1225,
+    "hPx": 457,
+    "tileX0": 1851,
+    "tileZTop": 4997,
+    "tileX1": 3076,
+    "tileZBot": 4540
+  }
+]

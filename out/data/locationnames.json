@@ -1,0 +1,1308 @@
+{
+  "generation": {
+    "revisionTime": "2026-08-12T22:42:28.252Z",
+    "content": "/home/shonc/rs2bot/Server/content",
+    "source": "content/maps/labels.txt",
+    "count": 136
+  },
+  "places": [
+    {
+      "name": "Lumbridge",
+      "lines": [
+        "Lumbridge"
+      ],
+      "x": 3239,
+      "z": 3233,
+      "type": 1
+    },
+    {
+      "name": "Varrock",
+      "lines": [
+        "Varrock"
+      ],
+      "x": 3211,
+      "z": 3450,
+      "type": 1
+    },
+    {
+      "name": "Kingdom Of/Misthalin",
+      "lines": [
+        "Kingdom Of",
+        "Misthalin"
+      ],
+      "x": 3217,
+      "z": 3321,
+      "type": 2
+    },
+    {
+      "name": "Al Kharid",
+      "lines": [
+        "Al Kharid"
+      ],
+      "x": 3297,
+      "z": 3150,
+      "type": 1
+    },
+    {
+      "name": "Duel/Arena",
+      "lines": [
+        "Duel",
+        "Arena"
+      ],
+      "x": 3361,
+      "z": 3233,
+      "type": 1
+    },
+    {
+      "name": "Shantay/Pass",
+      "lines": [
+        "Shantay",
+        "Pass"
+      ],
+      "x": 3304,
+      "z": 3126,
+      "type": 0
+    },
+    {
+      "name": "Toll/Gate",
+      "lines": [
+        "Toll",
+        "Gate"
+      ],
+      "x": 3278,
+      "z": 3227,
+      "type": 0
+    },
+    {
+      "name": "Tutorial Island",
+      "lines": [
+        "Tutorial Island"
+      ],
+      "x": 3105,
+      "z": 3099,
+      "type": 1
+    },
+    {
+      "name": "Port/Sarim",
+      "lines": [
+        "Port",
+        "Sarim"
+      ],
+      "x": 3047,
+      "z": 3221,
+      "type": 1
+    },
+    {
+      "name": "Falador",
+      "lines": [
+        "Falador"
+      ],
+      "x": 2989,
+      "z": 3355,
+      "type": 1
+    },
+    {
+      "name": "Edgeville",
+      "lines": [
+        "Edgeville"
+      ],
+      "x": 3098,
+      "z": 3488,
+      "type": 1
+    },
+    {
+      "name": "Brimhaven",
+      "lines": [
+        "Brimhaven"
+      ],
+      "x": 2779,
+      "z": 3174,
+      "type": 1
+    },
+    {
+      "name": "Karamja",
+      "lines": [
+        "Karamja"
+      ],
+      "x": 2860,
+      "z": 3059,
+      "type": 2
+    },
+    {
+      "name": "Crandor",
+      "lines": [
+        "Crandor"
+      ],
+      "x": 2839,
+      "z": 3271,
+      "type": 2
+    },
+    {
+      "name": "Entrana",
+      "lines": [
+        "Entrana"
+      ],
+      "x": 2850,
+      "z": 3379,
+      "type": 2
+    },
+    {
+      "name": "Draynor/Village",
+      "lines": [
+        "Draynor",
+        "Village"
+      ],
+      "x": 3120,
+      "z": 3267,
+      "type": 1
+    },
+    {
+      "name": "Jail",
+      "lines": [
+        "Jail"
+      ],
+      "x": 3126,
+      "z": 3244,
+      "type": 0
+    },
+    {
+      "name": "Market",
+      "lines": [
+        "Market"
+      ],
+      "x": 3090,
+      "z": 3252,
+      "type": 0
+    },
+    {
+      "name": "Draynor Manor",
+      "lines": [
+        "Draynor Manor"
+      ],
+      "x": 3108,
+      "z": 3345,
+      "type": 1
+    },
+    {
+      "name": "Barbarian/Village",
+      "lines": [
+        "Barbarian",
+        "Village"
+      ],
+      "x": 3063,
+      "z": 3416,
+      "type": 1
+    },
+    {
+      "name": "Desert Mining/Camp",
+      "lines": [
+        "Desert Mining",
+        "Camp"
+      ],
+      "x": 3291,
+      "z": 3022,
+      "type": 0
+    },
+    {
+      "name": "Bedabin/Camp",
+      "lines": [
+        "Bedabin",
+        "Camp"
+      ],
+      "x": 3170,
+      "z": 3038,
+      "type": 0
+    },
+    {
+      "name": "Exam Centre",
+      "lines": [
+        "Exam Centre"
+      ],
+      "x": 3361,
+      "z": 3345,
+      "type": 0
+    },
+    {
+      "name": "Dig Site",
+      "lines": [
+        "Dig Site"
+      ],
+      "x": 3365,
+      "z": 3419,
+      "type": 0
+    },
+    {
+      "name": "Lumber Yard",
+      "lines": [
+        "Lumber Yard"
+      ],
+      "x": 3308,
+      "z": 3507,
+      "type": 0
+    },
+    {
+      "name": "Palace",
+      "lines": [
+        "Palace"
+      ],
+      "x": 3213,
+      "z": 3483,
+      "type": 0
+    },
+    {
+      "name": "Cooks'/Guild",
+      "lines": [
+        "Cooks'",
+        "Guild"
+      ],
+      "x": 3137,
+      "z": 3437,
+      "type": 0
+    },
+    {
+      "name": "Monastery",
+      "lines": [
+        "Monastery"
+      ],
+      "x": 3052,
+      "z": 3477,
+      "type": 0
+    },
+    {
+      "name": "Dwarven/Mine",
+      "lines": [
+        "Dwarven",
+        "Mine"
+      ],
+      "x": 3016,
+      "z": 3441,
+      "type": 0
+    },
+    {
+      "name": "Ice/Mountain",
+      "lines": [
+        "Ice",
+        "Mountain"
+      ],
+      "x": 3009,
+      "z": 3487,
+      "type": 1
+    },
+    {
+      "name": "Black Knights'/Fortress",
+      "lines": [
+        "Black Knights'",
+        "Fortress"
+      ],
+      "x": 3018,
+      "z": 3522,
+      "type": 0
+    },
+    {
+      "name": "Goblin/Village",
+      "lines": [
+        "Goblin",
+        "Village"
+      ],
+      "x": 2963,
+      "z": 3502,
+      "type": 0
+    },
+    {
+      "name": "White Knights'/Castle",
+      "lines": [
+        "White Knights'",
+        "Castle"
+      ],
+      "x": 2961,
+      "z": 3345,
+      "type": 0
+    },
+    {
+      "name": "Park",
+      "lines": [
+        "Park"
+      ],
+      "x": 3005,
+      "z": 3379,
+      "type": 0
+    },
+    {
+      "name": "Kingdom of/Asgarnia",
+      "lines": [
+        "Kingdom of",
+        "Asgarnia"
+      ],
+      "x": 2988,
+      "z": 3412,
+      "type": 2
+    },
+    {
+      "name": "Dark Wizards'/Tower",
+      "lines": [
+        "Dark Wizards'",
+        "Tower"
+      ],
+      "x": 2907,
+      "z": 3336,
+      "type": 0
+    },
+    {
+      "name": "(due Jan-2005)",
+      "lines": [
+        "(due Jan-2005)"
+      ],
+      "x": 3429,
+      "z": 3555,
+      "type": 0
+    },
+    {
+      "name": "Melzar's/Maze",
+      "lines": [
+        "Melzar's",
+        "Maze"
+      ],
+      "x": 2931,
+      "z": 3248,
+      "type": 0
+    },
+    {
+      "name": "Rimmington",
+      "lines": [
+        "Rimmington"
+      ],
+      "x": 2960,
+      "z": 3222,
+      "type": 0
+    },
+    {
+      "name": "Wizards' Tower",
+      "lines": [
+        "Wizards' Tower"
+      ],
+      "x": 3112,
+      "z": 3153,
+      "type": 0
+    },
+    {
+      "name": "Lumbridge/Swamp",
+      "lines": [
+        "Lumbridge",
+        "Swamp"
+      ],
+      "x": 3195,
+      "z": 3183,
+      "type": 0
+    },
+    {
+      "name": "Fishing/Platform",
+      "lines": [
+        "Fishing",
+        "Platform"
+      ],
+      "x": 2775,
+      "z": 3287,
+      "type": 0
+    },
+    {
+      "name": "Tai Bwo Wannai",
+      "lines": [
+        "Tai Bwo Wannai"
+      ],
+      "x": 2794,
+      "z": 3066,
+      "type": 0
+    },
+    {
+      "name": "Shilo Village",
+      "lines": [
+        "Shilo Village"
+      ],
+      "x": 2849,
+      "z": 2986,
+      "type": 1
+    },
+    {
+      "name": "Ship Yard",
+      "lines": [
+        "Ship Yard"
+      ],
+      "x": 2990,
+      "z": 3055,
+      "type": 0
+    },
+    {
+      "name": "Cairn Isle",
+      "lines": [
+        "Cairn Isle"
+      ],
+      "x": 2764,
+      "z": 2979,
+      "type": 0
+    },
+    {
+      "name": "Kharazi Jungle",
+      "lines": [
+        "Kharazi Jungle"
+      ],
+      "x": 2844,
+      "z": 2923,
+      "type": 0
+    },
+    {
+      "name": "Chaos/Temple",
+      "lines": [
+        "Chaos",
+        "Temple"
+      ],
+      "x": 3238,
+      "z": 3610,
+      "type": 0
+    },
+    {
+      "name": "Graveyard of/Shadows",
+      "lines": [
+        "Graveyard of",
+        "Shadows"
+      ],
+      "x": 3167,
+      "z": 3673,
+      "type": 0
+    },
+    {
+      "name": "Bandit/Camp",
+      "lines": [
+        "Bandit",
+        "Camp"
+      ],
+      "x": 3036,
+      "z": 3689,
+      "type": 0
+    },
+    {
+      "name": "Dark Knight/Fortress",
+      "lines": [
+        "Dark Knight",
+        "Fortress"
+      ],
+      "x": 3030,
+      "z": 3633,
+      "type": 0
+    },
+    {
+      "name": "Ruins",
+      "lines": [
+        "Ruins"
+      ],
+      "x": 2966,
+      "z": 3697,
+      "type": 0
+    },
+    {
+      "name": "The Forgotten/Cemetery",
+      "lines": [
+        "The Forgotten",
+        "Cemetery"
+      ],
+      "x": 2977,
+      "z": 3753,
+      "type": 0
+    },
+    {
+      "name": "Ruins",
+      "lines": [
+        "Ruins"
+      ],
+      "x": 3164,
+      "z": 3735,
+      "type": 0
+    },
+    {
+      "name": "Bone Yard",
+      "lines": [
+        "Bone Yard"
+      ],
+      "x": 3246,
+      "z": 3746,
+      "type": 0
+    },
+    {
+      "name": "Red Dragon/Isle",
+      "lines": [
+        "Red Dragon",
+        "Isle"
+      ],
+      "x": 3199,
+      "z": 3824,
+      "type": 0
+    },
+    {
+      "name": "Wilderness",
+      "lines": [
+        "Wilderness"
+      ],
+      "x": 3144,
+      "z": 3773,
+      "type": 2
+    },
+    {
+      "name": "Lava Maze",
+      "lines": [
+        "Lava Maze"
+      ],
+      "x": 3079,
+      "z": 3848,
+      "type": 0
+    },
+    {
+      "name": "Frozen Waste/Plateau",
+      "lines": [
+        "Frozen Waste",
+        "Plateau"
+      ],
+      "x": 2972,
+      "z": 3919,
+      "type": 0
+    },
+    {
+      "name": "Agility Training/Area",
+      "lines": [
+        "Agility Training",
+        "Area"
+      ],
+      "x": 3005,
+      "z": 3950,
+      "type": 0
+    },
+    {
+      "name": "Pirates'/Hideout",
+      "lines": [
+        "Pirates'",
+        "Hideout"
+      ],
+      "x": 3043,
+      "z": 3948,
+      "type": 0
+    },
+    {
+      "name": "Mage Arena",
+      "lines": [
+        "Mage Arena"
+      ],
+      "x": 3107,
+      "z": 3933,
+      "type": 0
+    },
+    {
+      "name": "Deserted/Keep",
+      "lines": [
+        "Deserted",
+        "Keep"
+      ],
+      "x": 3156,
+      "z": 3937,
+      "type": 0
+    },
+    {
+      "name": "Scorpion/Pit",
+      "lines": [
+        "Scorpion",
+        "Pit"
+      ],
+      "x": 3236,
+      "z": 3945,
+      "type": 0
+    },
+    {
+      "name": "Rogues' Castle",
+      "lines": [
+        "Rogues' Castle"
+      ],
+      "x": 3286,
+      "z": 3931,
+      "type": 0
+    },
+    {
+      "name": "Demonic/Ruins",
+      "lines": [
+        "Demonic",
+        "Ruins"
+      ],
+      "x": 3293,
+      "z": 3884,
+      "type": 0
+    },
+    {
+      "name": "Chaos/Temple",
+      "lines": [
+        "Chaos",
+        "Temple"
+      ],
+      "x": 2934,
+      "z": 3526,
+      "type": 0
+    },
+    {
+      "name": "Heros'/Guild",
+      "lines": [
+        "Heros'",
+        "Guild"
+      ],
+      "x": 2894,
+      "z": 3501,
+      "type": 0
+    },
+    {
+      "name": "Druids'/Circle",
+      "lines": [
+        "Druids'",
+        "Circle"
+      ],
+      "x": 2925,
+      "z": 3473,
+      "type": 0
+    },
+    {
+      "name": "Taverley",
+      "lines": [
+        "Taverley"
+      ],
+      "x": 2900,
+      "z": 3458,
+      "type": 0
+    },
+    {
+      "name": "White Wolf/Mountain",
+      "lines": [
+        "White Wolf",
+        "Mountain"
+      ],
+      "x": 2849,
+      "z": 3492,
+      "type": 1
+    },
+    {
+      "name": "Catherby",
+      "lines": [
+        "Catherby"
+      ],
+      "x": 2821,
+      "z": 3432,
+      "type": 0
+    },
+    {
+      "name": "Camelot/Castle",
+      "lines": [
+        "Camelot",
+        "Castle"
+      ],
+      "x": 2763,
+      "z": 3505,
+      "type": 0
+    },
+    {
+      "name": "Seers'/Village",
+      "lines": [
+        "Seers'",
+        "Village"
+      ],
+      "x": 2692,
+      "z": 3489,
+      "type": 1
+    },
+    {
+      "name": "Sinclair Mansion",
+      "lines": [
+        "Sinclair Mansion"
+      ],
+      "x": 2739,
+      "z": 3551,
+      "type": 0
+    },
+    {
+      "name": "Flax",
+      "lines": [
+        "Flax"
+      ],
+      "x": 2744,
+      "z": 3445,
+      "type": 0
+    },
+    {
+      "name": "Beehives",
+      "lines": [
+        "Beehives"
+      ],
+      "x": 2767,
+      "z": 3443,
+      "type": 0
+    },
+    {
+      "name": "Sorcerers' Tower",
+      "lines": [
+        "Sorcerers' Tower"
+      ],
+      "x": 2718,
+      "z": 3415,
+      "type": 0
+    },
+    {
+      "name": "Keep/Le Faye",
+      "lines": [
+        "Keep",
+        "Le Faye"
+      ],
+      "x": 2770,
+      "z": 3399,
+      "type": 0
+    },
+    {
+      "name": "Legends'/Guild",
+      "lines": [
+        "Legends'",
+        "Guild"
+      ],
+      "x": 2737,
+      "z": 3374,
+      "type": 0
+    },
+    {
+      "name": "Hemenster",
+      "lines": [
+        "Hemenster"
+      ],
+      "x": 2655,
+      "z": 3438,
+      "type": 0
+    },
+    {
+      "name": "McGrubor's/Wood",
+      "lines": [
+        "McGrubor's",
+        "Wood"
+      ],
+      "x": 2647,
+      "z": 3480,
+      "type": 0
+    },
+    {
+      "name": "Coal/Trucks",
+      "lines": [
+        "Coal",
+        "Trucks"
+      ],
+      "x": 2600,
+      "z": 3491,
+      "type": 0
+    },
+    {
+      "name": "Fishing/Guild",
+      "lines": [
+        "Fishing",
+        "Guild"
+      ],
+      "x": 2607,
+      "z": 3403,
+      "type": 0
+    },
+    {
+      "name": "Kingdom of/Kandarin",
+      "lines": [
+        "Kingdom of",
+        "Kandarin"
+      ],
+      "x": 2578,
+      "z": 3443,
+      "type": 2
+    },
+    {
+      "name": "East/Ardougne",
+      "lines": [
+        "East",
+        "Ardougne"
+      ],
+      "x": 2597,
+      "z": 3298,
+      "type": 1
+    },
+    {
+      "name": "West/Ardougne",
+      "lines": [
+        "West",
+        "Ardougne"
+      ],
+      "x": 2524,
+      "z": 3308,
+      "type": 1
+    },
+    {
+      "name": "Combat/Training/Camp",
+      "lines": [
+        "Combat",
+        "Training",
+        "Camp"
+      ],
+      "x": 2519,
+      "z": 3370,
+      "type": 0
+    },
+    {
+      "name": "Agility/Training/Area",
+      "lines": [
+        "Agility",
+        "Training",
+        "Area"
+      ],
+      "x": 2481,
+      "z": 3426,
+      "type": 0
+    },
+    {
+      "name": "Tree Gnome/Stronghold",
+      "lines": [
+        "Tree Gnome",
+        "Stronghold"
+      ],
+      "x": 2433,
+      "z": 3454,
+      "type": 1
+    },
+    {
+      "name": "Grand Tree",
+      "lines": [
+        "Grand Tree"
+      ],
+      "x": 2469,
+      "z": 3504,
+      "type": 0
+    },
+    {
+      "name": "Swamp",
+      "lines": [
+        "Swamp"
+      ],
+      "x": 2419,
+      "z": 3513,
+      "type": 0
+    },
+    {
+      "name": "Gnome Ball/Field",
+      "lines": [
+        "Gnome Ball",
+        "Field"
+      ],
+      "x": 2401,
+      "z": 3487,
+      "type": 0
+    },
+    {
+      "name": "Agility Training/Area",
+      "lines": [
+        "Agility Training",
+        "Area"
+      ],
+      "x": 2539,
+      "z": 3533,
+      "type": 0
+    },
+    {
+      "name": "Barbarian Outpost",
+      "lines": [
+        "Barbarian Outpost"
+      ],
+      "x": 2550,
+      "z": 3563,
+      "type": 0
+    },
+    {
+      "name": "Underground/Pass",
+      "lines": [
+        "Underground",
+        "Pass"
+      ],
+      "x": 2443,
+      "z": 3315,
+      "type": 0
+    },
+    {
+      "name": "Battlefield",
+      "lines": [
+        "Battlefield"
+      ],
+      "x": 2522,
+      "z": 3232,
+      "type": 0
+    },
+    {
+      "name": "Baxtorian/Falls",
+      "lines": [
+        "Baxtorian",
+        "Falls"
+      ],
+      "x": 2515,
+      "z": 3462,
+      "type": 0
+    },
+    {
+      "name": "Tree Gnome/Village",
+      "lines": [
+        "Tree Gnome",
+        "Village"
+      ],
+      "x": 2528,
+      "z": 3174,
+      "type": 0
+    },
+    {
+      "name": "Fight/Arena",
+      "lines": [
+        "Fight",
+        "Arena"
+      ],
+      "x": 2594,
+      "z": 3162,
+      "type": 0
+    },
+    {
+      "name": "Port/Khazard",
+      "lines": [
+        "Port",
+        "Khazard"
+      ],
+      "x": 2659,
+      "z": 3189,
+      "type": 1
+    },
+    {
+      "name": "Yanille",
+      "lines": [
+        "Yanille"
+      ],
+      "x": 2549,
+      "z": 3091,
+      "type": 1
+    },
+    {
+      "name": "Wizards'/Guild",
+      "lines": [
+        "Wizards'",
+        "Guild"
+      ],
+      "x": 2589,
+      "z": 3077,
+      "type": 0
+    },
+    {
+      "name": "Observatory",
+      "lines": [
+        "Observatory"
+      ],
+      "x": 2440,
+      "z": 3151,
+      "type": 0
+    },
+    {
+      "name": "Necromancer",
+      "lines": [
+        "Necromancer"
+      ],
+      "x": 2669,
+      "z": 3243,
+      "type": 0
+    },
+    {
+      "name": "Gu'Tanoth",
+      "lines": [
+        "Gu'Tanoth"
+      ],
+      "x": 2528,
+      "z": 3046,
+      "type": 0
+    },
+    {
+      "name": "Feldip/Hills",
+      "lines": [
+        "Feldip",
+        "Hills"
+      ],
+      "x": 2566,
+      "z": 2985,
+      "type": 2
+    },
+    {
+      "name": "Zoo",
+      "lines": [
+        "Zoo"
+      ],
+      "x": 2614,
+      "z": 3273,
+      "type": 0
+    },
+    {
+      "name": "Morytania",
+      "lines": [
+        "Morytania"
+      ],
+      "x": 3469,
+      "z": 3443,
+      "type": 2
+    },
+    {
+      "name": "Mort Myre/Swamp",
+      "lines": [
+        "Mort Myre",
+        "Swamp"
+      ],
+      "x": 3439,
+      "z": 3383,
+      "type": 1
+    },
+    {
+      "name": "Canifis",
+      "lines": [
+        "Canifis"
+      ],
+      "x": 3491,
+      "z": 3487,
+      "type": 1
+    },
+    {
+      "name": "River/Salve",
+      "lines": [
+        "River",
+        "Salve"
+      ],
+      "x": 3410,
+      "z": 3438,
+      "type": 0
+    },
+    {
+      "name": "River Lum",
+      "lines": [
+        "River Lum"
+      ],
+      "x": 3167,
+      "z": 3350,
+      "type": 0
+    },
+    {
+      "name": "Temple",
+      "lines": [
+        "Temple"
+      ],
+      "x": 3421,
+      "z": 3489,
+      "type": 0
+    },
+    {
+      "name": "Agility/Arena",
+      "lines": [
+        "Agility",
+        "Arena"
+      ],
+      "x": 2815,
+      "z": 3193,
+      "type": 0
+    },
+    {
+      "name": "Burthorpe",
+      "lines": [
+        "Burthorpe"
+      ],
+      "x": 2895,
+      "z": 3549,
+      "type": 1
+    },
+    {
+      "name": "Death/Plateau",
+      "lines": [
+        "Death",
+        "Plateau"
+      ],
+      "x": 2865,
+      "z": 3592,
+      "type": 0
+    },
+    {
+      "name": "Tirannwn",
+      "lines": [
+        "Tirannwn"
+      ],
+      "x": 2241,
+      "z": 3265,
+      "type": 2
+    },
+    {
+      "name": "Isafdar",
+      "lines": [
+        "Isafdar"
+      ],
+      "x": 2243,
+      "z": 3186,
+      "type": 1
+    },
+    {
+      "name": "Arandar",
+      "lines": [
+        "Arandar"
+      ],
+      "x": 2340,
+      "z": 3296,
+      "type": 1
+    },
+    {
+      "name": "Prifddinas",
+      "lines": [
+        "Prifddinas"
+      ],
+      "x": 2237,
+      "z": 3309,
+      "type": 1
+    },
+    {
+      "name": "Tyras/Camp",
+      "lines": [
+        "Tyras",
+        "Camp"
+      ],
+      "x": 2180,
+      "z": 3147,
+      "type": 0
+    },
+    {
+      "name": "Elf/Camp",
+      "lines": [
+        "Elf",
+        "Camp"
+      ],
+      "x": 2196,
+      "z": 3256,
+      "type": 0
+    },
+    {
+      "name": "Trollheim",
+      "lines": [
+        "Trollheim"
+      ],
+      "x": 2892,
+      "z": 3678,
+      "type": 0
+    },
+    {
+      "name": "Troll/Stronghold",
+      "lines": [
+        "Troll",
+        "Stronghold"
+      ],
+      "x": 2835,
+      "z": 3681,
+      "type": 0
+    },
+    {
+      "name": "Mort'ton",
+      "lines": [
+        "Mort'ton"
+      ],
+      "x": 3491,
+      "z": 3281,
+      "type": 1
+    },
+    {
+      "name": "The/Hollows",
+      "lines": [
+        "The",
+        "Hollows"
+      ],
+      "x": 3500,
+      "z": 3384,
+      "type": 0
+    },
+    {
+      "name": "Poison Waste",
+      "lines": [
+        "Poison Waste"
+      ],
+      "x": 2241,
+      "z": 3098,
+      "type": 0
+    },
+    {
+      "name": "Castle Wars/(due Dec-2004)",
+      "lines": [
+        "Castle Wars",
+        "(due Dec-2004)"
+      ],
+      "x": 2432,
+      "z": 3111,
+      "type": 0
+    },
+    {
+      "name": "Champions'/Guild",
+      "lines": [
+        "Champions'",
+        "Guild"
+      ],
+      "x": 3201,
+      "z": 3354,
+      "type": 0
+    },
+    {
+      "name": "Rellekka",
+      "lines": [
+        "Rellekka"
+      ],
+      "x": 2672,
+      "z": 3681,
+      "type": 1
+    },
+    {
+      "name": "Golden/Apple Tree",
+      "lines": [
+        "Golden",
+        "Apple Tree"
+      ],
+      "x": 2765,
+      "z": 3608,
+      "type": 0
+    },
+    {
+      "name": "Lighthouse",
+      "lines": [
+        "Lighthouse"
+      ],
+      "x": 2514,
+      "z": 3628,
+      "type": 0
+    },
+    {
+      "name": "Fremennik/Province",
+      "lines": [
+        "Fremennik",
+        "Province"
+      ],
+      "x": 2679,
+      "z": 3632,
+      "type": 1
+    },
+    {
+      "name": "Crafting/Guild",
+      "lines": [
+        "Crafting",
+        "Guild"
+      ],
+      "x": 2921,
+      "z": 3282,
+      "type": 0
+    },
+    {
+      "name": "Haunted/Woods",
+      "lines": [
+        "Haunted",
+        "Woods"
+      ],
+      "x": 3567,
+      "z": 3488,
+      "type": 0
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 # dependencies (bun install)
 node_modules
 
-# output
-out
+# output (built site is tracked & published via GitHub Pages; only the bake scratch dir is ignored)
+out/build
 dist
 *.tgz
 

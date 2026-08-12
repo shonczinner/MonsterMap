@@ -19,6 +19,9 @@ import { join } from 'node:path';
 import { loadConfig } from './lib/config.ts';
 import { CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_COLORS } from './lib/colors.ts';
 
+// Browser-side helper source, inlined into the page <script> (no bundler).
+const clusteringSrc = readFileSync(join(import.meta.dir, 'lib/mapClustering.ts'), 'utf8');
+
 const config = loadConfig();
 const dataDir = config.dataDir;
 const mapsDir = config.mapsDir;
@@ -183,6 +186,9 @@ function render(payload: {
   .searchwrap{position:relative;}
   #search{width:100%;box-sizing:border-box;padding-right:28px;}
   #clearbtn{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:none;background:#1b222a;color:#cfd8e0;border:1px solid #2a323b;border-radius:4px;width:22px;height:22px;line-height:1;padding:0;cursor:pointer;font-size:15px;}
+  #selnav{display:none;align-items:center;gap:6px;margin-top:6px;}
+  #selnav button{background:#1b222a;color:#cfd8e0;border:1px solid #2a323b;border-radius:4px;width:24px;height:22px;line-height:1;padding:0;cursor:pointer;font-size:14px;}
+  #selnav #selcount{min-width:56px;text-align:center;color:#cfd8e0;font-size:12px;}
   #clearbtn:hover{background:#243039;}
   #suggest{position:absolute;left:0;right:0;z-index:20;background:#161b22;border:1px solid #30363d;border-radius:4px;max-height:240px;overflow:auto;display:none;}
   #suggest div{padding:4px 8px;cursor:pointer;}
@@ -207,6 +213,12 @@ function render(payload: {
         <input type="text" id="search" placeholder="name e.g. goblin, copper, Bank, Lumbridge" autocomplete="off">
         <button id="clearbtn" title="Show everything (clear filter)">&times;</button>
         <div id="suggest"></div>
+        <div id="selnav">
+          <button id="selprev" title="Previous match">&#8249;</button>
+          <span id="selcount" class="kv"></span>
+          <button id="selnext" title="Next match">&#8250;</button>
+          <label class="kv" title="min spacing between stops (tiles)">r<input id="snapdist" type="number" min="0" max="300" value="32" style="width:44px;background:#0d1117;color:#cfd8e0;border:1px solid #2a323b;border-radius:3px;margin-left:2px;"></label>
+        </div>
       </div>
       <div class="hint">type to list matches; click one to flash those dots; &times; clears it</div>
       <div class="hint">a flashing dot uses its layer colour (see the toggles) &middot; monsters yellow, drops/spawns red</div>
@@ -217,6 +229,7 @@ function render(payload: {
 <script>
 (function () {
 "use strict";
+${clusteringSrc}
 var data = JSON.parse(document.getElementById("mmdata").textContent);
 var pts = data.pts;
 var lbls = data.lbls;
@@ -293,28 +306,8 @@ function draw() {
   }
 
   var dot = Math.max(2.2, Math.min(18, ppt * 0.9));
-  var shown = 0, flashing = 0;
+  var shown = 0, flashing = 0, flashPts = [];
   var pulse = 0.5 + 0.5 * Math.sin(performance.now() / 200);
-  var flashLower = exactName ? exactName.toLowerCase() : '';
-
-  // does a point flash for the active query, and in which source colour?
-  //   'drop'  (yellow) — monster that drops it
-  //   'spawn' (red)    — ground spawn of it
-  //   'shop'  (white)  — shopkeeper that sells it
-  function flashKind(p) {
-    if (!exactName) return null;
-    if (p.name === exactName) return p.cat === 'item' ? 'spawn' : (p.hasShop ? 'shop' : 'drop');
-    if (p.shop) {
-      for (var si = 0; si < p.shop.shops.length; si++) {
-        var sh = p.shop.shops[si];
-        if (sh.title && sh.title.toLowerCase().indexOf(flashLower) >= 0) return 'shop';
-        for (var ii = 0; ii < sh.items.length; ii++) if (sh.items[ii].name === exactName) return 'shop';
-      }
-    }
-    if (p.drops && p.drops.indexOf(exactName) >= 0) return 'drop';
-    if (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0) return 'drop';
-    return null;
-  }
   function hexA(hex, a) {
     var h = hex.replace('#', '');
     var r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
@@ -330,28 +323,11 @@ function draw() {
     var a2 = stack[ai];
     var px = areaScreenX(a2, p.x), py = areaScreenY(a2) + (a2.tileZTop - p.z) * ppt;
     if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
-    var kind = flashKind(p);
-    var is = !!kind;
-    if (is) {
+    var kind = flashKind(p, exactName);
+    if (kind) {
       flashing++;
-      var fc = colorOf[p.cat] || "#ffffff";
-      // less-transparent halo in the layer colour
-      ctx.beginPath();
-      ctx.fillStyle = hexA(fc, 0.28 + 0.42 * pulse);
-      ctx.arc(px, py, 12 + dot * 2 + (1 - pulse) * 10, 0, Math.PI * 2);
-      ctx.fill();
-      // solid dot in its layer colour
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = fc;
-      ctx.beginPath();
-      ctx.arc(px, py, dot + 3, 0, Math.PI * 2);
-      ctx.fill();
-      // coloured ring to make the colour pop
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = fc;
-      ctx.beginPath();
-      ctx.arc(px, py, dot + 5, 0, Math.PI * 2);
-      ctx.stroke();
+      flashPts.push({ p: p, px: px, py: py, cat: p.cat });
+      continue;
     } else {
       ctx.globalAlpha = exactName ? 0.30 : 1;
       ctx.fillStyle = colorOf[p.cat] || "#ffffff";
@@ -362,6 +338,42 @@ function draw() {
     shown++;
   }
   ctx.globalAlpha = 1;
+
+  // clustered flashing markers — one bigger disc per clump, labelled xN
+  if (flashPts.length) {
+    var clusters = buildClusters(flashPts, SNAP_MIN_DIST);
+    for (var cj = 0; cj < clusters.length; cj++) {
+      var c = clusters[cj], n = c.pts.length, cx = c.pts[0].px, cy = c.pts[0].py;
+      if (n > 1) {
+        var sx = 0, sy = 0;
+        for (var pi = 0; pi < n; pi++) { sx += c.pts[pi].px; sy += c.pts[pi].py; }
+        cx = sx / n; cy = sy / n;
+      }
+      var fc = colorOf[c.cat] || "#ffffff";
+      var R = Math.max(dot + 7, 9);
+      ctx.fillStyle = hexA(fc, 0.25 + 0.4 * pulse);
+      ctx.beginPath();
+      ctx.arc(cx, cy, R + 4 + (1 - pulse) * 10, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = fc;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = fc;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R + 2, 0, Math.PI * 2);
+      ctx.stroke();
+      if (n > 1) {
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = Math.max(9, R | 0) + "px ui-monospace,monospace";
+        ctx.fillStyle = "#0d1117";
+        ctx.fillText("x" + n, cx, cy + 0.5);
+      }
+    }
+  }
 
   // place labels (text)
   if (shownCats.place) {
@@ -482,7 +494,7 @@ function buildAreas() {
   box.innerHTML = h;
   box.addEventListener("change", function (e) {
     var t = e.target; var i = Number(t.getAttribute("data-area"));
-    shownAreas[i] = t.checked; requestDraw();
+    shownAreas[i] = t.checked; requestDraw(); if (exactName) rebuildSelection();
   });
 }
 function buildCats() {
@@ -496,15 +508,53 @@ function buildCats() {
   box.addEventListener("change", function (e) {
     var t = e.target; var k = t.getAttribute("data-cat");
     if (!k) return;
-    shownCats[k] = t.checked; requestDraw();
+    shownCats[k] = t.checked; requestDraw(); if (exactName) rebuildSelection();
   });
 }
 
 // ---- search -> dropdown -> flash
 function setExact(v) {
   exactName = v;
+  rebuildSelection();
   if (exactName) { cancelAnimationFrame(animId); tick(); }
   else requestDraw();
+}
+
+// ---- selection navigation (prev/next through matched dots)
+var selection = [];
+var selIndex = 0;
+var selEl = document.getElementById("selnav");
+var selLabel = document.getElementById("selcount");
+var snapInput = document.getElementById("snapdist");
+var SNAP_MIN_DIST = Number(snapInput && snapInput.value) || 32; // min tile spacing between stops
+function rebuildSelection() {
+  selection = [];
+  if (exactName) {
+    var raw = collectMatches(pts, exactName, shownCats, shownAreas, spawnAreaIndex);
+    selection = dedupeByCluster(raw, SNAP_MIN_DIST);
+  }
+  if (selIndex >= selection.length) selIndex = selection.length - 1;
+  if (selIndex < 0) selIndex = 0;
+  updateSelUI();
+}
+function centerOn(p) {
+  var ai = spawnAreaIndex(p.x, p.z);
+  if (ai < 0) return;
+  var a = stack[ai];
+  ox = W / 2 - (p.x - a.tileX0) * ppt;
+  oy = H / 2 - (a.yOff * ppt + (a.tileZTop - p.z) * ppt);
+  requestDraw();
+}
+function updateSelUI() {
+  if (!exactName || selection.length === 0) { selEl.style.display = "none"; return; }
+  selEl.style.display = "flex";
+  selLabel.textContent = (selIndex + 1) + " / " + selection.length;
+}
+function stepSel(dir) {
+  if (selection.length === 0) return;
+  selIndex = (selIndex + dir + selection.length) % selection.length;
+  centerOn(selection[selIndex]);
+  updateSelUI();
 }
 var lastMatches = [];
 function renderSuggest(q) {
@@ -538,6 +588,7 @@ function renderSuggest(q) {
 }
 function pickName(nm) {
   document.getElementById("search").value = nm;
+  selIndex = 0;
   setExact(nm);
   suggestEl.style.display = "none";
   updateClearBtn();
@@ -577,6 +628,12 @@ document.getElementById("search").addEventListener("keydown", function (e) {
   for (var i = 0; i < items.length; i++) items[i].classList.toggle("sel", i === suggestSel);
 });
 document.getElementById("clearbtn").addEventListener("click", clearSelection);
+document.getElementById("selprev").addEventListener("click", function () { stepSel(-1); });
+document.getElementById("selnext").addEventListener("click", function () { stepSel(1); });
+if (snapInput) snapInput.addEventListener("input", function () {
+  SNAP_MIN_DIST = Number(snapInput.value) || 0;
+  if (exactName) rebuildSelection();
+});
 
 (function boot() {
   buildAreas();

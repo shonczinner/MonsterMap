@@ -104,9 +104,14 @@ for (const a of stack) {
 }
 type StackArea = AreaLayout & { yOff: number };
 
-// distinct names for the search dropdown
+// distinct names for the search dropdown (incl. the fish each fishing spot yields)
 const nameSet = new Set<string>();
-for (const p of pts) nameSet.add(p.name);
+for (const p of pts) {
+  nameSet.add(p.name);
+  if (p.cat === 'fish' && p.sub) {
+    for (const f of p.sub.split(',')) { const t = f.trim(); if (t) nameSet.add(t); }
+  }
+}
 for (const l of lbls) nameSet.add(l.name);
 const ALL_NAMES = [...nameSet].sort((a, b) => a.localeCompare(b));
 
@@ -279,6 +284,7 @@ function draw() {
   var dot = Math.max(2.2, Math.min(18, ppt * 0.9));
   var shown = 0, flashing = 0;
   var pulse = 0.5 + 0.5 * Math.sin(performance.now() / 200);
+  var flashLower = exactName ? exactName.toLowerCase() : '';
 
   // dots
   for (var k = 0; k < pts.length; k++) {
@@ -289,7 +295,7 @@ function draw() {
     var a2 = stack[ai];
     var px = areaScreenX(a2, p.x), py = areaScreenY(a2) + (a2.tileZTop - p.z) * ppt;
     if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
-    var is = exactName && p.name === exactName;
+    var is = exactName && (p.name === exactName || (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0));
     if (is) {
       flashing++;
       ctx.beginPath();

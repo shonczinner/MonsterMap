@@ -149,7 +149,7 @@ function render(payload: {
   #panel{display:flex;height:100vh;}
   #wrap{position:relative;flex:1;}
   #c{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;image-rendering:pixelated;}
-  #side{width:320px;padding:12px 14px;box-sizing:border-box;border-left:1px solid #232a31;overflow:auto;}
+  #side{position:relative;width:320px;padding:12px 14px;box-sizing:border-box;border-left:1px solid #232a31;overflow:auto;}
   h1{font-size:15px;margin:0 0 10px;}
   h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8b96a3;margin:14px 0 6px;}
   label{display:block;margin:4px 0;}
@@ -172,23 +172,23 @@ function render(payload: {
 </head>
 <body>
 <div id="panel">
-  <div id="wrap">
-    <canvas id="c"></canvas>
-    <div id="tip"></div>
-    <div id="stats"></div>
-    <div id="suggest"></div>
-  </div>
-  <div id="side">
-    <h1>MonsterMap</h1>
-    <h2>Areas</h2>
-    <div class="areas" id="areas"></div>
-    <h2>Layers</h2>
-    <div id="cats"></div>
-    <h2>Find &amp; flash</h2>
-    <input type="text" id="search" placeholder="name e.g. goblin, copper, Bank, Lumbridge" autocomplete="off">
-    <div class="hint">type to list matches; click one to make those dots flash</div>
-    <div style="margin-top:16px;color:#8b96a3">drag: pan &middot; scroll: zoom &middot; hover: details</div>
-  </div>
+    <div id="wrap">
+      <canvas id="c"></canvas>
+      <div id="tip"></div>
+      <div id="stats"></div>
+    </div>
+    <div id="side">
+      <h1>MonsterMap</h1>
+      <h2>Areas</h2>
+      <div class="areas" id="areas"></div>
+      <h2>Layers</h2>
+      <div id="cats"></div>
+      <h2>Find &amp; flash</h2>
+      <input type="text" id="search" placeholder="name e.g. goblin, copper, Bank, Lumbridge" autocomplete="off">
+      <div id="suggest"></div>
+      <div class="hint">type to list matches; click one to make those dots flash</div>
+      <div style="margin-top:16px;color:#8b96a3">drag: pan &middot; scroll: zoom &middot; hover: details</div>
+    </div>
 </div>
 <script id="mmdata" type="application/json">${json}</script>
 <script>
@@ -447,8 +447,10 @@ function renderSuggest(q) {
   for (var j = 0; j < matches.length; j++) h += '<div data-name="' + esc(matches[j]) + '">' + esc(matches[j]) + '</div>';
   suggestEl.innerHTML = h;
   suggestEl.style.display = "block";
-  suggestEl.style.left = "14px";
-  suggestEl.style.top = (document.getElementById("search").offsetTop + 30) + "px";
+  var input = document.getElementById("search");
+  suggestEl.style.left = input.offsetLeft + "px";
+  suggestEl.style.right = input.offsetLeft + "px";
+  suggestEl.style.top = (input.offsetTop + input.offsetHeight + 4) + "px";
   suggestSel = -1;
   var items = suggestEl.querySelectorAll("div");
   for (var m = 0; m < items.length; m++) {

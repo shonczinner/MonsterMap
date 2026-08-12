@@ -36,7 +36,10 @@ gitignored in `Server/` and never committed anywhere; we only read it from that
 path. It contains one entry per mapsquare `n{mapX}_{mapZ}` (483 files) holding
 the NPC spawn coords (and land) used by `lib/tiles.ts`.
 3. **`bun map.ts`** — reads the data + layout, stacks the three area PNGs
-   **vertically** (no ocean gaps) and plots every spawn dot → `out/monstermap.html`.
+   **vertically** (no ocean gaps), plots every spawn dot, and writes
+   `out/monstermap.html`. The page markup lives in `template.html`; the
+   flash-matching / cluster logic in `lib/mapClustering.ts` is inlined into the
+   page at build time.
 
 ## Usage
 
@@ -50,18 +53,25 @@ open out/monstermap.html
 bun tools/smoke.ts   # headless Playwright check + screenshots
 ```
 
-`lib/config.ts` reads `.env` (bun auto-loads it). All paths are fully expanded
-there from the base dirs. Optional CLI flags override: `--engine/--content/
---client/--out/--maps-server <dir|path>`.
+`lib/config.ts` reads `.env` (bun auto-loads it). Copy `.env.example` to `.env`
+and set the base dirs; all derived paths are expanded from there. Optional CLI
+flags override: `--engine/--content/--client/--out/--maps-server <dir|path>`.
 
 ## Map page controls
 
 - **Areas** — checkboxes to show/hide each of surface / dungeon / extra.
-- **Name filter** — type a name; a unique exact match pulses a golden halo over
-  every spawn of that monster (other spawns dim).
+- **Layers** — per-category toggles (Monsters / drops, NPCs / stores, Item
+  spawns, Mining, Woodcut, Fishing spots, Map icons, Place names).
+- **Find & flash** — type a name; the dropdown ranks exact → prefix → word-start
+  → contains. Pick one and every matching dot **flashes in its layer colour**
+  (other dots dim). Nearby matches collapse into one bigger disc labelled `xN`
+  so clumps are easy to count.
+- **Selection navigation** — a `‹ n / total ›` bar steps through the distinct
+  matches; the `r` box sets the min tile spacing (default 32) used to collapse
+  same-layer clumps for both the nav list and the flashing discs.
 - **Min level** — slider hides monsters below a vislevel.
-- **Show drop-table monsters** — hides monsters with no drop table.
-- **Hover** — tooltip with name, id, combat level, stats, area, tile, drops.
+- **Hover** — tooltip with name, id, combat level, stats, area, tile, drops,
+  and (for shops) stock.
 - **Drag** to pan, **scroll** to zoom (pivots at the cursor).
 
 ## Layout
@@ -76,7 +86,9 @@ there from the base dirs. Optional CLI flags override: `--engine/--content/
 | `lib/maps/bakeSource.ts` | Headless bake entry: `BakeMapView` (real `MapView` subclass) renders each area, crops, encodes PNGs + `layout.json`. |
 | `lib/maps/domShim.ts` | Fake DOM/canvas for running the real game `MapView` under Node. |
 | `gen.ts` | Spawns + configs + drops → out/data artifacts. |
-| `map.ts` | Builds `out/monstermap.html`: stacks the baked PNGs, plots spawns, pan/zoom/hover/filters. |
+| `map.ts` | Reads `template.html`, injects the data + `lib/mapClustering.ts` source, and writes `out/monstermap.html`. |
+| `template.html` | Page markup + CSS + inline browser script; `map.ts` fills in the data and clustering source. |
+| `lib/mapClustering.ts` | Flash-match + cluster de-duplication helpers (inlined into the page by `map.ts`). |
 | `tools/smoke.ts` | Playwright smoke test: boots the page, exercises filters, area toggles, zoom; screenshots to `out/smoke*.png`. |
 
 ## Constraints
@@ -88,4 +100,4 @@ there from the base dirs. Optional CLI flags override: `--engine/--content/
 - Dropped spawns: only dot spawns that fall inside a baked area's trimmed tile
   rectangle appear (~7.3k of 7.3k+; the rest sit in ocean/void tiles).
 
-Roadmap and detailed notes: see `PLAN.md`.
+Roadmap and detailed notes: see `docs/`.

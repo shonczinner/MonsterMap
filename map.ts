@@ -336,8 +336,9 @@ function draw() {
     if (is) {
       flashing++;
       var c = flashRGB(kind);
+      var fa = kind === 'shop' ? (0.32 + 0.45 * pulse) : (0.12 + 0.30 * pulse);
       ctx.beginPath();
-      ctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + (0.12 + 0.30 * pulse) + ")";
+      ctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + fa + ")";
       ctx.arc(px, py, 12 + dot * 2 + (1 - pulse) * 10, 0, Math.PI * 2);
       ctx.fill();
     }

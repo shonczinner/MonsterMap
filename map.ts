@@ -165,7 +165,11 @@ function render(payload: {
   .kv{color:#8b96a3;}
   #stats{position:absolute;left:12px;bottom:10px;background:rgba(18,22,27,.82);padding:5px 10px;border-radius:5px;font-size:12px;color:#aab6c2;}
   .area-label{position:absolute;left:4px;font-size:11px;color:#0d1117;background:rgba(231,238,247,.9);padding:1px 6px;border-radius:3px;pointer-events:none;opacity:.85;}
-  #suggest{position:absolute;z-index:20;background:#161b22;border:1px solid #30363d;border-radius:4px;max-height:240px;overflow:auto;display:none;}
+  .searchwrap{position:relative;}
+  #search{width:100%;box-sizing:border-box;padding-right:28px;}
+  #clearbtn{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:none;background:#1b222a;color:#cfd8e0;border:1px solid #2a323b;border-radius:4px;width:22px;height:22px;line-height:1;padding:0;cursor:pointer;font-size:15px;}
+  #clearbtn:hover{background:#243039;}
+  #suggest{position:absolute;left:0;right:0;z-index:20;background:#161b22;border:1px solid #30363d;border-radius:4px;max-height:240px;overflow:auto;display:none;}
   #suggest div{padding:4px 8px;cursor:pointer;}
   #suggest div:hover,#suggest div.sel{background:#21303f;}
 </style>
@@ -184,9 +188,12 @@ function render(payload: {
       <h2>Layers</h2>
       <div id="cats"></div>
       <h2>Find &amp; flash</h2>
-      <input type="text" id="search" placeholder="name e.g. goblin, copper, Bank, Lumbridge" autocomplete="off">
-      <div id="suggest"></div>
-      <div class="hint">type to list matches; click one to make those dots flash</div>
+      <div class="searchwrap">
+        <input type="text" id="search" placeholder="name e.g. goblin, copper, Bank, Lumbridge" autocomplete="off">
+        <button id="clearbtn" title="Show everything (clear filter)">&times;</button>
+        <div id="suggest"></div>
+      </div>
+      <div class="hint">type to list matches; click one to flash those dots; &times; clears it</div>
       <div style="margin-top:16px;color:#8b96a3">drag: pan &middot; scroll: zoom &middot; hover: details</div>
     </div>
 </div>
@@ -434,17 +441,17 @@ function setExact(v) {
   if (exactName) { cancelAnimationFrame(animId); tick(); }
   else requestDraw();
 }
+var lastMatches = [];
 function renderSuggest(q) {
-  if (!q) { suggestEl.style.display = "none"; suggestSel = -1; return; }
+  if (!q) { suggestEl.style.display = "none"; suggestSel = -1; lastMatches = []; return; }
   var lower = q.toLowerCase();
-  var matches = [];
+  lastMatches = [];
   for (var i = 0; i < ALL_NAMES.length; i++) {
-    if (ALL_NAMES[i].toLowerCase().indexOf(lower) >= 0) matches.push(ALL_NAMES[i]);
-    if (matches.length >= 200) break;
+    if (ALL_NAMES[i].toLowerCase().indexOf(lower) >= 0) { lastMatches.push(ALL_NAMES[i]); if (lastMatches.length >= 200) break; }
   }
-  if (matches.length === 0) { suggestEl.style.display = "none"; return; }
+  if (lastMatches.length === 0) { suggestEl.style.display = "none"; return; }
   var h = "";
-  for (var j = 0; j < matches.length; j++) h += '<div data-name="' + esc(matches[j]) + '">' + esc(matches[j]) + '</div>';
+  for (var j = 0; j < lastMatches.length; j++) h += '<div data-idx="' + j + '">' + esc(lastMatches[j]) + '</div>';
   suggestEl.innerHTML = h;
   suggestEl.style.display = "block";
   var input = document.getElementById("search");
@@ -452,30 +459,48 @@ function renderSuggest(q) {
   suggestEl.style.right = input.offsetLeft + "px";
   suggestEl.style.top = (input.offsetTop + input.offsetHeight + 4) + "px";
   suggestSel = -1;
-  var items = suggestEl.querySelectorAll("div");
-  for (var m = 0; m < items.length; m++) {
-    items[m].addEventListener("click", function () {
-      var nm = this.getAttribute("data-name");
-      document.getElementById("search").value = nm;
-      setExact(nm);
-      suggestEl.style.display = "none";
-    });
-  }
 }
+function pickName(nm) {
+  document.getElementById("search").value = nm;
+  setExact(nm);
+  suggestEl.style.display = "none";
+  updateClearBtn();
+}
+function clearSelection() {
+  document.getElementById("search").value = "";
+  setExact("");
+  suggestEl.style.display = "none";
+  updateClearBtn();
+}
+function updateClearBtn() {
+  document.getElementById("clearbtn").style.display =
+    document.getElementById("search").value.trim() ? "block" : "none";
+}
+suggestEl.addEventListener("click", function (e) {
+  var d = e.target.closest("[data-idx]");
+  if (!d) return;
+  pickName(lastMatches[Number(d.getAttribute("data-idx"))]);
+});
 document.getElementById("search").addEventListener("input", function () {
-  renderSuggest(this.value.trim());
+  var q = this.value.trim();
+  if (!q) setExact("");
+  else setExact("");
+  updateClearBtn();
+  renderSuggest(q);
 });
 document.getElementById("search").addEventListener("keydown", function (e) {
   var items = suggestEl.querySelectorAll("div");
   if (e.key === "ArrowDown") { suggestSel = Math.min(items.length - 1, suggestSel + 1); }
   else if (e.key === "ArrowUp") { suggestSel = Math.max(0, suggestSel - 1); }
   else if (e.key === "Enter") {
-    if (suggestSel >= 0 && items[suggestSel]) { var nm = items[suggestSel].getAttribute("data-name"); this.value = nm; setExact(nm); suggestEl.style.display = "none"; }
-    else if (items[0]) { var nm2 = items[0].getAttribute("data-name"); this.value = nm2; setExact(nm2); suggestEl.style.display = "none"; }
+    if (suggestSel >= 0 && items[suggestSel]) pickName(lastMatches[Number(items[suggestSel].getAttribute("data-idx"))]);
+    else if (items[0]) pickName(lastMatches[0]);
     return;
-  } else return;
+  } else if (e.key === "Escape") { clearSelection(); return; }
+  else return;
   for (var i = 0; i < items.length; i++) items[i].classList.toggle("sel", i === suggestSel);
 });
+document.getElementById("clearbtn").addEventListener("click", clearSelection);
 
 (function boot() {
   buildAreas();

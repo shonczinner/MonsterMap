@@ -83,7 +83,14 @@ for (const s of res.spawns) {
         points.push({ x: s.x, z: s.z, level: s.level, cat: 'flax', name: s.name, sub: '', id: s.id });
     }
 }
+// coords already claimed by the monster / fishing layers — those NPCs also
+// carry a minimap icon, so skip the duplicate "Map icon" dot that would paint
+// on top of (and hide) the monster/fish colour.
+const claimed = new Set<string>();
+for (const s of monsters.spawns) claimed.add(s.x + '|' + s.z);
+for (const s of res.spawns) if (s.kind === 'fishing') claimed.add(s.x + '|' + s.z);
 for (const s of icons.locations) {
+    if (s.kind === 'npc' && claimed.has(s.x + '|' + s.z)) continue;
     points.push({ x: s.x, z: s.z, level: s.level, cat: 'poi', name: s.icon || s.name, sub: s.name, id: s.id });
 }
 const labels = locs.places.map((p: any) => ({ x: p.x, z: p.z, level: 0, cat: 'place', name: p.name, lines: p.lines, type: p.type }));
@@ -351,13 +358,6 @@ function draw() {
       ctx.beginPath();
       ctx.arc(px, py, dot, 0, Math.PI * 2);
       ctx.fill();
-      if (p.hasShop) {
-        ctx.beginPath();
-        ctx.strokeStyle = "#ffcf4d";
-        ctx.lineWidth = 1.5;
-        ctx.arc(px, py, dot + 3, 0, Math.PI * 2);
-        ctx.stroke();
-      }
     }
     shown++;
   }
@@ -510,11 +510,22 @@ var lastMatches = [];
 function renderSuggest(q) {
   if (!q) { suggestEl.style.display = "none"; suggestSel = -1; lastMatches = []; return; }
   var lower = q.toLowerCase();
-  lastMatches = [];
+  var matches = [];
   for (var i = 0; i < ALL_NAMES.length; i++) {
-    if (ALL_NAMES[i].toLowerCase().indexOf(lower) >= 0) { lastMatches.push(ALL_NAMES[i]); if (lastMatches.length >= 200) break; }
+    var n = ALL_NAMES[i], nl = n.toLowerCase();
+    var idx = nl.indexOf(lower);
+    if (idx < 0) continue;
+    var score;
+    if (nl === lower) score = 0;                         // exact
+    else if (idx === 0) score = 1;                        // starts with query
+    else if (nl.charAt(idx - 1) === ' ' || nl.charAt(idx - 1) === '-') score = 2; // word start
+    else score = 3;                                       // mid-word contains
+    matches.push({ n: n, score: score });
   }
-  if (lastMatches.length === 0) { suggestEl.style.display = "none"; return; }
+  if (matches.length === 0) { suggestEl.style.display = "none"; return; }
+  matches.sort(function (a, b) { return a.score - b.score || a.n.localeCompare(b.n); });
+  if (matches.length > 200) matches.length = 200;
+  lastMatches = matches.map(function (m) { return m.n; });
   var h = "";
   for (var j = 0; j < lastMatches.length; j++) h += '<div data-idx="' + j + '">' + esc(lastMatches[j]) + '</div>';
   suggestEl.innerHTML = h;

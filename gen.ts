@@ -26,6 +26,8 @@ import {
     parseFishingNpcCategories,
     parseFishingFish
 } from './lib/resources.ts';
+import { parseLabels } from './lib/labels.ts';
+import { WORLDMAP_KEY_NAMES, iconName, iconNameForLabel } from './lib/icons.ts';
 
 const config = loadConfig();
 const maps = loadMaps(config.mapsServerZip);
@@ -213,6 +215,48 @@ for (const spawn of maps.spawns) {
 }
 
 // =====================================================================
+// location names (cities / areas / POIs) — from content/maps/labels.txt
+// =====================================================================
+const places = parseLabels(config.contentDir);
+
+// =====================================================================
+// minimap icons — legend + per-spawn points of interest
+// =====================================================================
+const iconLocations: any[] = [];
+for (const s of maps.locSpawns) {
+    const type = LocType.get(s.id);
+    if (!type || type.mapfunction < 0) {
+        continue;
+    }
+    iconLocations.push({
+        kind: 'loc',
+        mapfunction: type.mapfunction,
+        icon: iconName(type.mapfunction),
+        name: type.name ?? type.debugname ?? `loc_${s.id}`,
+        id: s.id,
+        x: s.x,
+        z: s.z,
+        level: s.level
+    });
+}
+for (const spawn of maps.spawns) {
+    const type = NpcType.get(spawn.id);
+    if (!type || !type.minimap) {
+        continue;
+    }
+    iconLocations.push({
+        kind: 'npc',
+        mapfunction: -1,
+        icon: iconNameForLabel(type.name) ?? type.name ?? 'Fishing spot',
+        name: type.name ?? 'Fishing spot',
+        id: spawn.id,
+        x: spawn.x,
+        z: spawn.z,
+        level: spawn.level
+    });
+}
+
+// =====================================================================
 // outputs
 // =====================================================================
 const dataDir = config.dataDir;
@@ -308,8 +352,40 @@ writeFileSync(join(dataDir, 'resources.json'), JSON.stringify({
     byX: byX(resourceSpawns)
 }, null, 2));
 
+// ---- location names
+const placeTsvHeader = ['name', 'type', 'absX', 'absZ'];
+const placeTsv = [placeTsvHeader.join('\t'), ...places.map(p => [p.name, p.type, p.x, p.z].join('\t'))].join('\n') + '\n';
+writeFileSync(join(dataDir, 'locationnames.tsv'), placeTsv);
+writeFileSync(join(dataDir, 'locationnames.json'), JSON.stringify({
+    generation: {
+        revisionTime: new Date().toISOString(),
+        content: config.contentDir,
+        source: 'content/maps/labels.txt',
+        count: places.length
+    },
+    places
+}, null, 2));
+
+// ---- minimap icons
+const iconTsvHeader = ['kind', 'mapfunction', 'icon', 'name', 'id', 'absX', 'absZ', 'level'];
+const iconTsv = [iconTsvHeader.join('\t'), ...iconLocations.map(s => [
+    s.kind, s.mapfunction, s.icon, s.name, s.id, s.x, s.z, s.level
+].join('\t'))].join('\n') + '\n';
+writeFileSync(join(dataDir, 'minimapicons.tsv'), iconTsv);
+writeFileSync(join(dataDir, 'minimapicons.json'), JSON.stringify({
+    generation: {
+        revisionTime: new Date().toISOString(),
+        engine: config.engineDir,
+        content: config.contentDir,
+        iconCount: iconLocations.length
+    },
+    icons: WORLDMAP_KEY_NAMES.map((name, i) => ({ mapfunction: i, name })),
+    locations: iconLocations
+}, null, 2));
+
 console.log(`monsters: spawns=${stats.spawned} distinct=${stats.distinctIds} configs=${monsterRecords.length} withDrops=${stats.dropped}`);
 console.log(`items:    ${itemSpawns.length}`);
 console.log(`resources: mining=${miningCount} woodcut=${woodcutCount} flax=${flaxCount} fishing=${fishingCount} total=${resourceSpawns.length}`);
+console.log(`places:   ${places.length}  minimap icons: ${iconLocations.length} (legend ${WORLDMAP_KEY_NAMES.length})`);
 console.log(`bounds: ${bounds.minX},${bounds.minZ} .. ${bounds.maxX},${bounds.maxZ}`);
-console.log(`wrote monsters/itemspawns/resources .tsv + .json to ${dataDir}`);
+console.log(`wrote monsters/itemspawns/resources/locationnames/minimapicons .tsv + .json to ${dataDir}`);

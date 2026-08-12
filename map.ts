@@ -17,6 +17,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { loadConfig } from './lib/config.ts';
+import { CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_COLORS } from './lib/colors.ts';
 
 const config = loadConfig();
 const dataDir = config.dataDir;
@@ -126,19 +127,9 @@ for (const p of pts) {
 for (const l of lbls) nameSet.add(l.name);
 const ALL_NAMES = [...nameSet].sort((a, b) => a.localeCompare(b));
 
-const cats = [
-    { key: 'monster', label: 'Monsters / drops', color: '#ffe14d' },
-    { key: 'shop', label: 'NPCs / stores', color: '#ffb454' },
-    { key: 'item', label: 'Item spawns', color: '#ff5b5b' },
-    { key: 'mining', label: 'Mining rocks', color: '#9aa0a6' },
-    { key: 'woodcut', label: 'Woodcut trees', color: '#54c265' },
-    { key: 'fish', label: 'Fishing spots', color: '#4d8bff' },
-    { key: 'flax', label: 'Flax', color: '#8fc1ff' },
-    { key: 'poi', label: 'Map icons', color: '#36c5d0' },
-    { key: 'place', label: 'Place names', color: '#e7e7e7' }
-];
+const cats = CATEGORY_ORDER.map(k => ({ key: k, label: CATEGORY_LABELS[k], color: CATEGORY_COLORS[k] }));
 const colorOf: Record<string, string> = {};
-for (const c of cats) colorOf[c.key] = c.color;
+for (const k of CATEGORY_ORDER) colorOf[k] = CATEGORY_COLORS[k];
 
 const html = render({ pts, lbls, stack, stackWidth, stackHeight, cats, colorOf, allNames: ALL_NAMES });
 writeFileSync(join(config.outDir, 'monstermap.html'), html);
@@ -211,7 +202,7 @@ function render(payload: {
         <div id="suggest"></div>
       </div>
       <div class="hint">type to list matches; click one to flash those dots; &times; clears it</div>
-      <div class="hint">flash colours: <span style="color:#ffe14d">yellow</span> = monsters &middot; <span style="color:#ff5b5b">red</span> = drops/spawns &middot; <span style="color:#c46bff">purple</span> = shops</div>
+      <div class="hint">a flashing dot uses its layer colour (see the toggles) &middot; monsters yellow, drops/spawns red</div>
       <div style="margin-top:16px;color:#8b96a3">drag: pan &middot; scroll: zoom &middot; hover: details</div>
     </div>
 </div>
@@ -317,10 +308,10 @@ function draw() {
     if (p.sub && p.sub.toLowerCase().indexOf(flashLower) >= 0) return 'drop';
     return null;
   }
-  function flashRGB(kind) {
-    if (kind === 'spawn') return [255, 91, 91];   // red — item spawns / drops
-    if (kind === 'shop') return [196, 107, 255];   // purple — stores (distinct from yellow/red)
-    return [255, 225, 77];                          // yellow — monsters / drop source
+  function hexA(hex, a) {
+    var h = hex.replace('#', '');
+    var r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+    return "rgba(" + r + "," + g + "," + b + "," + a + ")";
   }
 
   // dots
@@ -336,14 +327,13 @@ function draw() {
     var is = !!kind;
     if (is) {
       flashing++;
-      var c = flashRGB(kind);
-      var fc = "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
-      // less-transparent halo
+      var fc = colorOf[p.cat] || "#ffffff";
+      // less-transparent halo in the layer colour
       ctx.beginPath();
-      ctx.fillStyle = "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + (0.28 + 0.42 * pulse) + ")";
+      ctx.fillStyle = hexA(fc, 0.28 + 0.42 * pulse);
       ctx.arc(px, py, 12 + dot * 2 + (1 - pulse) * 10, 0, Math.PI * 2);
       ctx.fill();
-      // solid dot in its flash colour
+      // solid dot in its layer colour
       ctx.globalAlpha = 1;
       ctx.fillStyle = fc;
       ctx.beginPath();

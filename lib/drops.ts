@@ -7,9 +7,11 @@
  *
  *   - parse `[type,name]` blocks from every *.rs2 under content/scripts
  *   - for each NPC's `[ai_queue3,<debugname>]` block (and any referenced
- *     `[proc,<x>]` blocks) collect obj tokens. A leading-underscore form
- *     (`[ai_queue3,_<debugname>]`) is also tried when the plain block yields
- *     no drops (some content tables use that naming):
+ *     `[proc,<x>]` blocks) collect obj tokens. A leading-underscore block name
+ *     is a CATEGORY script (`[ai_queue3,_unicorn]` applies to every NPC with
+ *     `category=unicorn`, e.g. black_unicorn): dropsFor tries the id-named
+ *     block, then the category-named `_<category>` block (read from each
+ *     NPC's `.npc` `category=`), then a legacy `_<debugname>` fallback:
  *        obj_add(npc_coord, <tok>, ...)
  *        return ( <tok> )     (~foo = recursive proc, npc_param = death_drop)
  *        <var> = <tok>;        (staged drops like megararetable)
@@ -94,14 +96,40 @@ function loadDeathDrops(scriptsDir: string): Map<string, string> {
     return deathDrops;
 }
 
+// A leading-underscore name in a drop-table block (e.g. `[ai_queue3,_unicorn]`)
+// is a CATEGORY script: it applies to every NPC whose `.npc` `category=` matches
+// (black_unicorn has category=unicorn, so it shares the _unicorn table). Capture
+// each NPC's category so dropsFor can resolve category-bound tables.
+function loadCategories(scriptsDir: string): Map<string, string> {
+    const categories = new Map<string, string>();
+    for (const file of filesUnder(scriptsDir, '.npc')) {
+        let cur: string | null = null;
+        for (const raw of readFileSync(file, 'utf8').split('\n')) {
+            const line = raw.trim();
+            const head = /^\[([a-z0-9_]+)\]$/.exec(line);
+            if (head) {
+                cur = head[1];
+            } else if (cur && line.startsWith('category=')) {
+                const value = line.slice('category='.length).trim();
+                if (value) {
+                    categories.set(cur, value);
+                }
+            }
+        }
+    }
+    return categories;
+}
+
 export class DropResolver {
     private readonly blocks: Map<string, Block>;
     private readonly deathDrops: Map<string, string>;
+    private readonly categories: Map<string, string>;
     private readonly toDisplay: TokenResolver;
 
     constructor(scriptsDir: string, toDisplay: TokenResolver) {
         this.blocks = loadBlocks(scriptsDir);
         this.deathDrops = loadDeathDrops(scriptsDir);
+        this.categories = loadCategories(scriptsDir);
         this.toDisplay = toDisplay;
     }
 
@@ -154,9 +182,19 @@ export class DropResolver {
     dropsFor(npcDebugName: string, deathDropHint?: string | null): string[] {
         const deathDrop = deathDropHint ?? this.deathDrops.get(npcDebugName) ?? null;
         let items = this.itemsIn(`ai_queue3:${npcDebugName}`, deathDrop, new Set<string>());
-        // Some content drop tables name their [ai_queue3,...] block with a
-        // leading underscore (e.g. `_unicorn`, `_chicken`). Fall back to that
-        // form when the plain debugname block yields nothing.
+        // A leading-underscore block name (e.g. `[ai_queue3,_unicorn]`) is a
+        // CATEGORY script: it applies to every NPC whose `.npc` `category=`
+        // matches. Try that form when the plain debugname block yields nothing.
+        if (items.size === 0) {
+            const category = this.categories.get(npcDebugName);
+            if (category) {
+                const byCategory = this.itemsIn(`ai_queue3:_${category}`, deathDrop, new Set<string>());
+                if (byCategory.size > 0) {
+                    items = byCategory;
+                }
+            }
+        }
+        // Legacy fallback: some tables are simply named `_<debugname>`.
         if (items.size === 0) {
             const alt = this.itemsIn(`ai_queue3:_${npcDebugName}`, deathDrop, new Set<string>());
             if (alt.size > 0) {

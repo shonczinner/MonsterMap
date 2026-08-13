@@ -18,6 +18,7 @@ import { join } from 'node:path';
 
 import { loadConfig } from './lib/config.ts';
 import { CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_COLORS } from './lib/colors.ts';
+import { resolveConditionalDrops } from './lib/conddrops.ts';
 
 // Browser-side helper source, inlined into the page <script> (no bundler).
 const clusteringSrc = readFileSync(join(import.meta.dir, 'lib/mapClustering.ts'), 'utf8');
@@ -64,13 +65,30 @@ const locs = JSON.parse(readFileSync(join(dataDir, 'locationnames.json'), 'utf8'
 const icons = JSON.parse(readFileSync(join(dataDir, 'minimapicons.json'), 'utf8'));
 const layout = JSON.parse(readFileSync(join(mapsDir, 'layout.json'), 'utf8')) as AreaLayout[];
 
+// only what sits inside a baked area's trimmed tiles is visible
+const inArea = (x: number, z: number): boolean =>
+    layout.some(a => x >= a.tileX0 && x < a.tileX1 && z >= a.tileZBot && z <= a.tileZTop);
+// index of the baked area a coordinate falls in (0=surface,1=dungeon,2=extra), or -1
+const areaIndexOf = (x: number, z: number): number => {
+    for (let i = 0; i < layout.length; i++) {
+        if (x >= layout[i].tileX0 && x < layout[i].tileX1 && z >= layout[i].tileZBot && z <= layout[i].tileZTop) {
+            return i;
+        }
+    }
+    return -1;
+};
+
 // --- build a unified point list (dots) + place labels (text)
 const points: any[] = [];
 for (const s of monsters.spawns) {
     const m = monsters.monsters[s.id];
     if (!m) continue;
     const st = storesData.stores[s.id];
-    points.push({ x: s.x, z: s.z, level: s.level, cat: st ? 'shop' : 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops: dropsData.drops[s.id], shop: st, hasShop: !!st });
+    // drops are resolved per-NPC id by lib/drops.ts (flattening the randomjewel
+    // chaos/nature conditional); re-apply that conditional per spawn using the
+    // spawn's area so each dot shows the talisman it would actually drop.
+    const drops = resolveConditionalDrops(dropsData.drops[s.id], areaIndexOf(s.x, s.z));
+    points.push({ x: s.x, z: s.z, level: s.level, cat: st ? 'shop' : 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops, shop: st, hasShop: !!st });
 }
 for (const s of items.spawns) {
     points.push({ x: s.x, z: s.z, level: s.level, cat: 'item', name: s.name, sub: 'x' + s.count, id: s.id });
@@ -98,9 +116,6 @@ for (const s of icons.locations) {
 }
 const labels = locs.places.map((p: any) => ({ x: p.x, z: p.z, level: 0, cat: 'place', name: p.name, lines: p.lines, type: p.type }));
 
-// only what sits inside a baked area's trimmed tiles is visible
-const inArea = (x: number, z: number): boolean =>
-    layout.some(a => x >= a.tileX0 && x < a.tileX1 && z >= a.tileZBot && z <= a.tileZTop);
 const pts = points.filter(p => inArea(p.x, p.z));
 const lbls = labels.filter(p => inArea(p.x, p.z));
 if (pts.length === 0 && lbls.length === 0) {

@@ -74,6 +74,8 @@
 __MM_CLUSTERING__
 var data = JSON.parse(document.getElementById("mmdata").textContent);
 var pts = data.pts;
+// screen-space flash clusters, refreshed every draw, so hover can hit-test them
+var flashClusters = [];
 var lbls = data.lbls;
 var stack = data.stack;
 var stackW = data.stackWidth, stackH = data.stackHeight;
@@ -182,6 +184,7 @@ function draw() {
   ctx.globalAlpha = 1;
 
   // clustered flashing markers — one bigger disc per clump, labelled xN
+  flashClusters = [];
   if (flashPts.length) {
     var clusters = buildClusters(flashPts, SNAP_MIN_DIST);
     for (var cj = 0; cj < clusters.length; cj++) {
@@ -214,6 +217,7 @@ function draw() {
         ctx.fillStyle = "#0d1117";
         ctx.fillText("x" + n, cx, cy + 0.5);
       }
+      flashClusters.push({ name: c.name, cat: c.cat, n: n, cx: cx, cy: cy, R: R, pts: c.pts });
     }
   }
 
@@ -257,6 +261,21 @@ function tick() {
 
 // ---- tooltip
 function nearest(sx, sy) {
+  if (flashClusters.length) {
+    for (var ci = 0; ci < flashClusters.length; ci++) {
+      var fcl = flashClusters[ci], fdx = fcl.cx - sx, fdy = fcl.cy - sy, frr = fcl.R + 5;
+      if (fdx * fdx + fdy * fdy <= frr * frr) {
+        // return the clustered dot nearest the cursor so hover shows that
+        // point's original tooltip (not a custom cluster summary)
+        var bestP = fcl.pts[0].p, bestPD = Infinity;
+        for (var pi = 0; pi < fcl.pts.length; pi++) {
+          var mp = fcl.pts[pi], mdx = mp.px - sx, mdy = mp.py - sy, md = mdx * mdx + mdy * mdy;
+          if (md < bestPD) { bestPD = md; bestP = mp.p; }
+        }
+        return { el: bestP, isLabel: false, clusterN: fcl.n };
+      }
+    }
+  }
   var best = null, bestD = 26 * 26, bestLabel = false;
   for (var k = 0; k < pts.length; k++) {
     var p = pts[k];
@@ -288,6 +307,7 @@ function showTip(hit) {
   if (!hit) { tip.style.display = "none"; return; }
   var e = hit.el;
   var html = "<b>" + esc(e.name) + "</b> <span class='kv'>#" + e.id + "</span>";
+  if (hit.clusterN && hit.clusterN > 1) html += " <span class='kv'>&times; " + hit.clusterN + "</span>";
   if (e.cat && e.cat !== "place") html += " <span class='kv'>· " + esc(e.cat) + "</span>";
   if (e.sub) html += "<div class='r kv'>" + esc(e.sub) + "</div>";
   if (e.drops && e.drops.length) html += "<div class='r kv'>Drops: " + esc(e.drops.join(', ')) + "</div>";

@@ -52,16 +52,18 @@ function dedupeByCluster(raw, minDist) {
     var pp = raw[a], keep = true;
     for (var b = 0; b < sel.length; b++) {
       var dx = pp.x - sel[b].x, dz = pp.z - sel[b].z;
-      if (dx * dx + dz * dz <= r2 && sel[b].cat === pp.cat) { keep = false; break; }
+      if (dx * dx + dz * dz <= r2 && sel[b].cat === pp.cat && sel[b].name === pp.name) { keep = false; break; }
     }
     if (keep) sel.push(pp);
   }
   return sel;
 }
 
-// Group points into same-category clumps within `minDist` tiles.
-// Returns [{ cat, pts:[...] }] keyed by world coords; callers add screen px/py
-// (pts entries carry `px`/`py` as pushed by the draw loop).
+// Group points into same-name (and same-category) clumps within `minDist`
+// tiles. Grouping by name means a drop search that flashes several different
+// monsters does NOT merge them into a single disc — each monster keeps its own
+// cluster. Returns [{ name, cat, pts:[...] }] keyed by world coords; callers
+// add screen px/py (pts entries carry `px`/`py` as pushed by the draw loop).
 function buildClusters(flashPts, minDist) {
   var r2 = minDist * minDist, clusters = [];
   for (var i = 0; i < flashPts.length; i++) {
@@ -69,9 +71,9 @@ function buildClusters(flashPts, minDist) {
     for (var j = 0; j < clusters.length; j++) {
       var cl = clusters[j];
       var dx = fp.p.x - cl.x, dz = fp.p.z - cl.z;
-      if (dx * dx + dz * dz <= r2 && cl.cat === fp.cat) { cl.pts.push(fp); placed = true; break; }
+      if (dx * dx + dz * dz <= r2 && cl.cat === fp.cat && cl.name === fp.p.name) { cl.pts.push(fp); placed = true; break; }
     }
-    if (!placed) clusters.push({ x: fp.p.x, z: fp.p.z, cat: fp.cat, pts: [fp] });
+    if (!placed) clusters.push({ x: fp.p.x, z: fp.p.z, cat: fp.cat, name: fp.p.name, pts: [fp] });
   }
   return clusters;
 }

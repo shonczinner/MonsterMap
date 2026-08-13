@@ -7,7 +7,9 @@
  *
  *   - parse `[type,name]` blocks from every *.rs2 under content/scripts
  *   - for each NPC's `[ai_queue3,<debugname>]` block (and any referenced
- *     `[proc,<x>]` blocks) collect obj tokens:
+ *     `[proc,<x>]` blocks) collect obj tokens. A leading-underscore form
+ *     (`[ai_queue3,_<debugname>]`) is also tried when the plain block yields
+ *     no drops (some content tables use that naming):
  *        obj_add(npc_coord, <tok>, ...)
  *        return ( <tok> )     (~foo = recursive proc, npc_param = death_drop)
  *        <var> = <tok>;        (staged drops like megararetable)
@@ -151,7 +153,16 @@ export class DropResolver {
     /** Unique display names (via ObjType+fallbacks) for an npc debugname. */
     dropsFor(npcDebugName: string, deathDropHint?: string | null): string[] {
         const deathDrop = deathDropHint ?? this.deathDrops.get(npcDebugName) ?? null;
-        const items = this.itemsIn(`ai_queue3:${npcDebugName}`, deathDrop, new Set<string>());
+        let items = this.itemsIn(`ai_queue3:${npcDebugName}`, deathDrop, new Set<string>());
+        // Some content drop tables name their [ai_queue3,...] block with a
+        // leading underscore (e.g. `_unicorn`, `_chicken`). Fall back to that
+        // form when the plain debugname block yields nothing.
+        if (items.size === 0) {
+            const alt = this.itemsIn(`ai_queue3:_${npcDebugName}`, deathDrop, new Set<string>());
+            if (alt.size > 0) {
+                items = alt;
+            }
+        }
         if (items.size === 0) {
             return [];
         }

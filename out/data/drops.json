@@ -1,6 +1,6 @@
 {
   "generation": {
-    "revisionTime": "2026-08-13T19:08:26.808Z",
+    "revisionTime": "2026-08-13T19:49:18.781Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
     "bounds": {
@@ -530,6 +530,24 @@
       "Iron dagger",
       "Mind rune"
     ],
+    "12": [
+      "Beer",
+      "Bronze arrow",
+      "Bronze axe",
+      "Chaos rune",
+      "Coins",
+      "Cooked meat",
+      "Earth rune",
+      "Fire rune",
+      "Flier",
+      "Fur",
+      "Iron mace",
+      "Law rune",
+      "Mind rune",
+      "Ring mould",
+      "Staff",
+      "Tin ore"
+    ],
     "13": [
       "Air rune",
       "Blood rune",
@@ -623,6 +641,10 @@
       "Steel arrow",
       "Steel med helm",
       "Steel sword"
+    ],
+    "41": [
+      "Feather",
+      "Raw chicken"
     ],
     "47": [
       "Rats tail"
@@ -851,6 +873,10 @@
       "Iron axe",
       "Nature rune"
     ],
+    "81": [
+      "Cow hide",
+      "Raw beef"
+    ],
     "82": [
       "Ashes",
       "Chaos rune",
@@ -904,6 +930,55 @@
       "Uncut emerald",
       "Uncut ruby",
       "Uncut sapphire"
+    ],
+    "84": [
+      "Adamant javelin",
+      "Adamantite bar",
+      "Air rune",
+      "Ashes",
+      "Black axe",
+      "Black sword",
+      "Blood rune",
+      "Chaos rune",
+      "Chaos talisman",
+      "Coins",
+      "Death rune",
+      "Defence potion(3)",
+      "Dragon med helm",
+      "Dragon spear",
+      "Dragonstone",
+      "Fire rune",
+      "Half of a key",
+      "Herb",
+      "Law rune",
+      "Lobster",
+      "Mithril kiteshield",
+      "Nature rune",
+      "Nature talisman",
+      "Rune 2h sword",
+      "Rune arrow",
+      "Rune battleaxe",
+      "Rune chainbody",
+      "Rune javelin",
+      "Rune kiteshield",
+      "Rune med helm",
+      "Rune spear",
+      "Rune sq shield",
+      "Runite bar",
+      "Shield left half",
+      "Silver ore",
+      "Steel arrow",
+      "Steel battleaxe",
+      "Uncut diamond",
+      "Uncut emerald",
+      "Uncut ruby",
+      "Uncut sapphire"
+    ],
+    "86": [
+      "Raw rat meat"
+    ],
+    "89": [
+      "Unicorn horn"
     ],
     "90": [
       "Air rune",
@@ -2218,6 +2293,36 @@
       "Steel bar",
       "Steel claws",
       "Steel full helm",
+      "Uncut diamond",
+      "Uncut emerald",
+      "Uncut ruby",
+      "Uncut sapphire"
+    ],
+    "1115": [
+      "Adamant axe",
+      "Adamant sq shield",
+      "Big bones",
+      "Black warhammer",
+      "Chaos talisman",
+      "Coal",
+      "Coins",
+      "Dragon spear",
+      "Earth rune",
+      "Granite shield",
+      "Half of a key",
+      "Herb",
+      "Law rune",
+      "Mithril platebody",
+      "Nature rune",
+      "Nature talisman",
+      "Prison key",
+      "Raw tuna",
+      "Rune javelin",
+      "Rune spear",
+      "Rune warhammer",
+      "Shield left half",
+      "Steel platebody",
+      "Steel warhammer",
       "Uncut diamond",
       "Uncut emerald",
       "Uncut ruby",

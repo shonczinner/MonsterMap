@@ -6,14 +6,15 @@ Local tooling that builds a **monster table** (spawns, stats, drops) and an
 **interactive single-file HTML map** of every monster spawn for the rs2b2t /
 Lost City engine in this workspace.
 
-`Server/` and `rs2b0t/` are **untouched** — we only read from them (source
-imports under a bundler / file paths). This folder has its own local git repo.
+`Server/` (engine, content, and webclient) is **untouched** — we only read from
+it (source imports under a bundler / file paths). This folder has its own local
+git repo.
 
 ## Pipeline
 
 Three steps produce `out/monstermap.html`:
 
-1. **`bun lib/maps/bake.ts`** — bakes terrain to PNGs. Runs the *real* rs2b0t
+1. **`bun lib/maps/bake.ts`** — bakes terrain to PNGs. Runs the `Server/webclient`
    `MapView` headless (via `lib/maps/domShim.ts` + a `bun build` bundling step)
    once per map area, renders the whole area at 1 px/tile, trims the void/sea
    border, and emits:
@@ -84,7 +85,7 @@ flags override: `--engine/--content/--client/--out/--maps-server <dir|path>`.
 | `lib/config.ts` | Env + CLI-flag loader; expands `${VAR}` refs; validates required paths. |
 | `lib/tiles.ts` | Unzips `maps-server.zip`, parses `n{mapX}_{mapZ}` spawn blocks. |
 | `lib/drops.ts` | Drop-table parser (`[ai_queue3,…]` blocks, recursive `~proc` subtables, `npc_param(death_drop)`) + joiner to NPCs. |
-| `lib/maps/bake.ts` | Bundles `bakeSource.ts` (`#/…` aliases rewritten to rs2b0t's absolute source paths) and runs it with `JAG`/`OUT` env. |
+| `lib/maps/bake.ts` | Bundles `bakeSource.ts` (`#/…` aliases rewritten to `Server/webclient`'s absolute source paths) and runs it with `JAG`/`OUT` env. |
 | `lib/maps/bakeSource.ts` | Headless bake entry: `BakeMapView` (real `MapView` subclass) renders each area, crops, encodes PNGs + `layout.json`. |
 | `lib/maps/domShim.ts` | Fake DOM/canvas for running the real game `MapView` under Node. |
 | `gen.ts` | Spawns + configs + drops → out/data artifacts. |
@@ -95,8 +96,8 @@ flags override: `--engine/--content/--client/--out/--maps-server <dir|path>`.
 
 ## Constraints
 
-- **rs2b0t and Server are untouched** — nothing is modified, added, or
-  committed inside those repos.
+- **Server is untouched** — nothing is modified, added, or committed inside the
+  `Server` repo. The bake reads `Server/webclient`'s client source read-only.
 - **`out/`, `node_modules/`, `.env` are gitignored**; only source/docs are
   committed here.
 - Dropped spawns: only dot spawns that fall inside a baked area's trimmed tile

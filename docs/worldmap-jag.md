@@ -1,13 +1,13 @@
 # worldmap.jag — format & contents
 
 The world map is shipped as one `JagFile` archive: `Server/engine/data/pack/mapview/worldmap.jag`.
-This document describes what's inside it, how `MapView` (in `rs2b0t/src/mapview/MapView.ts`)
+This document describes what's inside it, how `MapView` (in `Server/webclient/src/mapview/MapView.ts`)
 loads and renders it, and the coordinate model that makes all three map areas
 (surface / dungeon / extra) coexist in a single jag.
 
 ---
 
-## 1. JAG container format (`rs2b0t/src/io/JagFile.ts`)
+## 1. JAG container format (`Server/webclient/src/io/JagFile.ts`)
 
 A JAG file is a single blob with a small header followed by a directory of named
 entries. Entries are looked up by **hash of their name**, not by position.
@@ -36,7 +36,7 @@ entry, BZip2-decompressing it on first access (`readIndex` caches the result).
 `genHash` is `h = h*61 + (charCode - 32)` iterated over the uppercased name.
 
 Sprites are *not* stored as separate individual entries; see `Pix8.Depack`
-(`rs2b0t/src/graphics/Pix8.ts`) — a sprite family (e.g. `mapscene`) is one
+   (`Server/webclient/src/graphics/Pix8.ts`) — a sprite family (e.g. `mapscene`) is one
 `mapscene.dat` entry plus a shared `index.dat` that holds per-frame headers.
 
 ---
@@ -164,10 +164,9 @@ then draws any sub-rect of that one grid.
    overlay shape), then:
    - walls → 1px edge lines (white/red/grey, `Pix2D.vline/hline`)
    - mapscenes → `scalePlotSprite(...)` scaled sprite blits
-   - mapfunctions → `plotSprite` at cell center − 7 (only if
-     `MapView.shouldDrawMapfunctions`)
-   - labels / free / multi layers gated by the respective static `shouldDraw*`
-     flags.
+    - mapfunctions → `plotSprite` at cell center − 7
+    - labels / free / multi layers gated by the respective static `shouldDraw*`
+      flags.
 3. `renderWorldMap` may render any sub-rect *at any scale*: the first two args
    are the world-tile rect to cover, and `width`/`height` the output pixel size.
    The whole render is **north-up** — world tile-Z decreases as the output row
@@ -194,13 +193,20 @@ Terrain is **baked once**, not rendered live. `bun lib/maps/bake.ts` bundles
     properties of undefined (reading 'scalePlotSprite')` (instance-only).
 - Each bake pass sets `mapArea`/`mapOriginX`/`mapOriginZ`/`mapWidth`/`mapHeight`
   to one of the §3 areas, forces `zoom = targetZoom = 1` (so **1 tile = 1 px**),
-  turns every `MapView.shouldDraw*` static flag off (labels, key icons, borders,
-  npc/item dots, multi, free), then calls `maininit()` and
+  turns the still-present `MapView.shouldDraw*` static flags off (labels, npc/item
+  dots, multi, free), then calls `maininit()` and
   `renderWorldMap(0, 0, w, h, 0, 0, w, h)` into a fresh `PixMap(w, h)`.
+- `BakeMapView.clearOverlayIcons()` (called after `maininit()`) zeroes the
+  per-instance `locWall` and `locMapfunction` arrays so the **wall/border lines
+  and minimap-key icons** are not plotted onto the terrain. The `Server/webclient`
+  `MapView` dropped the `shouldDrawBorders` / `shouldDrawMapfunctions` flags the
+  bake used to rely on, so suppression now happens by zeroing the bake-owned loc
+  arrays rather than flipping a static flag. `locMapscene` is left intact (the
+  bake still draws location scene sprites, as the original rs2b0t-based bake did).
 - The 0 pixel value doubles as void/sea: a bounding box over non-zero pixels is
   cropped, and the RGBA (`0x00RRGGBB`, filter-none) PNG is written with the
-  small pure-Node encoder in `bakeSource.ts` (mirrors `rs2b0t/tools/map/
-  encodePng.ts`). Pixel (0, 0) of the cropped image = world tile
+   small pure-Node encoder in `bakeSource.ts` (mirrors the client's
+   `tools/map/encodePng.ts`). Pixel (0, 0) of the cropped image = world tile
   `(originX + cropLeft, originZ + height − cropTop)`.
 
 `layout.json` records, per area: `ai`, `png`, cropped size `wPx`/`hPx`, and the
@@ -222,13 +228,14 @@ stack pixel: sx = px                    sy = yOff + py         (yOff = Σ hPx ab
 - plots each remaining spawn dot coloured by vislevel, with pan/zoom/hover/filters.
 
 So nothing in `monstermap.html` runs `MapView` at load time — the jag is only
-read once during `bake.ts`. Changing what's drawn is a matter of re-baking with
-different `MapView.shouldDraw*` flags (e.g. `shouldDrawLabels = true` for named
-map labels, `shouldDrawMapfunctions` for the key icons, `shouldDrawNpcs` /
-`shouldDrawItems` for the dot layers).
+read once during `bake.ts`. Changing what's drawn is a matter of re-baking:
+the still-present `shouldDraw*` flags (e.g. `shouldDrawLabels = true` for named
+map labels, `shouldDrawNpcs` / `shouldDrawItems` for the dot layers) and
+`BakeMapView.clearOverlayIcons()` (for the wall/border lines and minimap-key
+icons, which the `Server/webclient` `MapView` no longer gates behind a flag).
 
-`rs2b0t/tools/map/build-basemap.ts` does the same trick for the game client's
-map picker: happy-dom canvas shim + a `MapView` subclass + `encodePng.ts`. Our
-`bake.ts` differs by wiring `#/…` import aliases to rs2b0t's absolute source
-paths and running the bundle under Node — otherwise it's the same
+The client's `tools/map/build-basemap.ts` does the same trick for the game
+client's map picker: happy-dom canvas shim + a `MapView` subclass + `encodePng.ts`.
+Our `bake.ts` differs by wiring `#/…` import aliases to `Server/webclient`'s
+absolute source paths and running the bundle under Node — otherwise it's the same
 "subclass, `maininit()`, render, encode PNG" pattern.

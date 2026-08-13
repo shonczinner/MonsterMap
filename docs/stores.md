@@ -44,17 +44,18 @@ A quick dump of the packed data yields **119 shared inventories** (shops) with
 **1037 stock lines** total. Two shared invs (`gemshop3`, `partyroom_dropinv`)
 have no default stock configured — they are filled dynamically by scripts.
 
-**From the content source (recommended for NPC + pricing info)** — there is
-already a parser in `rs2b0t/tools/shops/`:
+**From the content source (recommended for NPC + pricing info)** — the client
+ships equivalent parsers in `tools/shops/` (the upstream origin of MonsterMap's
+port):
 
-- `rs2b0t/tools/shops/parse.ts`
+- `tools/shops/parse.ts`
   - `parseInvShops(text)` → `{ inv, scope, allstock, stock:[{obj,baseline,restockTicks}] }`
   - `parseNpcKeepers(text)` → `{ npc, name, ownedShops[], sell, buy, delta, title }`
   - `parseObjDefs(text)` → item name / cost / stackable / members
   - `joinShopDb(...)` merges them into a per-shop record keyed by inv name.
-- `rs2b0t/tools/shops/gen-shopdb.ts` walks `Server/content/scripts/**` (override
-  with `CONTENT_DIR=...`), runs the parsers, and writes
-  `rs2b0t/src/bot/shops/data/shopdb.ts` (`SHOP_DB`). Run it with
+- `tools/shops/gen-shopdb.ts` walks `Server/content/scripts/**` (override
+  with `CONTENT_DIR=...`), runs the parsers, and writes the client's
+  `SHOP_DB` (`src/bot/shops/data/shopdb.ts`). Run it with
   `bun tools/shops/gen-shopdb.ts` (add `--check` to flag drift vs the content pack).
 
 `SHOP_DB` is the richest view: it joins the keeper NPC names, the shop title, the
@@ -95,7 +96,7 @@ player trades against its `stockobj`/`stockcount` baseline.
 | Shop inventory + stock | `data/pack/server/inv.dat` (`InvType`) | `**/*.inv` (`stockN=...`) |
 | Item names / cost | `data/pack/server/obj.dat` (`ObjType`) | `**/*.obj` (`name=`,`cost=`) |
 | Shop ↔ NPC link | *(none)* | `**/*.npc` (`param=owned_shop,...`) |
-| Generated combined DB | — | `rs2b0t/src/bot/shops/data/shopdb.ts` |
+| Generated combined DB | — | the client's `src/bot/shops/data/shopdb.ts` (`SHOP_DB`) |
 
 ## Mapping NPCs to their stores (implemented)
 
@@ -109,11 +110,12 @@ from the content source, then joined to (a) the shop stock and (b) the in-world
 NPC spawn positions (already plotted as the `monster` category).
 
 ### Implementation (MonsterMap)
-- `lib/shops.ts` ports the join logic (mirrors `rs2b0t/tools/shops/parse.ts`):
-  `parseNpcKeepers` / `parseInvShops` / `parseObjDefs` walk
-  `config.dropScriptsDir` (`Server/content/scripts`), then `buildStores`
-  resolves each keeper's `[block]` id (the NPC `debugname`) to its id via
-  `NpcType.getId`, and emits a map **keyed by NPC id**.
+- `lib/shops.ts` is a **standalone port** of the client's shop-join logic
+  (originally `tools/shops/parse.ts`): `parseNpcKeepers` / `parseInvShops` /
+  `parseObjDefs` walk `config.dropScriptsDir` (`Server/content/scripts`), then
+  `buildStores` resolves each keeper's `[block]` id (the NPC `debugname`) to its
+  id via `NpcType.getId`, and emits a map **keyed by NPC id**. It has no
+  build-time dependency on the client.
 - `gen.ts` writes `out/data/stores.json`:
   ```jsonc
   { "generation": { ... }, "note": "...", "stores": { "<npcId>": { "name": "Tiadeche", "shops": [ { "inv": "...", "title": "...", "sell": 550, "buy": 60, "delta": 10, "items": [ { "obj": "raw_karambwan", "name": "Raw karambwan", "baseline": 5, "restockTicks": 100, "cost": 1 } ] } ] } } }
@@ -132,7 +134,7 @@ NPC spawn positions (already plotted as the `monster` category).
   filled by scripts, not an NPC — they won't appear in the NPC→store map.
 - NPC `debugname` is the stable key; display `name` may repeat across NPCs, so
   the join uses `debugname`/id, not the human name.
-- `rs2b0t/tools/shops/` provides an equivalent, inv-keyed `SHOP_DB`
+- The client's `tools/shops/` provides an equivalent, inv-keyed `SHOP_DB`
   (`gen-shopdb.ts`) if you need the shop-centric (rather than NPC-centric) view.
 
 

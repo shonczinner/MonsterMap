@@ -85,6 +85,27 @@ class BakeMapView extends MapView {
         pad(this.mapscene as Array<Pix8Like | undefined>);
         pad(this.mapfunction as Array<Pix8Like | undefined>);
     }
+
+    /**
+     * The webclient MapView dropped the `shouldDrawMapfunctions` /
+     * `shouldDrawBorders` flags the bake relied on, so minimap-key icons
+     * (line 1169) and wall/border lines (line 1087) are now plotted onto the
+     * terrain unconditionally. Replicate the old suppression by zeroing the
+     * per-instance `loc*` arrays the bake owns — we never mutate Server/webclient.
+     * `locMapscene` is intentionally left intact (the rs2b0t bake drew it).
+     */
+    clearOverlayIcons(): void {
+        const zero = (a: Array<Array<number>>): void => {
+            for (let x = 0; x < a.length; x++) {
+                const col = a[x];
+                for (let y = 0; y < col.length; y++) {
+                    col[y] = 0;
+                }
+            }
+        };
+        zero(this.locWall as Array<Array<number>>);
+        zero(this.locMapfunction as Array<Array<number>>);
+    }
 }
 
 type Pix8Like = { data: Int32Array; wi: number; hi: number; xof: number; yof: number };
@@ -101,12 +122,12 @@ export async function bakeAll(): Promise<{ files: string[]; layout: BakeArea[] }
     const view = new BakeMapView();
 
     MapView.shouldDrawLabels = false;
-    MapView.shouldDrawMapfunctions = false;
-    MapView.shouldDrawBorders = false;
     MapView.shouldDrawNpcs = false;
     MapView.shouldDrawItems = false;
     MapView.shouldDrawMultimap = false;
     MapView.shouldDrawFreemap = false;
+    // shouldDrawMapfunctions / shouldDrawBorders are gone in the webclient
+    // revision; clearOverlayIcons() (called after maininit) reproduces them.
 
     const layout: BakeArea[] = [];
     const files: string[] = [];
@@ -123,6 +144,7 @@ export async function bakeAll(): Promise<{ files: string[]; layout: BakeArea[] }
         await view.maininit();
         view.initDone = true;
         view.padSpriteArrays();
+        view.clearOverlayIcons();
 
         // full-area render, 1 px per tile, north-up: screen row 0 = tileZ (originZ + h)
         const pw = area.w;

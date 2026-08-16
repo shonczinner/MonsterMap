@@ -32,6 +32,41 @@ Only NPCs that actually have a drop table are present (no entry = no drops).
 - `gen.ts` writes `drops.json` in the same pass that writes `monsters.json`,
   reusing the same `monstersMeta`. Run `bun gen.ts` to (re)generate.
 
+## Death drops from `.npc` (`param=death_drop`)
+
+Not every drop comes from a drop-table `.rs2` script. The guaranteed "always
+drops on death" item is declared on the **NPC config** itself via
+`param=death_drop,<item>`. These live in the same `Server/content/scripts/**`
+tree that `DropResolver` already scans — including the unpacked monolithic
+config:
+
+- `Server/content/scripts/_unpack/225/all.npc` — one `[<debugname>]` block per
+  NPC; e.g. `[babydragon]` / `[babybluedragon]` both declare
+  `param=death_drop,babydragon_bones`.
+
+`DropResolver.loadDeathDrops()` walks **every** `.npc` file under
+`config.dropScriptsDir` and builds a `Map<debugname, item>`. So `babydragon` →
+`babydragon_bones` is captured here, independent of any `[ai_queue3,...]` table.
+
+The death drop is **guaranteed** loot — it is always dropped on kill — so
+`dropsFor` splices the `param=death_drop` item into the result regardless of
+whether a drop-table script references it. This happens in two ways:
+
+- a table that includes the `npc_param(death_drop)` token (handled in
+  `itemsIn`) emits the resolved death-drop item alongside the rolled loot;
+- and, after the `[ai_queue3,...]` / category / legacy lookups, `dropsFor`
+  unconditionally `items.add(deathDrop)` when a death drop is declared.
+
+So an NPC with **no** drop-table block at all still gets its `death_drop` in
+`drops.json` (e.g. `babydragon` → `["Baby dragon bones"]`). The item is
+display-name resolved like any other token, falling back to the raw token if
+`ObjType` has no name for it.
+
+Note `bones.obj` (`Server/content/scripts/skill_prayer/configs/bones.obj`) and
+`cheat_bank.rs2` also reference `babydragon_bones`, but only the `param=death_drop`
+path above is what feeds the kill-loot `drops.json`; the others are prayer/xp
+config (bone burial xp) and a debug bank, not monster drop tables.
+
 ## Relationship to the other per-NPC files
 
 All three are keyed by the same **NPC id** and merged in `map.ts` by id:
@@ -125,6 +160,33 @@ The conditional is now re-applied **per spawn at build time** in `map.ts`:
   applied in `map.ts` only. Verified after a regen: chaos talisman appears on
   dungeon spawns exclusively, nature talisman on surface spawns exclusively, and
   no dot shows both.
+
+## Why many monsters don't show bones (engine default, not yet modeled)
+
+A lot of NPCs that visibly drop bones on the live server — e.g. `man`,
+`woman`, generic citizens — have **no** `param=death_drop` line in their `.npc`
+config, and no `npc_param(death_drop)`-driven entry in `drops.json`. That is
+expected given how the engine actually resolves the death drop:
+
+- The drop table calls `npc_param(death_drop)` (see
+  `drop tables/scripts/man.rs2`). In the engine this is the `NPC_PARAM` script
+  opcode, implemented in `Server/engine/src/engine/script/handlers/NpcConfigOps.ts`,
+  which falls back to `paramType.defaultString` when the NPC does not set the
+  param.
+- The `death_drop` param is param id `146` (`Server/content/pack/param.pack`:
+  `146=death_drop`). Its **param-type default value** is what unconfigured NPCs
+  inherit — that default is what makes `man` drop bones on the server.
+
+`MonsterMap/lib/drops.ts` only reads the *explicit* `param=death_drop,<x>`
+lines from `.npc` files (via `DropResolver.loadDeathDrops`), and splices that
+in unconditionally for NPCs that declare it. It does **not** currently apply the
+param-type default, so any NPC whose death drop comes solely from that default
+(men, women, and many others) shows no bones in `drops.json` / on the map.
+
+This is a known data-fidelity gap, deliberately left as-is to keep the generator
+reflecting only the explicit content we can statically read. Closing it would
+mean loading param 146's default from the engine cache (`param.dat`) and using
+it as the fallback `deathDrop` in `dropsFor`.
 
 ## Why it was split out
 

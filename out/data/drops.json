@@ -1,6 +1,6 @@
 {
   "generation": {
-    "revisionTime": "2026-08-13T20:41:31.697Z",
+    "revisionTime": "2026-08-16T23:13:56.766Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
     "bounds": {
@@ -874,6 +874,12 @@
       "Uncut sapphire",
       "Yew logs"
     ],
+    "51": [
+      "Babydragon bones"
+    ],
+    "52": [
+      "Babydragon bones"
+    ],
     "53": [
       "Adamant platebody",
       "Adamantite bar",
@@ -978,6 +984,9 @@
       "Uncut sapphire",
       "Water rune"
     ],
+    "72": [
+      "Big bones"
+    ],
     "73": [
       "Air rune",
       "Body rune",
@@ -1047,6 +1056,9 @@
       "Herb",
       "Iron axe",
       "Nature rune"
+    ],
+    "78": [
+      "Bat bones"
     ],
     "81": [
       "Cow hide",
@@ -1264,6 +1276,15 @@
       "Uncut sapphire",
       "Water rune"
     ],
+    "95": [
+      "Wolf bones"
+    ],
+    "96": [
+      "Wolf bones"
+    ],
+    "97": [
+      "Wolf bones"
+    ],
     "100": [
       "Air talisman",
       "Beer",
@@ -1446,6 +1467,15 @@
       "Uncut ruby",
       "Uncut sapphire",
       "Unidentified herb"
+    ],
+    "114": [
+      "Big bones"
+    ],
+    "115": [
+      "Big bones"
+    ],
+    "116": [
+      "Big bones"
     ],
     "117": [
       "Beer",
@@ -1724,6 +1754,9 @@
       "Uncut ruby",
       "Uncut sapphire"
     ],
+    "127": [
+      "Iron battleaxe"
+    ],
     "132": [
       "Monkey bones",
       "Monkey corpse"
@@ -1731,8 +1764,20 @@
     "133": [
       "Unicorn horn"
     ],
+    "135": [
+      "Big bones"
+    ],
     "139": [
       "Fire feather"
+    ],
+    "141": [
+      "Wolf bones"
+    ],
+    "142": [
+      "Wolf bones"
+    ],
+    "143": [
+      "Wolf bones"
     ],
     "145": [
       "Adamant arrow",
@@ -2368,6 +2413,9 @@
       "Nature rune",
       "Tin ore"
     ],
+    "374": [
+      "Big bones"
+    ],
     "391": [
       "Casket",
       "Feather",
@@ -2455,6 +2503,9 @@
     "397": [
       "Cow hide",
       "Raw beef"
+    ],
+    "412": [
+      "Bat bones"
     ],
     "413": [
       "Adamant pickaxe",
@@ -3155,6 +3206,9 @@
       "Wizards hat",
       "Yellow bead"
     ],
+    "709": [
+      "Ashes"
+    ],
     "745": [
       "Map part"
     ],
@@ -3178,15 +3232,60 @@
     "753": [
       "Key"
     ],
+    "792": [
+      "Grips' keyring"
+    ],
+    "795": [
+      "Ice gloves"
+    ],
     "827": [
       "Slave boots",
       "Slave robe",
       "Slaves' shirt"
     ],
+    "839": [
+      "Wolf bones"
+    ],
     "840": [
       "Raw ugthanki meat"
     ],
+    "852": [
+      "Big bones"
+    ],
     "856": [
+      "Big bones"
+    ],
+    "857": [
+      "Big bones"
+    ],
+    "858": [
+      "Big bones"
+    ],
+    "859": [
+      "Big bones"
+    ],
+    "860": [
+      "Big bones"
+    ],
+    "861": [
+      "Big bones"
+    ],
+    "862": [
+      "Big bones"
+    ],
+    "870": [
+      "Big bones"
+    ],
+    "873": [
+      "Big bones"
+    ],
+    "874": [
+      "Big bones"
+    ],
+    "875": [
+      "Big bones"
+    ],
+    "876": [
       "Big bones"
     ],
     "877": [
@@ -3218,6 +3317,9 @@
       "Steel arrow",
       "Steel med helm",
       "Steel sword"
+    ],
+    "879": [
+      "Ashes"
     ],
     "891": [
       "Carnillean armour"
@@ -3253,6 +3355,9 @@
       "Water rune"
     ],
     "950": [
+      "Bones"
+    ],
+    "951": [
       "Bones"
     ],
     "955": [
@@ -4602,6 +4707,9 @@
       "Steel med helm",
       "Steel warhammer"
     ],
+    "1125": [
+      "Big bones"
+    ],
     "1126": [
       "Adamant med helm",
       "Adamnt warhammer",
@@ -4979,6 +5087,9 @@
       "Uncut sapphire",
       "Wine of zamorak"
     ],
+    "1172": [
+      "Shaikahan bones"
+    ],
     "1183": [
       "Adamant full helm",
       "Adamantite ore",
@@ -5210,6 +5321,30 @@
     ],
     "1241": [
       "Loar remains"
+    ],
+    "1243": [
+      "Phrin remains"
+    ],
+    "1244": [
+      "Phrin remains"
+    ],
+    "1245": [
+      "Riyl remains"
+    ],
+    "1246": [
+      "Riyl remains"
+    ],
+    "1247": [
+      "Asyn remains"
+    ],
+    "1248": [
+      "Asyn remains"
+    ],
+    "1249": [
+      "Fiyr remains"
+    ],
+    "1250": [
+      "Fiyr remains"
     ],
     "1255": [
       "Bolts",
@@ -5873,6 +6008,9 @@
     "1327": [
       "Fur",
       "Raw bear meat"
+    ],
+    "1330": [
+      "Wolf bones"
     ],
     "1338": [
       "Bronze spear",

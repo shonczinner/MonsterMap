@@ -201,6 +201,13 @@ export class DropResolver {
                 items = alt;
             }
         }
+        // Guaranteed death drop: the `param=death_drop` item is always dropped
+        // on kill, even when the NPC has no `[ai_queue3,...]` table (or its table
+        // doesn't reference `npc_param(death_drop)`). So splice it in here
+        // rather than relying on the script to ask for it.
+        if (deathDrop) {
+            items.add(deathDrop);
+        }
         if (items.size === 0) {
             return [];
         }

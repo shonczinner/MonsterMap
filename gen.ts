@@ -69,7 +69,7 @@ const isFishingSpot = (id: number): boolean => {
 // =====================================================================
 // monsters (everything except fishing spots)
 // =====================================================================
-const stats = { spawned: 0, distinct: 0, dropped: 0 };
+const stats = { spawned: 0, distinct: 0, dropped: 0, distinctIds: 0 };
 const monsterById = new Map<number, any>();
 const spawnCountById = new Map<number, number>();
 

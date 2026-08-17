@@ -30,7 +30,7 @@ function loadBlocks(path: string): DRowBlock[] {
             if (cur) {
                 blocks.push(cur);
             }
-            cur = { name: head[1], fields: new Map() };
+            cur = { name: head[1]!, fields: new Map() };
             continue;
         }
         if (!cur) {
@@ -174,13 +174,13 @@ export function parseFishingFish(contentDir: string, resolve: TokenResolver): Ma
         const key = fileKeyOverride[base] ?? base;
         const body = readFileSync(join(dir, file), 'utf8');
         for (const m of body.matchAll(/~fish_roll(?:_loc)?\s*\(\s*([a-z0-9_]+)\s*(?:,\s*([a-z0-9_]+)\s*)?/g)) {
-            addFish(key, m[1]);
+            addFish(key, m[1]!);
             if (m[2] && m[2] !== 'null') {
-                addFish(key, m[2]);
+                addFish(key, m[2]!);
             }
         }
         for (const m of body.matchAll(/inv_add\s*\(\s*inv\s*,\s*([a-z0-9_]+)\s*,/g)) {
-            addFish(key, m[1]);
+            addFish(key, m[1]!);
         }
     }
 

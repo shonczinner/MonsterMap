@@ -62,7 +62,7 @@ function loadBlocks(scriptsDir: string): Map<string, Block> {
             const head = /^\[([a-z0-9_]+)\s*,\s*([a-z0-9_]+)\]/.exec(raw.trim());
             if (head) {
                 flush();
-                cur = { type: head[1], name: head[2], body: '' };
+                cur = { type: head[1]!, name: head[2]!, body: '' };
                 const rest = raw.trim().slice(head[0].length);
                 if (rest.trim()) {
                     lines.push(rest);
@@ -84,11 +84,11 @@ function loadDeathDrops(scriptsDir: string): Map<string, string> {
             const line = raw.trim();
             const head = /^\[([a-z0-9_]+)\]$/.exec(line);
             if (head) {
-                cur = head[1];
+                cur = head[1] ?? null;
             } else if (cur && line.startsWith('param=death_drop,')) {
                 const value = line.slice('param=death_drop,'.length).trim();
                 if (value && value !== 'null') {
-                    deathDrops.set(cur, value.split(',')[0].trim());
+                    deathDrops.set(cur, (value.split(',')[0] ?? '').trim());
                 }
             }
         }
@@ -108,7 +108,7 @@ function loadCategories(scriptsDir: string): Map<string, string> {
             const line = raw.trim();
             const head = /^\[([a-z0-9_]+)\]$/.exec(line);
             if (head) {
-                cur = head[1];
+                cur = head[1] ?? null;
             } else if (cur && line.startsWith('category=')) {
                 const value = line.slice('category='.length).trim();
                 if (value) {
@@ -143,13 +143,13 @@ export class DropResolver {
 
         const tokens: string[] = [];
         for (const m of block.body.matchAll(/obj_add\s*\(\s*npc_coord\s*,\s*(~?[a-z0-9_]+)/g)) {
-            tokens.push(m[1]);
+            tokens.push(m[1]!);
         }
         for (const m of block.body.matchAll(/return\s*\(\s*(~?[a-z0-9_]+)/g)) {
-            tokens.push(m[1]);
+            tokens.push(m[1]!);
         }
         for (const m of block.body.matchAll(/=\s*([a-z][a-z0-9_]*)\s*;/g)) {
-            tokens.push(m[1]);
+            tokens.push(m[1]!);
         }
         for (const m of block.body.matchAll(/@([a-z0-9_]+)/g)) {
             tokens.push(`~label${m[1]}`);

@@ -95,16 +95,16 @@ export function loadSpawns(zipPath: string): { spawns: Spawn[]; land: Set<string
         const mapZ = Number(n[2]);
         const baseX = mapX << 6;
         const baseZ = mapZ << 6;
-        const data = entries[key];
+        const data = entries[key]!;
         let pos = 0;
 
         while (pos < data.length) {
-            const coord = (data[pos] << 8) | data[pos + 1];
+            const coord = (data[pos]! << 8) | data[pos + 1]!;
             pos += 2;
-            const count = data[pos++];
+            const count = data[pos++]!;
             const { x, z, level } = unpackCoord(coord);
             for (let i = 0; i < count; i++) {
-                const id = (data[pos] << 8) | data[pos + 1];
+                const id = (data[pos]! << 8) | data[pos + 1]!;
                 pos += 2;
                 spawns.push({ x: baseX + x, z: baseZ + z, level, id, mapX, mapZ });
             }
@@ -133,10 +133,10 @@ export function boundsOf(spawns: Spawn[]): MapBounds {
  * the next byte < 0x80, otherwise a big-endian u16 minus 0x8000.
  */
 function gsmarts(data: Uint8Array, pos: { v: number }): number {
-    if (data[pos.v] < 0x80) {
-        return data[pos.v++];
+    if (data[pos.v]! < 0x80) {
+        return data[pos.v++]!;
     }
-    const v = (data[pos.v] << 8) | data[pos.v + 1];
+    const v = (data[pos.v]! << 8) | data[pos.v + 1]!;
     pos.v += 2;
     return v - 0x8000;
 }
@@ -186,17 +186,17 @@ export function loadMaps(zipPath: string): MapData {
         const mapZ = Number(base[3]);
         const baseX = mapX << 6;
         const baseZ = mapZ << 6;
-        const data = entries[key];
+        const data = entries[key]!;
 
         if (family === 'n') {
             let pos = 0;
             while (pos < data.length) {
-                const coord = (data[pos] << 8) | data[pos + 1];
+                const coord = (data[pos]! << 8) | data[pos + 1]!;
                 pos += 2;
-                const count = data[pos++];
+                const count = data[pos++]!;
                 const { x, z, level } = unpackCoord(coord);
                 for (let i = 0; i < count; i++) {
-                    const id = (data[pos] << 8) | data[pos + 1];
+                    const id = (data[pos]! << 8) | data[pos + 1]!;
                     pos += 2;
                     spawns.push({ x: baseX + x, z: baseZ + z, level, id, mapX, mapZ });
                 }
@@ -204,14 +204,14 @@ export function loadMaps(zipPath: string): MapData {
         } else if (family === 'o') {
             let pos = 0;
             while (pos < data.length) {
-                const coord = (data[pos] << 8) | data[pos + 1];
+                const coord = (data[pos]! << 8) | data[pos + 1]!;
                 pos += 2;
-                const count = data[pos++];
+                const count = data[pos++]!;
                 const { x, z, level } = unpackCoord(coord);
                 for (let i = 0; i < count; i++) {
-                    const id = (data[pos] << 8) | data[pos + 1];
+                    const id = (data[pos]! << 8) | data[pos + 1]!;
                     pos += 2;
-                    const stackCount = data[pos++];
+                    const stackCount = data[pos++]!;
                     itemSpawns.push({ x: baseX + x, z: baseZ + z, level, id, count: stackCount, mapX, mapZ });
                 }
             }
@@ -226,7 +226,7 @@ export function loadMaps(zipPath: string): MapData {
                 while (coordOffset !== 0) {
                     coord += coordOffset - 1;
                     const { x, z, level } = unpackCoord(coord);
-                    const info = data[pos.v++];
+                    const info = data[pos.v++]!;
                     const shape = info >> 2;
                     const angle = info & 0x3;
                     locSpawns.push({

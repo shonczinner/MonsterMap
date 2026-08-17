@@ -17,7 +17,7 @@ await page.waitForTimeout(1500);
 const boot = await page.evaluate(() => ({
     areas: document.querySelectorAll('#areas input').length,
     checked: document.querySelectorAll('#areas input:checked').length,
-    stats: document.getElementById('stats').textContent,
+    stats: document.getElementById('stats')!.textContent,
     canvas: (document.getElementById('c') as HTMLCanvasElement).width > 0
 }));
 await page.screenshot({ path: 'out/smoke.png' });
@@ -30,7 +30,7 @@ async function setFilter(v: string): Promise<string> {
         t.dispatchEvent(new Event('input'));
     }, v);
     await page.waitForTimeout(500);
-    return page.evaluate(() => document.getElementById('stats').textContent);
+    return page.evaluate(() => document.getElementById('stats')!.textContent);
 }
 const before = await setFilter('');
 await page.screenshot({ path: 'out/smoke-filtered.png' });
@@ -45,7 +45,7 @@ await page.evaluate(() => {
     s.dispatchEvent(new Event('input'));
 });
 await page.waitForTimeout(300);
-const minLev = await page.evaluate(() => document.getElementById('stats').textContent);
+const minLev = await page.evaluate(() => document.getElementById('stats')!.textContent);
 
 // hide the dungeon area
 await page.evaluate(() => {
@@ -53,12 +53,12 @@ await page.evaluate(() => {
     cb.click();
 });
 await page.waitForTimeout(300);
-const hidden = await page.evaluate(() => document.getElementById('stats').textContent);
+const hidden = await page.evaluate(() => document.getElementById('stats')!.textContent);
 await page.screenshot({ path: 'out/smoke-no-dungeon.png' });
 
 // zoom in at canvas centre (wheel), screenshot ground rendering
 await page.evaluate(() => {
-    const c = document.getElementById('c');
+    const c = document.getElementById('c')!;
     const r = c.getBoundingClientRect();
     c.dispatchEvent(new WheelEvent('wheel', {
         clientX: r.left + r.width / 2, clientY: r.top + r.height / 2,
@@ -67,7 +67,7 @@ await page.evaluate(() => {
 });
 await page.waitForTimeout(600);
 await page.screenshot({ path: 'out/smoke-zoom.png' });
-const zoomed = await page.evaluate(() => document.getElementById('stats').textContent);
+const zoomed = await page.evaluate(() => document.getElementById('stats')!.textContent);
 
 console.log('boot:', JSON.stringify(boot));
 console.log('before:', before, '| zombie:', filtered, '| min level 41:', minLev, '| dungeons hidden:', hidden, '| zoomed:', zoomed);

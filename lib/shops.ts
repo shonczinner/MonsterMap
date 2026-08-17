@@ -47,7 +47,7 @@ function blocks(text: string): Block[] {
         const line = raw.trim();
         const head = /^\[([a-z0-9_]+)\]$/.exec(line);
         if (head) {
-            cur = { id: head[1], lines: [] };
+            cur = { id: head[1]!, lines: [] };
             out.push(cur);
         } else if (cur && line.length > 0 && !line.startsWith('//')) {
             cur.lines.push(line);
@@ -68,7 +68,7 @@ export function parseInvShops(text: string): ParsedInv[] {
         const stock: ParsedInv['stock'] = [];
         for (const line of b.lines) {
             const m = /^stock\d+=([a-z0-9_]+),(\d+),(\d+)$/.exec(line);
-            if (m) stock.push({ obj: m[1], baseline: Number(m[2]), restockTicks: Number(m[3]) });
+            if (m) stock.push({ obj: m[1]!, baseline: Number(m[2]), restockTicks: Number(m[3]) });
         }
         if (stock.length > 0) out.push({ inv: b.id, scope: field(b.lines, 'scope') ?? '', allstock: field(b.lines, 'allstock') === 'yes', stock });
     }
@@ -133,7 +133,7 @@ export function buildStores(scriptsDir: string, NpcType: AnyConfig, ObjType: Any
         if (items.length === 0) continue;
         const owners = keepers.filter(k => k.ownedShops.includes(inv.inv));
         if (owners.length === 0) continue;
-        const first = owners[0];
+        const first = owners[0]!;
         shopByInv[inv.inv] = {
             inv: inv.inv,
             title: first.title || inv.inv,

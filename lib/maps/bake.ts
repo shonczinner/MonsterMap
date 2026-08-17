@@ -33,10 +33,10 @@ function main(): void {
 
     const bundleOut = join(buildDir, '.bake.cjs').replace(/\\/g, '/');
     const cmd = ['bun', 'build', '--target=node', '--outfile=' + bundleOut, entry];
-    execFileSync(cmd[0], cmd.slice(1), { stdio: 'inherit' });
+    execFileSync(cmd[0]!, cmd.slice(1), { stdio: 'inherit' });
 
     const run = ['bun', bundleOut];
-    execFileSync(run[0], run.slice(1), {
+    execFileSync(run[0]!, run.slice(1), {
         stdio: 'inherit',
         env: {
             ...process.env,

@@ -37,7 +37,7 @@ function flagValue(args: string[], name: string): string | null {
     if (i === -1 || i + 1 >= args.length) {
         return null;
     }
-    return args[i + 1];
+    return args[i + 1] ?? null;
 }
 
 function abs(p: string): string {
@@ -67,14 +67,15 @@ function readEnvFile(): Record<string, string> {
 }
 
 function expandResult(
-    env: Record<string, string>,
-    kv: Record<string, string>
+    env: Record<string, string | undefined>,
+    kv: Record<string, string | undefined>
 ): Record<string, string> {
     // Expand ${BASE} references against the flat map, resolving in key order.
     const expanded: Record<string, string> = {};
     const get = (k: string): string => expanded[k] ?? env[k] ?? '';
     for (const [k, v] of Object.entries({ ...env, ...kv })) {
-        expanded[k] = v.replace(/\$\{([A-Z0-9_]+)\}/g, (_m, name: string) => get(name));
+        const val = v ?? '';
+        expanded[k] = val.replace(/\$\{([A-Z0-9_]+)\}/g, (_m, name: string) => get(name));
     }
     return expanded;
 }

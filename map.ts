@@ -71,7 +71,8 @@ const inArea = (x: number, z: number): boolean =>
 // index of the baked area a coordinate falls in (0=surface,1=dungeon,2=extra), or -1
 const areaIndexOf = (x: number, z: number): number => {
     for (let i = 0; i < layout.length; i++) {
-        if (x >= layout[i].tileX0 && x < layout[i].tileX1 && z >= layout[i].tileZBot && z <= layout[i].tileZTop) {
+        const a = layout[i]!;
+        if (x >= a.tileX0 && x < a.tileX1 && z >= a.tileZBot && z <= a.tileZTop) {
             return i;
         }
     }
@@ -114,7 +115,7 @@ for (const s of icons.locations) {
     if (s.kind === 'npc' && claimed.has(s.x + '|' + s.z)) continue;
     points.push({ x: s.x, z: s.z, level: s.level, cat: 'poi', name: s.icon || s.name, sub: s.name, id: s.id });
 }
-const labels = locs.places.map((p: any) => ({ x: p.x, z: p.z, level: 0, cat: 'place', name: p.name, lines: p.lines, type: p.type }));
+const labels: any[] = locs.places.map((p: any) => ({ x: p.x, z: p.z, level: 0, cat: 'place', name: p.name, lines: p.lines, type: p.type }));
 
 const pts = points.filter(p => inArea(p.x, p.z));
 const lbls = labels.filter(p => inArea(p.x, p.z));
@@ -123,15 +124,15 @@ if (pts.length === 0 && lbls.length === 0) {
 }
 
 // stacking
-const stack = layout.map(a => ({ ...a }));
+type StackArea = AreaLayout & { yOff: number };
+const stack: StackArea[] = layout.map(a => ({ ...a, yOff: 0 }));
 const stackHeight = stack.reduce((n, a) => n + a.hPx, 0);
 const stackWidth = Math.max(...stack.map(a => a.wPx));
 let acc = 0;
 for (const a of stack) {
-    a['yOff'] = acc;
+    a.yOff = acc;
     acc += a.hPx;
 }
-type StackArea = AreaLayout & { yOff: number };
 
 // distinct names for the search dropdown (incl. the fish each fishing spot yields,
 // and each shop's title so stores are searchable by name)
@@ -152,9 +153,9 @@ for (const p of pts) {
 for (const l of lbls) nameSet.add(l.name);
 const ALL_NAMES = [...nameSet].sort((a, b) => a.localeCompare(b));
 
-const cats = CATEGORY_ORDER.map(k => ({ key: k, label: CATEGORY_LABELS[k], color: CATEGORY_COLORS[k] }));
+const cats = CATEGORY_ORDER.map(k => ({ key: k, label: CATEGORY_LABELS[k]!, color: CATEGORY_COLORS[k]! }));
 const colorOf: Record<string, string> = {};
-for (const k of CATEGORY_ORDER) colorOf[k] = CATEGORY_COLORS[k];
+for (const k of CATEGORY_ORDER) colorOf[k] = CATEGORY_COLORS[k]!;
 
 const html = render({ pts, lbls, stack, stackWidth, stackHeight, cats, colorOf, allNames: ALL_NAMES });
 writeFileSync(join(config.outDir, 'monstermap.html'), html);

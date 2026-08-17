@@ -66,7 +66,7 @@ export function iconName(mapfunction: number): string {
     if (mapfunction < 0 || mapfunction >= WORLDMAP_KEY_NAMES.length) {
         return '?';
     }
-    return WORLDMAP_KEY_NAMES[mapfunction];
+    return WORLDMAP_KEY_NAMES[mapfunction]!;
 }
 
 /** Case-insensitive lookup of an icon name by an npc/loc display name. */

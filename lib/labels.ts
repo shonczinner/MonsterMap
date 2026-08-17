@@ -34,7 +34,7 @@ export function parseLabels(contentDir: string): PlaceLabel[] {
         if (parts.length < 4) {
             continue;
         }
-        const name = parts[0].trim();
+        const name = parts[0]!.trim();
         const x = Number(parts[1]);
         const z = Number(parts[2]);
         const type = Number(parts[3]);

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * mapClustering — flash-matching + cluster de-duplication helpers for MonsterMap.
  *

@@ -24,6 +24,13 @@
   .r{display:flex;gap:8px;margin-top:4px;}
   .kv{color:#8b96a3;}
   #stats{position:absolute;left:12px;bottom:10px;background:rgba(18,22,27,.82);padding:5px 10px;border-radius:5px;font-size:12px;color:#aab6c2;}
+  #pinbox{position:absolute;left:12px;top:12px;background:rgba(18,22,27,.88);border:1px solid #2f3b47;border-radius:6px;padding:7px 10px;font-size:12px;color:#cfd8e0;cursor:pointer;z-index:8;user-select:none;max-width:220px;}
+  #pinbox .pinhd{color:#8b96a3;font-size:11px;text-transform:uppercase;letter-spacing:.06em;}
+  #pinbox .pincoords{font-size:13px;color:#ffe14d;margin-top:2px;}
+  #pinbox .pinhint{color:#8b96a3;font-size:11px;margin-top:3px;}
+  #pinbox #pincopy{margin-top:6px;background:#1b222a;color:#cfd8e0;border:1px solid #2a323b;border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;font-family:inherit;}
+  #pinbox #pincopy:hover{background:#243039;}
+  #pinbox #pincopy.done{color:#7ea34a;}
   .area-label{position:absolute;left:4px;font-size:11px;color:#0d1117;background:rgba(231,238,247,.9);padding:1px 6px;border-radius:3px;pointer-events:none;opacity:.85;}
   .searchwrap{position:relative;}
   #search{width:100%;box-sizing:border-box;padding-right:28px;}
@@ -41,6 +48,7 @@
 <div id="panel">
     <div id="wrap">
       <canvas id="c"></canvas>
+      <div id="pinbox"><div class="pinhd">click to pin tile</div></div>
       <div id="tip"></div>
       <div id="stats"></div>
     </div>
@@ -85,9 +93,45 @@ var canvas = document.getElementById("c");
 var ctx = canvas.getContext("2d");
 var tip = document.getElementById("tip");
 var statsEl = document.getElementById("stats");
+var pinbox = document.getElementById("pinbox");
 var wrap = document.getElementById("wrap");
 var dpr = window.devicePixelRatio || 1;
 var W = 0, H = 0;
+
+var pinned = null; // { x, z, area, ai }
+function screenToTile(sx, sy) {
+  for (var i = 0; i < stack.length; i++) {
+    var a = stack[i];
+    var top = oy + a.yOff * ppt;
+    var bot = top + a.hPx * ppt;
+    if (sy < top || sy > bot) continue;
+    var x = a.tileX0 + (sx - ox) / ppt;
+    var z = a.tileZTop - (sy - top) / ppt;
+    if (x < a.tileX0 || x >= a.tileX1 || z < a.tileZBot || z > a.tileZTop) continue;
+    return { x: Math.floor(x), z: Math.floor(z), area: a.name, ai: i };
+  }
+  return null;
+}
+function updatePin() {
+  if (pinned) {
+    pinbox.innerHTML = '<div class="pinhd">pinned tile</div>' +
+      '<div class="pincoords">' + esc(pinned.area) + ' · ' + pinned.x + ', ' + pinned.z + '</div>' +
+      '<div class="pinhint">right click to unpin tile</div>' +
+      '<button id="pincopy">copy coords</button>';
+  } else {
+    pinbox.innerHTML = '<div class="pinhd">click to pin tile</div>';
+  }
+  requestDraw();
+}
+pinbox.addEventListener("click", function (e) {
+  var b = e.target.closest && e.target.closest("#pincopy");
+  if (!b || !pinned) return;
+  e.stopPropagation();
+  var txt = pinned.area + " " + pinned.x + "," + pinned.z;
+  (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject())
+    .then(function () { b.textContent = "copied!"; b.classList.add("done"); setTimeout(updatePin, 1200); })
+    .catch(function () { b.textContent = "copy failed"; });
+});
 
 var imgs = {}, loaded = 0;
 var shownAreas = {}, shownCats = {};
@@ -245,6 +289,25 @@ function draw() {
 
   statsEl.textContent = shown + " dots" + (shownCats.place ? " + " + lbls.length + " labels" : "") +
     (exactName ? "  · flashing " + exactName : "") + "  (" + flashing + " flashing)";
+
+  // pinned tile marker
+  if (pinned) {
+    var pa = stack[pinned.ai];
+    if (pa && shownAreas[pinned.ai]) {
+      var ppx = areaScreenX(pa, pinned.x + 0.5);
+      var ppy = areaScreenY(pa) + (pa.tileZTop - pinned.z - 0.5) * ppt;
+      ctx.strokeStyle = "#ffe14d";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(ppx, ppy, Math.max(7, dot + 6), 0, Math.PI * 2);
+      ctx.stroke();
+      var cr = Math.max(7, dot + 6) + 4;
+      ctx.beginPath();
+      ctx.moveTo(ppx - cr, ppy); ctx.lineTo(ppx + cr, ppy);
+      ctx.moveTo(ppx, ppy - cr); ctx.lineTo(ppx, ppy + cr);
+      ctx.stroke();
+    }
+  }
 }
 
 var drawPending = false;
@@ -332,8 +395,23 @@ canvas.addEventListener("mousemove", function (e) {
   if (hit) { showTip(hit); tip.style.display = "block"; } else { tip.style.display = "none"; }
 });
 canvas.addEventListener("mouseleave", function () { tip.style.display = "none"; });
-canvas.addEventListener("mousedown", function (e) { dragging = true; lastX = e.clientX; lastY = e.clientY; });
-window.addEventListener("mouseup", function () { dragging = false; });
+var downX = 0, downY = 0, downBtn = 0;
+canvas.addEventListener("mousedown", function (e) { dragging = true; lastX = e.clientX; lastY = e.clientY; downX = e.clientX; downY = e.clientY; downBtn = e.button; });
+window.addEventListener("mouseup", function (e) {
+  if (dragging && downBtn === 0) {
+    var dxp = e.clientX - downX, dyp = e.clientY - downY;
+    if (dxp * dxp + dyp * dyp < 25) {
+      var r = wrap.getBoundingClientRect();
+      var t = screenToTile(e.clientX - r.left, e.clientY - r.top);
+      if (t) { pinned = t; updatePin(); }
+    }
+  }
+  dragging = false;
+});
+canvas.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+  if (pinned) { pinned = null; updatePin(); }
+});
 canvas.addEventListener("wheel", function (e) {
   e.preventDefault();
   var r = wrap.getBoundingClientRect();

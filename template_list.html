@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__MM_TITLE__</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0d1117;color:#e7e7e7;font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;}
+  #mmnav{display:flex;align-items:center;gap:4px;height:38px;padding:0 12px;background:#11161c;border-bottom:1px solid #232a31;box-sizing:border-box;flex:0 0 auto;}
+  #mmnav .brand{font-weight:600;color:#e7e7e7;margin-right:12px;letter-spacing:.02em;}
+  #mmnav a{color:#9aa6b2;text-decoration:none;font-size:13px;padding:5px 10px;border-radius:5px;}
+  #mmnav a:hover{background:#1b222a;color:#e7e7e7;}
+  #mmnav a.active{background:#21303f;color:#58a6ff;}
+  #app{display:flex;flex-direction:column;height:calc(100vh - 38px);}
+  #filters{overflow:auto;padding:10px 12px;border-bottom:1px solid #232a31;background:#0f141a;flex:0 0 auto;}
+  #filters .grp{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-end;}
+  .fld{display:flex;flex-direction:column;gap:3px;}
+  .fld label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8b96a3;}
+  .fld input{background:#161b22;border:1px solid #30363d;color:#e6edf3;padding:4px 6px;border-radius:4px;width:130px;box-sizing:border-box;font:inherit;}
+  .fld.range input{width:62px;}
+  .fld.range .rng{display:flex;align-items:center;gap:4px;}
+  .fld.range .rng span{color:#6b7683;}
+  #count{padding:6px 12px;color:#aab6c2;border-bottom:1px solid #232a31;flex:0 0 auto;background:#0d1117;}
+  #count b{color:#e7e7e7;}
+  #tablewrap{flex:1 1 auto;overflow:auto;}
+  table{border-collapse:collapse;width:100%;font-size:12px;}
+  thead th{position:sticky;top:0;background:#161b22;color:#cdd6df;text-align:left;padding:6px 8px;border-bottom:1px solid #30363d;cursor:pointer;white-space:nowrap;user-select:none;z-index:1;}
+  thead th:hover{background:#1d2730;}
+  thead th .arrow{color:#58a6ff;font-size:10px;margin-left:4px;}
+  thead th.num{text-align:right;}
+  tbody td{padding:4px 8px;border-bottom:1px solid #1a2026;white-space:nowrap;}
+  tbody td.num{text-align:right;font-variant-numeric:tabular-nums;color:#cfd8e0;}
+  tbody tr:hover{background:#161d24;}
+  .num-input::-webkit-outer-spin-button,.num-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+  .num-input{-moz-appearance:textfield;}
+</style>
+</head>
+<body>
+__MM_NAV__
+<div id="app">
+  <div id="filters"><div class="grp" id="filtergrp"></div></div>
+  <div id="count"></div>
+  <div id="tablewrap"><table id="tbl"><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+</div>
+<script id="mmdata" type="application/json">__MM_DATA__</script>
+<script>
+(function () {
+  "use strict";
+  var data = JSON.parse(document.getElementById("mmdata").textContent);
+  var columns = data.columns;          // [{key,label,num}]
+  var rows = data.rows;                // array of row objects
+  var filters = {};                    // key -> {text, min, max}
+  columns.forEach(function (c) { filters[c.key] = { text: "", min: "", max: "" }; });
+  var sortKey = null, sortDir = 1;     // 1 asc, -1 desc
+
+  var grp = document.getElementById("filtergrp");
+  var thead = document.getElementById("thead");
+  var tbody = document.getElementById("tbody");
+  var countEl = document.getElementById("count");
+
+  // ---- build filter controls
+  columns.forEach(function (c) {
+    var fld = document.createElement("div");
+    fld.className = "fld" + (c.num ? " range" : "");
+    var lbl = document.createElement("label");
+    lbl.textContent = c.label;
+    fld.appendChild(lbl);
+    if (c.num) {
+      var rng = document.createElement("div");
+      rng.className = "rng";
+      var mn = document.createElement("input");
+      mn.type = "number"; mn.className = "num-input"; mn.placeholder = "min"; mn.step = "any";
+      var mx = document.createElement("input");
+      mx.type = "number"; mx.className = "num-input"; mx.placeholder = "max"; mx.step = "any";
+      var sep = document.createElement("span"); sep.textContent = "–";
+      rng.appendChild(mn); rng.appendChild(sep); rng.appendChild(mx);
+      fld.appendChild(rng);
+      mn.addEventListener("input", function () { filters[c.key].min = mn.value; apply(); });
+      mx.addEventListener("input", function () { filters[c.key].max = mx.value; apply(); });
+    } else {
+      var tx = document.createElement("input");
+      tx.type = "text"; tx.placeholder = "contains…";
+      fld.appendChild(tx);
+      tx.addEventListener("input", function () { filters[c.key].text = tx.value; apply(); });
+    }
+    grp.appendChild(fld);
+  });
+
+  // ---- build header (sortable)
+  var hr = document.createElement("tr");
+  columns.forEach(function (c) {
+    var th = document.createElement("th");
+    if (c.num) th.className = "num";
+    th.textContent = c.label;
+    th.addEventListener("click", function () {
+      if (sortKey === c.key) sortDir = -sortDir;
+      else { sortKey = c.key; sortDir = 1; }
+      render();
+    });
+    th._key = c.key; th._num = c.num;
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+
+  function matchRow(r) {
+    for (var i = 0; i < columns.length; i++) {
+      var c = columns[i], f = filters[c.key], v = r[c.key];
+      if (c.num) {
+        var n = parseFloat(v);
+        if (f.min !== "" && !isNaN(parseFloat(f.min)) && n < parseFloat(f.min)) return false;
+        if (f.max !== "" && !isNaN(parseFloat(f.max)) && n > parseFloat(f.max)) return false;
+      } else if (f.text) {
+        var q = f.text.toLowerCase();
+        if (String(v).toLowerCase().indexOf(q) < 0) return false;
+      }
+    }
+    return true;
+  }
+
+  function apply() { render(); }
+
+  function render() {
+    var view = rows.filter(matchRow);
+    if (sortKey) {
+      var col = columns.filter(function (c) { return c.key === sortKey; })[0];
+      view.sort(function (a, b) {
+        var x = a[sortKey], y = b[sortKey];
+        if (col.num) { x = parseFloat(x); y = parseFloat(y); }
+        else { x = String(x).toLowerCase(); y = String(y).toLowerCase(); }
+        if (x < y) return -1 * sortDir;
+        if (x > y) return 1 * sortDir;
+        return 0;
+      });
+    }
+    // header arrows
+    var ths = thead.querySelectorAll("th");
+    for (var i = 0; i < ths.length; i++) {
+      var t = ths[i];
+      var base = t.textContent.replace(/[▲▼]\s*$/, "").trim();
+      if (t._key === sortKey) base += (sortDir === 1 ? " ▲" : " ▼");
+      t.textContent = base;
+    }
+    // body
+    var h = "";
+    for (var j = 0; j < view.length; j++) {
+      var r = view[j];
+      h += "<tr>";
+      for (var k = 0; k < columns.length; k++) {
+        var c2 = columns[k];
+        h += '<td class="' + (c2.num ? "num" : "") + '">' + esc(r[c2.key]) + "</td>";
+      }
+      h += "</tr>";
+    }
+    tbody.innerHTML = h;
+    countEl.innerHTML = "<b>" + view.length + "</b> / " + rows.length + " " + (data.noun || "rows");
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      if (c === "&") return "&amp;"; if (c === "<") return "&lt;"; if (c === ">") return "&gt;";
+      if (c === '"') return "&quot;"; return "&#39;";
+    });
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>

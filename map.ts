@@ -19,6 +19,7 @@ import { join } from 'node:path';
 import { loadConfig } from './lib/config.ts';
 import { CATEGORY_ORDER, CATEGORY_LABELS, CATEGORY_COLORS } from './lib/colors.ts';
 import { resolveConditionalDrops } from './lib/conddrops.ts';
+import { navHtml } from './lib/pages.ts';
 
 // Browser-side helper source, inlined into the page <script> (no bundler).
 const clusteringSrc = readFileSync(join(import.meta.dir, 'lib/mapClustering.ts'), 'utf8');
@@ -173,5 +174,5 @@ function render(payload: {
 }): string {
     const json = JSON.stringify(payload);
     const tpl = readFileSync(join(import.meta.dir, "template.html"), "utf8");
-    return tpl.split("__MM_DATA__").join(json).split("__MM_CLUSTERING__").join(clusteringSrc);
+    return tpl.split("__MM_DATA__").join(json).split("__MM_CLUSTERING__").join(clusteringSrc).split("__MM_NAV__").join(navHtml('monstermap.html'));
 }

@@ -45,6 +45,14 @@ absX	absZ	level	id	name	count
 2416	9698	0	1484	Orb of light	1
 2417	9673	0	1493	Old journal	1
 2387	9810	0	2030	Choc saturday	1
+2368	3135	0	590	Tinderbox	1
+2371	3127	0	1925	Bucket	1
+2371	3128	0	1925	Bucket	1
+2428	3079	0	1925	Bucket	1
+2428	3080	0	1925	Bucket	1
+2431	3072	0	590	Tinderbox	1
+2376	3127	1	590	Tinderbox	1
+2423	3080	1	590	Tinderbox	1
 2381	3414	0	2150	Swamp toad	1
 2382	3412	0	2150	Swamp toad	1
 2388	3410	0	2150	Swamp toad	1
@@ -250,6 +258,13 @@ absX	absZ	level	id	name	count
 2605	3396	0	311	Harpoon	1
 2608	3397	0	301	Lobster pot	1
 2567	3444	2	0	Dwarf remains	1
+2563	4603	0	401	Seaweed	1
+2570	4569	0	2347	Hammer	1
+2571	4546	0	401	Seaweed	1
+2579	4594	0	2347	Hammer	1
+2591	4549	0	401	Seaweed	1
+2602	4584	0	2347	Hammer	1
+2605	4597	0	2347	Hammer	1
 2653	9767	0	946	Knife	1
 2654	9767	0	88	Boots of lightness	1
 2637	9819	0	83	Lever	1
@@ -314,6 +329,14 @@ absX	absZ	level	id	name	count
 2627	4728	0	16	Magic whistle	1
 2637	4692	0	16	Magic whistle	1
 2649	4684	2	19	Holy grail	1
+2709	9116	0	3187	Bones	1
+2719	9097	0	3187	Bones	1
+2719	9120	0	3187	Bones	1
+2722	9110	0	3187	Bones	1
+2729	9116	0	3187	Bones	1
+2730	9106	0	3187	Bones	1
+2732	9093	0	3187	Bones	1
+2739	9097	0	3187	Bones	1
 2715	9819	0	995	Coins	1
 2715	9820	0	1635	Gold ring	1
 2716	9816	0	995	Coins	1
@@ -325,6 +348,8 @@ absX	absZ	level	id	name	count
 2721	9819	0	995	Coins	1
 2721	9821	0	995	Coins	7
 2722	9816	0	995	Coins	1
+2701	2717	0	960	Plank	1
+2704	2718	0	960	Plank	1
 2691	3203	0	1895	Slice of cake	1
 2691	3218	0	1895	Slice of cake	1
 2732	3224	0	444	Gold ore	1
@@ -355,6 +380,8 @@ absX	absZ	level	id	name	count
 2719	3733	0	401	Seaweed	1
 2721	3731	0	401	Seaweed	1
 2725	3731	0	401	Seaweed	1
+2769	9203	0	4034	Monkey skull	1
+2800	2797	0	1271	Adamant pickaxe	1
 2755	2952	0	401	Seaweed	1
 2757	2947	0	401	Seaweed	1
 2762	3001	0	401	Seaweed	1
@@ -409,6 +436,29 @@ absX	absZ	level	id	name	count
 2806	3449	1	1993	Jug of wine	1
 2813	3449	1	2313	Pie dish	1
 2768	3500	1	554	Fire rune	2
+2806	3770	0	562	Chaos rune	1
+2776	3781	0	526	Bones	1
+2802	3780	0	562	Chaos rune	1
+2804	3785	0	4084	Sled	1
+2761	3845	0	562	Chaos rune	1
+2767	3855	0	532	Big bones	1
+2788	3870	0	1623	Uncut sapphire	1
+2770	4515	0	1267	Iron pickaxe	1
+2770	4516	0	995	Coins	3
+2771	4516	0	995	Coins	10
+2772	4515	0	995	Coins	4
+2772	4517	0	995	Coins	2
+2800	4500	0	1755	Chisel	1
+2801	4493	0	1265	Bronze pickaxe	1
+2801	4513	0	1265	Bronze pickaxe	1
+2803	4491	0	1755	Chisel	1
+2795	4579	0	1265	Bronze pickaxe	1
+2801	4572	0	1205	Bronze dagger	1
+2806	4569	0	1205	Bronze dagger	1
+2808	4572	0	1237	Bronze spear	1
+2811	4572	0	1265	Bronze pickaxe	1
+2812	4566	0	1295	Steel longsword	1
+2812	4571	0	1269	Steel pickaxe	1
 2755	4728	0	16	Magic whistle	1
 2761	4689	0	16	Magic whistle	1
 2806	4710	0	16	Magic whistle	1
@@ -1150,3 +1200,6 @@ absX	absZ	level	id	name	count
 3478	3438	0	1939	Swamp tar	1
 3480	3419	0	1939	Swamp tar	1
 3483	3426	0	1939	Swamp tar	1
+3494	3395	0	1939	Swamp tar	1
+3494	3401	0	1939	Swamp tar	1
+3502	3401	0	1939	Swamp tar	1

@@ -66,14 +66,18 @@ the NPC spawn coords (and land) used by `lib/tiles.ts`.
 ```bash
 cd /home/shonc/rs2bot/MonsterMap
 bun install          # fflate + playwright-core (smoke)
-bun lib/maps/bake.ts # → out/maps/{surface,dungeon,extra}.png + layout.json
-bun gen.ts           # → out/data/{monsters,itemspawns,resources}.{tsv,json}
-bun build.ts         # → out/monstermap.html + out/monsters.html (all pages)
+bun build.ts         # bake + gen + build (full pipeline, single command)
 open out/monstermap.html
 bun tools/smoke.ts   # headless Playwright check + screenshots
 ```
 
-Individual pages can also be built on their own: `bun map.ts` and `bun list.ts`.
+`bun build.ts` runs the full pipeline in order: bake terrain PNGs from
+`worldmap.jag`, generate monster/item/resource data from `maps-server.zip` +
+content scripts, then render all HTML pages. A single command rebuilds the
+entire site.
+
+Individual steps can still be run on their own:
+`bun lib/maps/bake.ts` (terrain), `bun gen.ts` (data), `bun map.ts` / `bun list.ts` (pages).
 
 `lib/config.ts` reads `.env` (bun auto-loads it). Copy `.env.example` to `.env`
 and set the base dirs; all derived paths are expanded from there. Optional CLI

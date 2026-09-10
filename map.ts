@@ -90,7 +90,7 @@ for (const s of monsters.spawns) {
     // chaos/nature conditional); re-apply that conditional per spawn using the
     // spawn's area so each dot shows the talisman it would actually drop.
     const drops = resolveConditionalDrops(dropsData.drops[s.id], areaIndexOf(s.x, s.z));
-    points.push({ x: s.x, z: s.z, level: s.level, cat: st ? 'shop' : 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops, shop: st, hasShop: !!st });
+    points.push({ x: s.x, z: s.z, level: s.level, cat: st ? 'shop' : 'monster', name: m.name, sub: 'lvl ' + m.level, id: s.id, drops, shop: st, hasShop: !!st, bonuses: m.bonuses });
 }
 for (const s of items.spawns) {
     points.push({ x: s.x, z: s.z, level: s.level, cat: 'item', name: s.name, sub: 'x' + s.count, id: s.id });

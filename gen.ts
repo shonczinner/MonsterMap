@@ -69,6 +69,24 @@ const isFishingSpot = (id: number): boolean => {
 // =====================================================================
 // monsters (everything except fishing spots)
 // =====================================================================
+// combat bonus param IDs and their defaults (from combat.param)
+const PARAM = {
+    stabattack: 101, slashattack: 102, crushattack: 103, magicattack: 104, rangeattack: 105,
+    stabdefence: 106, slashdefence: 107, crushdefence: 108, magicdefence: 109, rangedefence: 110,
+    strengthbonus: 111, attackbonus: 112, attackrate: { id: 116, def: 4 }
+} as const;
+
+function extractBonuses(type: any): Record<string, number> {
+    const out: Record<string, number> = {};
+    for (const [key, val] of Object.entries(PARAM)) {
+        const id = typeof val === 'number' ? val : val.id;
+        const def = typeof val === 'number' ? undefined : val.def;
+        const v = type.params.get(id);
+        out[key] = v !== undefined ? v : (def ?? 0);
+    }
+    return out;
+}
+
 const stats = { spawned: 0, distinct: 0, dropped: 0, distinctIds: 0 };
 const monsterById = new Map<number, any>();
 const spawnCountById = new Map<number, number>();
@@ -95,6 +113,7 @@ for (const spawn of maps.spawns) {
             debug: type.debugname,
             level: type.vislevel,
             stats: [...type.stats],
+            bonuses: extractBonuses(type),
             members: type.members,
             size: type.size,
             attackrange: type.attackrange,
@@ -133,6 +152,7 @@ for (let id = 0; id < NpcType.count; id++) {
         debug: type.debugname,
         level: type.vislevel,
         stats: [...type.stats],
+        bonuses: extractBonuses(type),
         members: type.members,
         size: type.size,
         attackrange: type.attackrange,
@@ -275,17 +295,24 @@ function byX<T extends { x: number; z: number }>(items: T[]): Record<string, Rec
 }
 
 // ---- monsters
-const tsvHeader = ['absX', 'absZ', 'level', 'id', 'name', 'debug', 'vislevel', 'att', 'def', 'str', 'hp', 'rng', 'mage', 'members', 'size', 'attackrange'];
+const tsvHeader = ['absX', 'absZ', 'level', 'id', 'name', 'debug', 'vislevel', 'att', 'def', 'str', 'hp', 'rng', 'mage', 'members', 'size', 'attackrange',
+    'stabatt', 'slashatt', 'crushatt', 'magatt', 'rngatt',
+    'stabdef', 'slashdef', 'crushdef', 'magdef', 'rngdef',
+    'strbonus', 'attbonus', 'attackrate'];
 const tsvRows = maps.spawns
     .filter(s => !isFishingSpot(s.id))
     .map(spawn => {
         const rec = monsterById.get(spawn.id);
         const [att, def, str, hp, rng, mage] = rec?.stats ?? [0, 0, 0, 0, 0, 0];
+        const b = rec?.bonuses ?? {};
         return [
             spawn.x, spawn.z, spawn.level, spawn.id,
             rec?.name ?? spawn.id, rec?.debug ?? '', rec?.level ?? '',
             att, def, str, hp, rng, mage,
-            rec?.members ?? false, rec?.size ?? 1, rec?.attackrange ?? 0
+            rec?.members ?? false, rec?.size ?? 1, rec?.attackrange ?? 0,
+            b.stabattack ?? '', b.slashattack ?? '', b.crushattack ?? '', b.magicattack ?? '', b.rangeattack ?? '',
+            b.stabdefence ?? '', b.slashdefence ?? '', b.crushdefence ?? '', b.magicdefence ?? '', b.rangedefence ?? '',
+            b.strengthbonus ?? '', b.attackbonus ?? '', b.attackrate ?? ''
         ].join('\t');
     });
 const tsv = [tsvHeader.join('\t'), ...tsvRows].join('\n') + '\n';

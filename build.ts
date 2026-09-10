@@ -3,12 +3,14 @@
  *
  * Usage: bun build.ts
  *
- * Runs every page generator in sequence so a single command rebuilds the whole
- * site (map + monster list + item list). Each generator reads
- * `config.outDir`/`config.dataDir` and emits its HTML into `out/`.
- *
- * Add a generator here when you add a page to `lib/pages.ts`.
+ * Runs every step in sequence: bake terrain PNGs, generate data from the game
+ * cache, then render all HTML pages. A single command rebuilds the whole site.
  */
-import './map.ts';
-import './list.ts';
-import './items.ts';
+import { main as bake } from './lib/maps/bake.ts';
+
+bake();
+
+await import('./gen.ts');
+await import('./map.ts');
+await import('./list.ts');
+await import('./items.ts');

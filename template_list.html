@@ -8,6 +8,7 @@
   html,body{margin:0;height:100%;overflow:hidden;background:#0d1117;color:#e7e7e7;font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;}
   #mmnav{display:flex;align-items:center;gap:4px;height:38px;padding:0 12px;background:#11161c;border-bottom:1px solid #232a31;box-sizing:border-box;flex:0 0 auto;}
   #mmnav .brand{font-weight:600;color:#e7e7e7;margin-right:12px;letter-spacing:.02em;}
+  #mmnav .rev{font-weight:400;font-size:11px;color:#8b96a3;margin-left:4px;background:#1b222a;padding:1px 6px;border-radius:3px;}
   #mmnav a{color:#9aa6b2;text-decoration:none;font-size:13px;padding:5px 10px;border-radius:5px;}
   #mmnav a:hover{background:#1b222a;color:#e7e7e7;}
   #mmnav a.active{background:#21303f;color:#58a6ff;}
@@ -106,6 +107,7 @@ __MM_NAV__
     for (var i = 0; i < columns.length; i++) {
       var c = columns[i], f = filters[c.key], v = r[c.key];
       if (c.num) {
+        if (v === '' || v == null) { if (f.min !== '' || f.max !== '') return false; continue; }
         var n = parseFloat(v);
         if (f.min !== "" && !isNaN(parseFloat(f.min)) && n < parseFloat(f.min)) return false;
         if (f.max !== "" && !isNaN(parseFloat(f.max)) && n > parseFloat(f.max)) return false;
@@ -125,7 +127,7 @@ __MM_NAV__
       var col = columns.filter(function (c) { return c.key === sortKey; })[0];
       view.sort(function (a, b) {
         var x = a[sortKey], y = b[sortKey];
-        if (col.num) { x = parseFloat(x); y = parseFloat(y); }
+        if (col.num) { x = parseFloat(x); y = parseFloat(y); if (isNaN(x) !== isNaN(y)) return isNaN(x) ? 1 : -1; if (isNaN(x)) return 0; }
         else { x = String(x).toLowerCase(); y = String(y).toLowerCase(); }
         if (x < y) return -1 * sortDir;
         if (x > y) return 1 * sortDir;
@@ -147,7 +149,7 @@ __MM_NAV__
       h += "<tr>";
       for (var k = 0; k < columns.length; k++) {
         var c2 = columns[k];
-        h += '<td class="' + (c2.num ? "num" : "") + '">' + esc(r[c2.key]) + "</td>";
+        h += '<td class="' + (c2.num ? "num" : "") + '">' + esc(r[c2.key] != null ? r[c2.key] : "") + "</td>";
       }
       h += "</tr>";
     }

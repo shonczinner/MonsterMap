@@ -1,12 +1,12 @@
 {
   "generation": {
-    "revisionTime": "2026-08-17T00:06:38.123Z",
+    "revisionTime": "2026-09-10T15:12:17.914Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
     "bounds": {
       "minX": 1884,
       "maxX": 3646,
-      "minZ": 2887,
+      "minZ": 2694,
       "maxZ": 10362
     },
     "land": [
@@ -79,6 +79,7 @@
       "37_152",
       "37_153",
       "37_154",
+      "37_47",
       "37_48",
       "37_49",
       "37_50",
@@ -112,6 +113,10 @@
       "38_55",
       "38_56",
       "38_57",
+      "38_58",
+      "38_59",
+      "38_60",
+      "38_61",
       "38_71",
       "38_73",
       "38_74",
@@ -138,6 +143,10 @@
       "39_55",
       "39_56",
       "39_57",
+      "39_58",
+      "39_59",
+      "39_60",
+      "39_61",
       "39_71",
       "39_72",
       "39_73",
@@ -165,12 +174,18 @@
       "40_56",
       "40_57",
       "40_58",
+      "40_59",
+      "40_60",
+      "40_61",
+      "40_70",
+      "40_71",
       "40_72",
       "40_73",
       "40_74",
       "40_75",
       "40_76",
       "41_146",
+      "41_148",
       "41_149",
       "41_151",
       "41_152",
@@ -191,13 +206,21 @@
       "41_56",
       "41_57",
       "41_58",
+      "41_59",
+      "41_60",
+      "41_61",
+      "41_70",
+      "41_71",
       "41_72",
       "41_73",
       "41_74",
       "41_75",
+      "42_142",
+      "42_143",
       "42_144",
       "42_145",
       "42_146",
+      "42_147",
       "42_148",
       "42_149",
       "42_150",
@@ -205,6 +228,8 @@
       "42_152",
       "42_153",
       "42_154",
+      "42_42",
+      "42_43",
       "42_44",
       "42_45",
       "42_46",
@@ -220,10 +245,17 @@
       "42_56",
       "42_57",
       "42_58",
+      "42_59",
+      "42_60",
+      "42_69",
+      "42_70",
+      "42_71",
       "42_72",
       "42_73",
       "42_74",
       "42_75",
+      "43_142",
+      "43_143",
       "43_144",
       "43_145",
       "43_146",
@@ -232,6 +264,10 @@
       "43_150",
       "43_153",
       "43_154",
+      "43_158",
+      "43_159",
+      "43_42",
+      "43_43",
       "43_44",
       "43_45",
       "43_46",
@@ -246,6 +282,12 @@
       "43_55",
       "43_56",
       "43_57",
+      "43_58",
+      "43_59",
+      "43_60",
+      "43_69",
+      "43_70",
+      "43_71",
       "43_72",
       "43_73",
       "43_74",
@@ -263,6 +305,8 @@
       "44_155",
       "44_157",
       "44_158",
+      "44_42",
+      "44_43",
       "44_44",
       "44_45",
       "44_46",
@@ -277,6 +321,7 @@
       "44_55",
       "44_56",
       "44_57",
+      "44_58",
       "44_72",
       "44_73",
       "44_74",
@@ -292,6 +337,8 @@
       "45_155",
       "45_156",
       "45_157",
+      "45_42",
+      "45_43",
       "45_44",
       "45_45",
       "45_46",
@@ -476,6 +523,7 @@
       "52_60",
       "52_61",
       "52_62",
+      "53_150",
       "53_152",
       "53_154",
       "53_49",
@@ -487,16 +535,19 @@
       "53_55",
       "54_148",
       "54_151",
+      "54_153",
+      "54_50",
       "54_51",
       "54_52",
       "54_53",
       "54_54",
+      "55_51",
       "55_54",
       "56_54"
     ],
-    "spawnRecords": 7181,
-    "distinctIds": 1072,
-    "configs": 1308
+    "spawnRecords": 7994,
+    "distinctIds": 1213,
+    "configs": 1542
   },
   "note": "keyed by NPC id; only shops/items with default stock (baseline) > 0 are included",
   "stores": {
@@ -7546,7 +7597,7 @@
       ]
     },
     "971": {
-      "name": "chadwell",
+      "name": "Chadwell",
       "shops": [
         {
           "inv": "upassgeneralshop",
@@ -7648,7 +7699,7 @@
             }
           ],
           "keepers": [
-            "chadwell"
+            "Chadwell"
           ]
         }
       ]
@@ -8799,7 +8850,7 @@
               "obj": "black_warhammer",
               "name": "Black warhammer",
               "baseline": 3,
-              "cost": 640,
+              "cost": 980,
               "restockTicks": 100
             },
             {
@@ -9223,6 +9274,558 @@
             "Tostig",
             "Sam",
             "Rachael"
+          ]
+        }
+      ]
+    },
+    "1369": {
+      "name": "Fishmonger",
+      "shops": [
+        {
+          "inv": "etc_fishmonger",
+          "title": "Etceteria Fish",
+          "sell": 1300,
+          "buy": 700,
+          "delta": 30,
+          "items": [
+            {
+              "obj": "net",
+              "name": "Small fishing net",
+              "baseline": 5,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "fishing_rod",
+              "name": "Fishing rod",
+              "baseline": 5,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "fly_fishing_rod",
+              "name": "Fly fishing rod",
+              "baseline": 5,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "harpoon",
+              "name": "Harpoon",
+              "baseline": 2,
+              "cost": 5,
+              "restockTicks": 400
+            },
+            {
+              "obj": "lobster_pot",
+              "name": "Lobster pot",
+              "baseline": 2,
+              "cost": 20,
+              "restockTicks": 400
+            },
+            {
+              "obj": "fishing_bait",
+              "name": "Fishing bait",
+              "baseline": 1500,
+              "cost": 3,
+              "restockTicks": 1
+            },
+            {
+              "obj": "feather",
+              "name": "Feather",
+              "baseline": 1000,
+              "cost": 2,
+              "restockTicks": 1
+            },
+            {
+              "obj": "big_net",
+              "name": "Big fishing net",
+              "baseline": 5,
+              "cost": 20,
+              "restockTicks": 100
+            },
+            {
+              "obj": "raw_sardine",
+              "name": "Raw sardine",
+              "baseline": 200,
+              "cost": 10,
+              "restockTicks": 1
+            }
+          ],
+          "keepers": [
+            "Fishmonger"
+          ]
+        }
+      ]
+    },
+    "1370": {
+      "name": "Greengrocer",
+      "shops": [
+        {
+          "inv": "etc_greengrocer",
+          "title": "Island Greengrocer",
+          "sell": 1200,
+          "buy": 950,
+          "delta": 20,
+          "items": [
+            {
+              "obj": "cabbage",
+              "name": "Cabbage",
+              "baseline": 10,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "potato",
+              "name": "Potato",
+              "baseline": 10,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "onion",
+              "name": "Onion",
+              "baseline": 10,
+              "cost": 3,
+              "restockTicks": 100
+            },
+            {
+              "obj": "tomato",
+              "name": "Tomato",
+              "baseline": 10,
+              "cost": 4,
+              "restockTicks": 100
+            },
+            {
+              "obj": "garlic",
+              "name": "Garlic",
+              "baseline": 2,
+              "cost": 3,
+              "restockTicks": 400
+            }
+          ],
+          "keepers": [
+            "Greengrocer"
+          ]
+        }
+      ]
+    },
+    "1393": {
+      "name": "Fishmonger",
+      "shops": [
+        {
+          "inv": "misc_fishmonger",
+          "title": "Island Fishmonger",
+          "sell": 1300,
+          "buy": 700,
+          "delta": 30,
+          "items": [
+            {
+              "obj": "net",
+              "name": "Small fishing net",
+              "baseline": 5,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "fishing_rod",
+              "name": "Fishing rod",
+              "baseline": 5,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "fly_fishing_rod",
+              "name": "Fly fishing rod",
+              "baseline": 5,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "harpoon",
+              "name": "Harpoon",
+              "baseline": 2,
+              "cost": 5,
+              "restockTicks": 400
+            },
+            {
+              "obj": "lobster_pot",
+              "name": "Lobster pot",
+              "baseline": 2,
+              "cost": 20,
+              "restockTicks": 400
+            },
+            {
+              "obj": "fishing_bait",
+              "name": "Fishing bait",
+              "baseline": 1500,
+              "cost": 3,
+              "restockTicks": 1
+            },
+            {
+              "obj": "feather",
+              "name": "Feather",
+              "baseline": 1000,
+              "cost": 2,
+              "restockTicks": 1
+            },
+            {
+              "obj": "big_net",
+              "name": "Big fishing net",
+              "baseline": 5,
+              "cost": 20,
+              "restockTicks": 100
+            },
+            {
+              "obj": "raw_sardine",
+              "name": "Raw sardine",
+              "baseline": 200,
+              "cost": 10,
+              "restockTicks": 1
+            }
+          ],
+          "keepers": [
+            "Fishmonger"
+          ]
+        }
+      ]
+    },
+    "1394": {
+      "name": "Greengrocer",
+      "shops": [
+        {
+          "inv": "misc_greengrocer",
+          "title": "Greengrocer of Miscellania",
+          "sell": 1200,
+          "buy": 950,
+          "delta": 20,
+          "items": [
+            {
+              "obj": "cabbage",
+              "name": "Cabbage",
+              "baseline": 10,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "potato",
+              "name": "Potato",
+              "baseline": 10,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "onion",
+              "name": "Onion",
+              "baseline": 10,
+              "cost": 3,
+              "restockTicks": 100
+            },
+            {
+              "obj": "tomato",
+              "name": "Tomato",
+              "baseline": 10,
+              "cost": 4,
+              "restockTicks": 100
+            },
+            {
+              "obj": "garlic",
+              "name": "Garlic",
+              "baseline": 2,
+              "cost": 3,
+              "restockTicks": 400
+            }
+          ],
+          "keepers": [
+            "Greengrocer"
+          ]
+        }
+      ]
+    },
+    "1433": {
+      "name": "Solihib",
+      "shops": [
+        {
+          "inv": "mm_food_shop",
+          "title": "Solihib's Food Stall",
+          "sell": 1000,
+          "buy": 500,
+          "delta": 20,
+          "items": [
+            {
+              "obj": "mm_monkey_nuts",
+              "name": "Monkey nuts",
+              "baseline": 200,
+              "cost": 3,
+              "restockTicks": 100
+            },
+            {
+              "obj": "banana",
+              "name": "Banana",
+              "baseline": 10,
+              "cost": 2,
+              "restockTicks": 1000
+            },
+            {
+              "obj": "mm_banana_stew",
+              "name": "Banana stew",
+              "baseline": 10,
+              "cost": 300,
+              "restockTicks": 100
+            },
+            {
+              "obj": "mm_monkey_bar",
+              "name": "Monkey bar",
+              "baseline": 20,
+              "cost": 50,
+              "restockTicks": 100
+            }
+          ],
+          "keepers": [
+            "Solihib"
+          ]
+        }
+      ]
+    },
+    "1434": {
+      "name": "Daga",
+      "shops": [
+        {
+          "inv": "mm_scimitar_shop",
+          "title": "Daga's Scimitar Smithy",
+          "sell": 1000,
+          "buy": 500,
+          "delta": 20,
+          "items": [
+            {
+              "obj": "bronze_scimitar",
+              "name": "Bronze scimitar",
+              "baseline": 10,
+              "cost": 32,
+              "restockTicks": 100
+            },
+            {
+              "obj": "iron_scimitar",
+              "name": "Iron scimitar",
+              "baseline": 10,
+              "cost": 112,
+              "restockTicks": 200
+            },
+            {
+              "obj": "steel_scimitar",
+              "name": "Steel scimitar",
+              "baseline": 8,
+              "cost": 400,
+              "restockTicks": 600
+            },
+            {
+              "obj": "mithril_scimitar",
+              "name": "Mithril scimitar",
+              "baseline": 6,
+              "cost": 1040,
+              "restockTicks": 400
+            }
+          ],
+          "keepers": [
+            "Daga"
+          ]
+        }
+      ]
+    },
+    "1435": {
+      "name": "Tutab",
+      "shops": [
+        {
+          "inv": "mm_magic_shop",
+          "title": "Ifaba's General Store",
+          "sell": 1000,
+          "buy": 600,
+          "delta": 10,
+          "items": [
+            {
+              "obj": "firerune",
+              "name": "Fire rune",
+              "baseline": 1000,
+              "cost": 4,
+              "restockTicks": 10
+            },
+            {
+              "obj": "waterrune",
+              "name": "Water rune",
+              "baseline": 1000,
+              "cost": 4,
+              "restockTicks": 10
+            },
+            {
+              "obj": "airrune",
+              "name": "Air rune",
+              "baseline": 1000,
+              "cost": 4,
+              "restockTicks": 10
+            },
+            {
+              "obj": "earthrune",
+              "name": "Earth rune",
+              "baseline": 1000,
+              "cost": 4,
+              "restockTicks": 10
+            },
+            {
+              "obj": "lawrune",
+              "name": "Law rune",
+              "baseline": 250,
+              "cost": 40,
+              "restockTicks": 300
+            },
+            {
+              "obj": "mm_eye_of_gnome",
+              "name": "Eye of gnome",
+              "baseline": 10,
+              "cost": 3,
+              "restockTicks": 100
+            },
+            {
+              "obj": "mm_monkey_dentures",
+              "name": "Monkey dentures",
+              "baseline": 100,
+              "cost": 500,
+              "restockTicks": 100
+            },
+            {
+              "obj": "mm_monkey_talisman",
+              "name": "Monkey talisman",
+              "baseline": 50,
+              "cost": 1000,
+              "restockTicks": 100
+            }
+          ],
+          "keepers": [
+            "Tutab"
+          ]
+        }
+      ]
+    },
+    "1436": {
+      "name": "Ifaba",
+      "shops": [
+        {
+          "inv": "mm_general_shop",
+          "title": "Ifaba's General Store",
+          "sell": 1000,
+          "buy": 500,
+          "delta": 20,
+          "items": [
+            {
+              "obj": "pot_empty",
+              "name": "Pot",
+              "baseline": 3,
+              "cost": 1,
+              "restockTicks": 50
+            },
+            {
+              "obj": "jug_empty",
+              "name": "Jug",
+              "baseline": 2,
+              "cost": 1,
+              "restockTicks": 50
+            },
+            {
+              "obj": "rope",
+              "name": "Rope",
+              "baseline": 8,
+              "cost": 18,
+              "restockTicks": 50
+            },
+            {
+              "obj": "bucket_empty",
+              "name": "Bucket",
+              "baseline": 2,
+              "cost": 2,
+              "restockTicks": 50
+            },
+            {
+              "obj": "tinderbox",
+              "name": "Tinderbox",
+              "baseline": 2,
+              "cost": 1,
+              "restockTicks": 50
+            },
+            {
+              "obj": "hammer",
+              "name": "Hammer",
+              "baseline": 5,
+              "cost": 1,
+              "restockTicks": 50
+            }
+          ],
+          "keepers": [
+            "Ifaba"
+          ]
+        }
+      ]
+    },
+    "1437": {
+      "name": "Hamab",
+      "shops": [
+        {
+          "inv": "mm_crafting_shop",
+          "title": "Hamab's Crafting Emporium",
+          "sell": 1000,
+          "buy": 500,
+          "delta": 20,
+          "items": [
+            {
+              "obj": "chisel",
+              "name": "Chisel",
+              "baseline": 2,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "ring_mould",
+              "name": "Ring mould",
+              "baseline": 4,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "necklace_mould",
+              "name": "Necklace mould",
+              "baseline": 2,
+              "cost": 5,
+              "restockTicks": 100
+            },
+            {
+              "obj": "mm_monkey_amulet_mould",
+              "name": "M'amulet mould",
+              "baseline": 2,
+              "cost": 10,
+              "restockTicks": 100
+            },
+            {
+              "obj": "needle",
+              "name": "Needle",
+              "baseline": 3,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "thread",
+              "name": "Thread",
+              "baseline": 100,
+              "cost": 1,
+              "restockTicks": 5
+            },
+            {
+              "obj": "ball_of_wool",
+              "name": "Ball of wool",
+              "baseline": 100,
+              "cost": 2,
+              "restockTicks": 5
+            }
+          ],
+          "keepers": [
+            "Hamab"
           ]
         }
       ]

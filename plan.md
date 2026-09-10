@@ -130,8 +130,86 @@ Steps / implementation:
    count (`N / total`). Vanilla JS inlined — no table library / bundler needed,
    consistent with how `map.ts` inlines the clustering source.
 
+## Feature: per-plane (level) terrain PNGs + level selector
+
+**Confirmed blocker (why the current bake can't do it):** MonsterMap's map is
+baked from `worldmap.jag` via `Server/webclient`'s `MapView`. `MapView` has
+exactly **3 areas** (`mapArea` 0/1/2 = surface/dungeon/extra, `MapView.ts`
+`reloadMain/Dungeon/Extra`) and a single 2D tile grid (`floort1/floort2/
+floorsr`). Every game plane is flattened into one ground colour — there is **no
+plane/level axis** in that data, so it is impossible to derive a "plane 1 vs
+plane 0" terrain PNG from it. The spawn `level` (0–3) exists only in the spawn
+data, not in the rendered terrain.
+
+**Where real per-plane terrain lives:** the engine's mapsquare land data
+(underlay/overlay per tile per plane) in `Server/engine` — floor colours via
+`FloType` (`engine/src/cache/config/FloType.ts`) plus the per-plane land the
+client's `dash3d` scene reads (`webclient/src/dash3d/{World,Square,Ground}.ts`).
+That scene renderer draws the live 3D world per plane; **not** `MapView`.
+
+**Approach — a new bake, separate from the worldmap one:**
+1. Load engine per-plane land for the target region: for each mapsquare, each
+   plane (0–3), the underlay id + overlay id/shape per tile — the same source
+   the client `Ground`/`Square` use.
+2. Load colour configs (`FloType` underlay colours + overlay equivalents),
+   mirroring `MapView.getBlendedGroundColour`.
+3. Paint a flat, north-up PNG per plane (1 px/tile) for the covered region,
+   reusing the crop logic + the pure-Node PNG encoder already in
+   `lib/maps/bakeSource.ts`.
+4. Emit e.g. `out/maps/{surface,dungeon,extra}-l{0,1,2,3}.png` (+ a small
+   manifest mapping plane → world-tile rect), one set per area.
+5. UI: add a **level selector** to `monstermap.html` that swaps the displayed
+   area PNG to that plane while leaving dots unchanged (dots already carry
+   `level`; tinting/hiding dots per plane is a later, optional step).
+
+**Risks / open questions:**
+- Exact mapsquare land binary format + how the client unpacks per-plane
+  underlay/overlay (trace the `dash3d`/land loader — the biggest unknown).
+- Scope: full world per plane vs. just the spawn-covered mapsquares
+  (recommend the latter to bound PNG size/count).
+- Start with flat ground fill; add overlay shapes/walls only if needed.
+- This is a **separate, sizable** renderer — not a tweak of the existing
+  `bake.ts`/`MapView` path.
+
+### Consolidation with nav: one cache reader, two artifacts
+
+The route planner's walkability input and per-plane terrain look like two
+features in the sections above, but they are the **same cache read** — there is
+no second bake.
+
+**Walkability (nav) is already solved in rs2b0t.** `rs2b0t/tools/nav/lib.ts`
+(`loadMapsquares` / `parseLands` / `forEachLoc`) reads `maps-server.zip`
+engine per-plane land (`m*`) + loc (`l*`) archives — the exact archive
+`Server/engine`'s `GameMap` loads — and `tools/nav/build-collision.ts` builds a
+`CollisionEngine` and packs it to `collision.lcnav.gz`. So the plan's open
+question *"Can Server/engine export collision flags?"* is answered **yes**, and
+the route planner can reuse that reader (or its pack) directly. No separate
+flag-bake design is needed beyond pointing at this.
+
+**Per-plane terrain reuses the same reader.** `parseLands` already walks every
+plane of every mapsquare; today it only extracts the collision opcodes
+(opcode > 49 → roof/block flag). The underlay/overlay floor **ids** (the data
+needed to colour a tile) are in the *same* land packet at different opcodes —
+the client's `dash3d/{World,Square,Ground}.ts` + `FloType` (`engine …/cache/config/FloType.ts`)
+show how to decode + blend them (mirror `MapView.getBlendedGroundColour`). So
+the per-plane bake is *extend* `parseLands` to also capture underlay/overlay
+per tile per plane, then paint via `FloType` — using the pure-Node PNG encoder
+already in `tools/map/encodePng.ts` (rs2b0t) / `lib/maps/bakeSource.ts`.
+
+**Net:** one cache-based bake (reads `maps-server.zip`, the engine per-plane
+land+loc archive) emits both:
+1. per-area walkability flag grids (for the route planner), and
+2. per-plane terrain PNGs + manifest (for the level selector).
+
+This collapses the plan's "feature: route planner — walkability data" step 1
+and "feature: per-plane terrain" into a single shared core module, and removes
+the collision-flags open question.
+
 ## Open questions
 
-- Can `Server/engine` export collision flags? (needs verification before the
-  bake step is designed)
+- Per-plane underlay/overlay id extraction: confirm the exact land-packet
+  opcode layout by tracing `dash3d/{World,Square,Ground}.ts` (the remaining
+  unknown for terrain colouring — collision flags are already decoded).
 - Bun workspace vs plain folders for the split (tooling, not architecture)
+
+- Change click to add points and show a list of points, right to wipe all points, copies as (x1,y1,z1),(x2,y2,z2),(x3,y3,z3),... - need some good UI/UX to have multiple lists of points at a time and show total distance (for now just linear) between all points in a list e.g. p2-p1, p3-p2, etc. - can delete individual points? Can move points up or down list?

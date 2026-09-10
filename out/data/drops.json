@@ -1,12 +1,12 @@
 {
   "generation": {
-    "revisionTime": "2026-08-17T00:06:38.123Z",
+    "revisionTime": "2026-09-10T15:12:17.914Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
     "bounds": {
       "minX": 1884,
       "maxX": 3646,
-      "minZ": 2887,
+      "minZ": 2694,
       "maxZ": 10362
     },
     "land": [
@@ -79,6 +79,7 @@
       "37_152",
       "37_153",
       "37_154",
+      "37_47",
       "37_48",
       "37_49",
       "37_50",
@@ -112,6 +113,10 @@
       "38_55",
       "38_56",
       "38_57",
+      "38_58",
+      "38_59",
+      "38_60",
+      "38_61",
       "38_71",
       "38_73",
       "38_74",
@@ -138,6 +143,10 @@
       "39_55",
       "39_56",
       "39_57",
+      "39_58",
+      "39_59",
+      "39_60",
+      "39_61",
       "39_71",
       "39_72",
       "39_73",
@@ -165,12 +174,18 @@
       "40_56",
       "40_57",
       "40_58",
+      "40_59",
+      "40_60",
+      "40_61",
+      "40_70",
+      "40_71",
       "40_72",
       "40_73",
       "40_74",
       "40_75",
       "40_76",
       "41_146",
+      "41_148",
       "41_149",
       "41_151",
       "41_152",
@@ -191,13 +206,21 @@
       "41_56",
       "41_57",
       "41_58",
+      "41_59",
+      "41_60",
+      "41_61",
+      "41_70",
+      "41_71",
       "41_72",
       "41_73",
       "41_74",
       "41_75",
+      "42_142",
+      "42_143",
       "42_144",
       "42_145",
       "42_146",
+      "42_147",
       "42_148",
       "42_149",
       "42_150",
@@ -205,6 +228,8 @@
       "42_152",
       "42_153",
       "42_154",
+      "42_42",
+      "42_43",
       "42_44",
       "42_45",
       "42_46",
@@ -220,10 +245,17 @@
       "42_56",
       "42_57",
       "42_58",
+      "42_59",
+      "42_60",
+      "42_69",
+      "42_70",
+      "42_71",
       "42_72",
       "42_73",
       "42_74",
       "42_75",
+      "43_142",
+      "43_143",
       "43_144",
       "43_145",
       "43_146",
@@ -232,6 +264,10 @@
       "43_150",
       "43_153",
       "43_154",
+      "43_158",
+      "43_159",
+      "43_42",
+      "43_43",
       "43_44",
       "43_45",
       "43_46",
@@ -246,6 +282,12 @@
       "43_55",
       "43_56",
       "43_57",
+      "43_58",
+      "43_59",
+      "43_60",
+      "43_69",
+      "43_70",
+      "43_71",
       "43_72",
       "43_73",
       "43_74",
@@ -263,6 +305,8 @@
       "44_155",
       "44_157",
       "44_158",
+      "44_42",
+      "44_43",
       "44_44",
       "44_45",
       "44_46",
@@ -277,6 +321,7 @@
       "44_55",
       "44_56",
       "44_57",
+      "44_58",
       "44_72",
       "44_73",
       "44_74",
@@ -292,6 +337,8 @@
       "45_155",
       "45_156",
       "45_157",
+      "45_42",
+      "45_43",
       "45_44",
       "45_45",
       "45_46",
@@ -476,6 +523,7 @@
       "52_60",
       "52_61",
       "52_62",
+      "53_150",
       "53_152",
       "53_154",
       "53_49",
@@ -487,16 +535,19 @@
       "53_55",
       "54_148",
       "54_151",
+      "54_153",
+      "54_50",
       "54_51",
       "54_52",
       "54_53",
       "54_54",
+      "55_51",
       "55_54",
       "56_54"
     ],
-    "spawnRecords": 7181,
-    "distinctIds": 1072,
-    "configs": 1308
+    "spawnRecords": 7994,
+    "distinctIds": 1213,
+    "configs": 1542
   },
   "drops": {
     "1": [
@@ -822,7 +873,7 @@
       "Raw chicken"
     ],
     "47": [
-      "Rats tail"
+      "Rat's tail"
     ],
     "48": [
       "Raw oomlie"
@@ -1061,7 +1112,7 @@
       "Bat bones"
     ],
     "81": [
-      "Cow hide",
+      "Cowhide",
       "Raw beef"
     ],
     "82": [
@@ -2501,7 +2552,7 @@
       "Raw tuna"
     ],
     "397": [
-      "Cow hide",
+      "Cowhide",
       "Raw beef"
     ],
     "412": [
@@ -3361,7 +3412,7 @@
       "Bones"
     ],
     "955": [
-      "Cow hide",
+      "Cowhide",
       "Raw beef"
     ],
     "988": [
@@ -4276,220 +4327,40 @@
       "Uncut sapphire"
     ],
     "1101": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1102": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1103": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1104": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1105": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1106": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1107": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1108": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1109": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1110": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1111": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1112": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1115": [
       "Adamant axe",
@@ -4582,313 +4453,58 @@
       "Uncut sapphire"
     ],
     "1118": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1119": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1120": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1121": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1122": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1123": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1124": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1125": [
       "Big bones"
     ],
     "1126": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1127": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1128": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1129": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1130": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1131": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1132": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1133": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1134": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1138": [
-      "Adamant med helm",
-      "Adamnt warhammer",
-      "Big bones",
-      "Black warhammer",
-      "Cell key 1",
-      "Cell key 2",
-      "Coal",
-      "Coins",
-      "Earth rune",
-      "Herb",
-      "Law rune",
-      "Mithril sq shield",
-      "Nature rune",
-      "Raw mackerel",
-      "Steel med helm",
-      "Steel warhammer"
+      "Big bones"
     ],
     "1153": [
       "Body rune",
@@ -6209,6 +5825,231 @@
       "Uncut ruby",
       "Uncut sapphire",
       "Water rune"
+    ],
+    "1401": [
+      "Feather",
+      "Raw chicken"
+    ],
+    "1402": [
+      "Feather",
+      "Raw chicken"
+    ],
+    "1403": [
+      "Feather",
+      "Raw chicken"
+    ],
+    "1404": [
+      "Raw rabbit"
+    ],
+    "1432": [
+      "Monkey bones"
+    ],
+    "1446": [
+      "Monkey bones"
+    ],
+    "1447": [
+      "Monkey bones"
+    ],
+    "1455": [
+      "Monkey bones"
+    ],
+    "1456": [
+      "Monkey bones"
+    ],
+    "1457": [
+      "Monkey bones"
+    ],
+    "1458": [
+      "Monkey bones"
+    ],
+    "1459": [
+      "Monkey bones"
+    ],
+    "1460": [
+      "Monkey bones"
+    ],
+    "1465": [
+      "Monkey bones"
+    ],
+    "1466": [
+      "Monkey bones"
+    ],
+    "1467": [
+      "Monkey bones"
+    ],
+    "1471": [
+      "Bones"
+    ],
+    "1472": [
+      "Ashes"
+    ],
+    "1536": [
+      "Iron pickaxe"
+    ],
+    "1556": [
+      "Bones"
+    ],
+    "1558": [
+      "Wolf bones"
+    ],
+    "1559": [
+      "Wolf bones"
+    ],
+    "1560": [
+      "Big bones"
+    ],
+    "1561": [
+      "Big bones"
+    ],
+    "1562": [
+      "Big bones"
+    ],
+    "1563": [
+      "Big bones"
+    ],
+    "1564": [
+      "Big bones"
+    ],
+    "1565": [
+      "Big bones"
+    ],
+    "1566": [
+      "Big bones"
+    ],
+    "1575": [
+      "Big bones"
+    ],
+    "1582": [
+      "Big bones"
+    ],
+    "1583": [
+      "Big bones"
+    ],
+    "1584": [
+      "Big bones"
+    ],
+    "1585": [
+      "Big bones"
+    ],
+    "1586": [
+      "Big bones"
+    ],
+    "1587": [
+      "Big bones"
+    ],
+    "1588": [
+      "Big bones"
+    ],
+    "1589": [
+      "Babydragon bones"
+    ],
+    "1590": [
+      "Adamant dart(p)",
+      "Adamant javelin",
+      "Adamant platebody",
+      "Adamantite bar",
+      "Blood rune",
+      "Bolts",
+      "Bronze bar",
+      "Chaos talisman",
+      "Coins",
+      "Death rune",
+      "Dragon bones",
+      "Dragon med helm",
+      "Dragon platelegs",
+      "Dragon spear",
+      "Dragonstone",
+      "Fire rune",
+      "Half of a key",
+      "Law rune",
+      "Mithril 2h sword",
+      "Mithril axe",
+      "Mithril battleaxe",
+      "Mithril kiteshield",
+      "Nature rune",
+      "Nature talisman",
+      "Rune 2h sword",
+      "Rune arrow",
+      "Rune battleaxe",
+      "Rune javelin",
+      "Rune kiteshield",
+      "Rune knife",
+      "Rune longsword",
+      "Rune spear",
+      "Rune sq shield",
+      "Runite bar",
+      "Shield left half",
+      "Silver ore",
+      "Steel arrow",
+      "Swordfish",
+      "Uncut diamond",
+      "Uncut emerald",
+      "Uncut ruby",
+      "Uncut sapphire"
+    ],
+    "1591": [
+      "Adamant 2h sword",
+      "Adamant axe",
+      "Adamant battleaxe",
+      "Adamant javelin",
+      "Adamant sq shield",
+      "Adamantite bar",
+      "Blood rune",
+      "Bolts",
+      "Chaos talisman",
+      "Coins",
+      "Curry",
+      "Death rune",
+      "Dragon bones",
+      "Dragon med helm",
+      "Dragon platelegs",
+      "Dragon spear",
+      "Dragonstone",
+      "Half of a key",
+      "Iron bar",
+      "Law rune",
+      "Nature rune",
+      "Nature talisman",
+      "Rune 2h sword",
+      "Rune arrow",
+      "Rune battleaxe",
+      "Rune dart(p)",
+      "Rune javelin",
+      "Rune kiteshield",
+      "Rune knife",
+      "Rune med helm",
+      "Rune spear",
+      "Rune sq shield",
+      "Runite bar",
+      "Shield left half",
+      "Silver ore",
+      "Soul rune",
+      "Steel arrow",
+      "Super strength(1)",
+      "Uncut diamond",
+      "Uncut emerald",
+      "Uncut ruby",
+      "Uncut sapphire"
+    ],
+    "1592": [
+      "Adamant kiteshield",
+      "Blood rune",
+      "Bolts",
+      "Coins",
+      "Curry",
+      "Dragon bones",
+      "Dragon platelegs",
+      "Rune axe",
+      "Rune dart(p)",
+      "Rune full helm",
+      "Rune javelin",
+      "Rune knife",
+      "Rune mace",
+      "Runite bar",
+      "Soul rune",
+      "Steel bar",
+      "Super attack(3)",
+      "Super defence(2)"
     ]
   }
 }

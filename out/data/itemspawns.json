@@ -1,15 +1,15 @@
 {
   "generation": {
-    "revisionTime": "2026-08-17T00:06:38.248Z",
+    "revisionTime": "2026-09-10T15:12:18.054Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
     "bounds": {
       "minX": 1884,
       "maxX": 3646,
-      "minZ": 2887,
+      "minZ": 2694,
       "maxZ": 10362
     },
-    "spawnRecords": 1151
+    "spawnRecords": 1204
   },
   "spawns": [
     {
@@ -471,6 +471,86 @@
       "count": 1,
       "mapX": 37,
       "mapZ": 153
+    },
+    {
+      "x": 2368,
+      "z": 3135,
+      "level": 0,
+      "id": 590,
+      "name": "Tinderbox",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
+    },
+    {
+      "x": 2371,
+      "z": 3127,
+      "level": 0,
+      "id": 1925,
+      "name": "Bucket",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
+    },
+    {
+      "x": 2371,
+      "z": 3128,
+      "level": 0,
+      "id": 1925,
+      "name": "Bucket",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
+    },
+    {
+      "x": 2428,
+      "z": 3079,
+      "level": 0,
+      "id": 1925,
+      "name": "Bucket",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
+    },
+    {
+      "x": 2428,
+      "z": 3080,
+      "level": 0,
+      "id": 1925,
+      "name": "Bucket",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
+    },
+    {
+      "x": 2431,
+      "z": 3072,
+      "level": 0,
+      "id": 590,
+      "name": "Tinderbox",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
+    },
+    {
+      "x": 2376,
+      "z": 3127,
+      "level": 1,
+      "id": 590,
+      "name": "Tinderbox",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
+    },
+    {
+      "x": 2423,
+      "z": 3080,
+      "level": 1,
+      "id": 590,
+      "name": "Tinderbox",
+      "count": 1,
+      "mapX": 37,
+      "mapZ": 48
     },
     {
       "x": 2381,
@@ -2523,6 +2603,76 @@
       "mapZ": 53
     },
     {
+      "x": 2563,
+      "z": 4603,
+      "level": 0,
+      "id": 401,
+      "name": "Seaweed",
+      "count": 1,
+      "mapX": 40,
+      "mapZ": 71
+    },
+    {
+      "x": 2570,
+      "z": 4569,
+      "level": 0,
+      "id": 2347,
+      "name": "Hammer",
+      "count": 1,
+      "mapX": 40,
+      "mapZ": 71
+    },
+    {
+      "x": 2571,
+      "z": 4546,
+      "level": 0,
+      "id": 401,
+      "name": "Seaweed",
+      "count": 1,
+      "mapX": 40,
+      "mapZ": 71
+    },
+    {
+      "x": 2579,
+      "z": 4594,
+      "level": 0,
+      "id": 2347,
+      "name": "Hammer",
+      "count": 1,
+      "mapX": 40,
+      "mapZ": 71
+    },
+    {
+      "x": 2591,
+      "z": 4549,
+      "level": 0,
+      "id": 401,
+      "name": "Seaweed",
+      "count": 1,
+      "mapX": 40,
+      "mapZ": 71
+    },
+    {
+      "x": 2602,
+      "z": 4584,
+      "level": 0,
+      "id": 2347,
+      "name": "Hammer",
+      "count": 1,
+      "mapX": 40,
+      "mapZ": 71
+    },
+    {
+      "x": 2605,
+      "z": 4597,
+      "level": 0,
+      "id": 2347,
+      "name": "Hammer",
+      "count": 1,
+      "mapX": 40,
+      "mapZ": 71
+    },
+    {
       "x": 2653,
       "z": 9767,
       "level": 0,
@@ -3163,6 +3313,86 @@
       "mapZ": 73
     },
     {
+      "x": 2709,
+      "z": 9116,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
+      "x": 2719,
+      "z": 9097,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
+      "x": 2719,
+      "z": 9120,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
+      "x": 2722,
+      "z": 9110,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
+      "x": 2729,
+      "z": 9116,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
+      "x": 2730,
+      "z": 9106,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
+      "x": 2732,
+      "z": 9093,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
+      "x": 2739,
+      "z": 9097,
+      "level": 0,
+      "id": 3187,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 142
+    },
+    {
       "x": 2715,
       "z": 9819,
       "level": 0,
@@ -3271,6 +3501,26 @@
       "count": 1,
       "mapX": 42,
       "mapZ": 153
+    },
+    {
+      "x": 2701,
+      "z": 2717,
+      "level": 0,
+      "id": 960,
+      "name": "Plank",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 42
+    },
+    {
+      "x": 2704,
+      "z": 2718,
+      "level": 0,
+      "id": 960,
+      "name": "Plank",
+      "count": 1,
+      "mapX": 42,
+      "mapZ": 42
     },
     {
       "x": 2691,
@@ -3571,6 +3821,26 @@
       "count": 1,
       "mapX": 42,
       "mapZ": 58
+    },
+    {
+      "x": 2769,
+      "z": 9203,
+      "level": 0,
+      "id": 4034,
+      "name": "Monkey skull",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 143
+    },
+    {
+      "x": 2800,
+      "z": 2797,
+      "level": 0,
+      "id": 1271,
+      "name": "Adamant pickaxe",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 43
     },
     {
       "x": 2755,
@@ -4111,6 +4381,236 @@
       "count": 2,
       "mapX": 43,
       "mapZ": 54
+    },
+    {
+      "x": 2806,
+      "z": 3770,
+      "level": 0,
+      "id": 562,
+      "name": "Chaos rune",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 58
+    },
+    {
+      "x": 2776,
+      "z": 3781,
+      "level": 0,
+      "id": 526,
+      "name": "Bones",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 59
+    },
+    {
+      "x": 2802,
+      "z": 3780,
+      "level": 0,
+      "id": 562,
+      "name": "Chaos rune",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 59
+    },
+    {
+      "x": 2804,
+      "z": 3785,
+      "level": 0,
+      "id": 4084,
+      "name": "Sled",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 59
+    },
+    {
+      "x": 2761,
+      "z": 3845,
+      "level": 0,
+      "id": 562,
+      "name": "Chaos rune",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 60
+    },
+    {
+      "x": 2767,
+      "z": 3855,
+      "level": 0,
+      "id": 532,
+      "name": "Big bones",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 60
+    },
+    {
+      "x": 2788,
+      "z": 3870,
+      "level": 0,
+      "id": 1623,
+      "name": "Uncut sapphire",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 60
+    },
+    {
+      "x": 2770,
+      "z": 4515,
+      "level": 0,
+      "id": 1267,
+      "name": "Iron pickaxe",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2770,
+      "z": 4516,
+      "level": 0,
+      "id": 995,
+      "name": "Coins",
+      "count": 3,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2771,
+      "z": 4516,
+      "level": 0,
+      "id": 995,
+      "name": "Coins",
+      "count": 10,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2772,
+      "z": 4515,
+      "level": 0,
+      "id": 995,
+      "name": "Coins",
+      "count": 4,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2772,
+      "z": 4517,
+      "level": 0,
+      "id": 995,
+      "name": "Coins",
+      "count": 2,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2800,
+      "z": 4500,
+      "level": 0,
+      "id": 1755,
+      "name": "Chisel",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2801,
+      "z": 4493,
+      "level": 0,
+      "id": 1265,
+      "name": "Bronze pickaxe",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2801,
+      "z": 4513,
+      "level": 0,
+      "id": 1265,
+      "name": "Bronze pickaxe",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2803,
+      "z": 4491,
+      "level": 0,
+      "id": 1755,
+      "name": "Chisel",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 70
+    },
+    {
+      "x": 2795,
+      "z": 4579,
+      "level": 0,
+      "id": 1265,
+      "name": "Bronze pickaxe",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 71
+    },
+    {
+      "x": 2801,
+      "z": 4572,
+      "level": 0,
+      "id": 1205,
+      "name": "Bronze dagger",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 71
+    },
+    {
+      "x": 2806,
+      "z": 4569,
+      "level": 0,
+      "id": 1205,
+      "name": "Bronze dagger",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 71
+    },
+    {
+      "x": 2808,
+      "z": 4572,
+      "level": 0,
+      "id": 1237,
+      "name": "Bronze spear",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 71
+    },
+    {
+      "x": 2811,
+      "z": 4572,
+      "level": 0,
+      "id": 1265,
+      "name": "Bronze pickaxe",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 71
+    },
+    {
+      "x": 2812,
+      "z": 4566,
+      "level": 0,
+      "id": 1295,
+      "name": "Steel longsword",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 71
+    },
+    {
+      "x": 2812,
+      "z": 4571,
+      "level": 0,
+      "id": 1269,
+      "name": "Steel pickaxe",
+      "count": 1,
+      "mapX": 43,
+      "mapZ": 71
     },
     {
       "x": 2755,
@@ -11521,6 +12021,36 @@
       "count": 1,
       "mapX": 54,
       "mapZ": 53
+    },
+    {
+      "x": 3494,
+      "z": 3395,
+      "level": 0,
+      "id": 1939,
+      "name": "Swamp tar",
+      "count": 1,
+      "mapX": 54,
+      "mapZ": 53
+    },
+    {
+      "x": 3494,
+      "z": 3401,
+      "level": 0,
+      "id": 1939,
+      "name": "Swamp tar",
+      "count": 1,
+      "mapX": 54,
+      "mapZ": 53
+    },
+    {
+      "x": 3502,
+      "z": 3401,
+      "level": 0,
+      "id": 1939,
+      "name": "Swamp tar",
+      "count": 1,
+      "mapX": 54,
+      "mapZ": 53
     }
   ],
   "byX": {
@@ -11720,7 +12250,45 @@
         }
       ]
     },
+    "2368": {
+      "3135": [
+        {
+          "x": 2368,
+          "z": 3135,
+          "level": 0,
+          "id": 590,
+          "name": "Tinderbox",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
+        }
+      ]
+    },
     "2371": {
+      "3127": [
+        {
+          "x": 2371,
+          "z": 3127,
+          "level": 0,
+          "id": 1925,
+          "name": "Bucket",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
+        }
+      ],
+      "3128": [
+        {
+          "x": 2371,
+          "z": 3128,
+          "level": 0,
+          "id": 1925,
+          "name": "Bucket",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
+        }
+      ],
       "9461": [
         {
           "x": 2371,
@@ -11799,6 +12367,20 @@
           "count": 1,
           "mapX": 37,
           "mapZ": 147
+        }
+      ]
+    },
+    "2376": {
+      "3127": [
+        {
+          "x": 2376,
+          "z": 3127,
+          "level": 1,
+          "id": 590,
+          "name": "Tinderbox",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
         }
       ]
     },
@@ -12471,6 +13053,18 @@
       ]
     },
     "2423": {
+      "3080": [
+        {
+          "x": 2423,
+          "z": 3080,
+          "level": 1,
+          "id": 590,
+          "name": "Tinderbox",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
+        }
+      ],
       "9449": [
         {
           "x": 2423,
@@ -12577,6 +13171,30 @@
       ]
     },
     "2428": {
+      "3079": [
+        {
+          "x": 2428,
+          "z": 3079,
+          "level": 0,
+          "id": 1925,
+          "name": "Bucket",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
+        }
+      ],
+      "3080": [
+        {
+          "x": 2428,
+          "z": 3080,
+          "level": 0,
+          "id": 1925,
+          "name": "Bucket",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
+        }
+      ],
       "3510": [
         {
           "x": 2428,
@@ -12613,6 +13231,20 @@
           "count": 1,
           "mapX": 37,
           "mapZ": 147
+        }
+      ]
+    },
+    "2431": {
+      "3072": [
+        {
+          "x": 2431,
+          "z": 3072,
+          "level": 0,
+          "id": 590,
+          "name": "Tinderbox",
+          "count": 1,
+          "mapX": 37,
+          "mapZ": 48
         }
       ]
     },
@@ -13999,6 +14631,18 @@
           "mapZ": 50
         }
       ],
+      "4603": [
+        {
+          "x": 2563,
+          "z": 4603,
+          "level": 0,
+          "id": 401,
+          "name": "Seaweed",
+          "count": 1,
+          "mapX": 40,
+          "mapZ": 71
+        }
+      ],
       "9511": [
         {
           "x": 2563,
@@ -14119,6 +14763,18 @@
       ]
     },
     "2570": {
+      "4569": [
+        {
+          "x": 2570,
+          "z": 4569,
+          "level": 0,
+          "id": 2347,
+          "name": "Hammer",
+          "count": 1,
+          "mapX": 40,
+          "mapZ": 71
+        }
+      ],
       "9604": [
         {
           "x": 2570,
@@ -14167,6 +14823,18 @@
           "count": 1,
           "mapX": 40,
           "mapZ": 47
+        }
+      ],
+      "4546": [
+        {
+          "x": 2571,
+          "z": 4546,
+          "level": 0,
+          "id": 401,
+          "name": "Seaweed",
+          "count": 1,
+          "mapX": 40,
+          "mapZ": 71
         }
       ]
     },
@@ -14285,6 +14953,20 @@
           "count": 1,
           "mapX": 40,
           "mapZ": 150
+        }
+      ]
+    },
+    "2579": {
+      "4594": [
+        {
+          "x": 2579,
+          "z": 4594,
+          "level": 0,
+          "id": 2347,
+          "name": "Hammer",
+          "count": 1,
+          "mapX": 40,
+          "mapZ": 71
         }
       ]
     },
@@ -14448,6 +15130,20 @@
         }
       ]
     },
+    "2591": {
+      "4549": [
+        {
+          "x": 2591,
+          "z": 4549,
+          "level": 0,
+          "id": 401,
+          "name": "Seaweed",
+          "count": 1,
+          "mapX": 40,
+          "mapZ": 71
+        }
+      ]
+    },
     "2592": {
       "9740": [
         {
@@ -14487,6 +15183,20 @@
           "count": 1,
           "mapX": 40,
           "mapZ": 46
+        }
+      ]
+    },
+    "2602": {
+      "4584": [
+        {
+          "x": 2602,
+          "z": 4584,
+          "level": 0,
+          "id": 2347,
+          "name": "Hammer",
+          "count": 1,
+          "mapX": 40,
+          "mapZ": 71
         }
       ]
     },
@@ -14553,6 +15263,18 @@
           "count": 1,
           "mapX": 40,
           "mapZ": 53
+        }
+      ],
+      "4597": [
+        {
+          "x": 2605,
+          "z": 4597,
+          "level": 0,
+          "id": 2347,
+          "name": "Hammer",
+          "count": 1,
+          "mapX": 40,
+          "mapZ": 71
         }
       ]
     },
@@ -15767,6 +16489,18 @@
       ]
     },
     "2701": {
+      "2717": [
+        {
+          "x": 2701,
+          "z": 2717,
+          "level": 0,
+          "id": 960,
+          "name": "Plank",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 42
+        }
+      ],
       "3731": [
         {
           "x": 2701,
@@ -15781,6 +16515,18 @@
       ]
     },
     "2704": {
+      "2718": [
+        {
+          "x": 2704,
+          "z": 2718,
+          "level": 0,
+          "id": 960,
+          "name": "Plank",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 42
+        }
+      ],
       "3475": [
         {
           "x": 2704,
@@ -15805,6 +16551,20 @@
           "count": 1,
           "mapX": 42,
           "mapZ": 58
+        }
+      ]
+    },
+    "2709": {
+      "9116": [
+        {
+          "x": 2709,
+          "z": 9116,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
         }
       ]
     },
@@ -15928,6 +16688,30 @@
           "mapX": 42,
           "mapZ": 58
         }
+      ],
+      "9097": [
+        {
+          "x": 2719,
+          "z": 9097,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
+        }
+      ],
+      "9120": [
+        {
+          "x": 2719,
+          "z": 9120,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
+        }
       ]
     },
     "2720": {
@@ -15995,6 +16779,18 @@
       ]
     },
     "2722": {
+      "9110": [
+        {
+          "x": 2722,
+          "z": 9110,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
+        }
+      ],
       "9816": [
         {
           "x": 2722,
@@ -16036,6 +16832,34 @@
         }
       ]
     },
+    "2729": {
+      "9116": [
+        {
+          "x": 2729,
+          "z": 9116,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
+        }
+      ]
+    },
+    "2730": {
+      "9106": [
+        {
+          "x": 2730,
+          "z": 9106,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
+        }
+      ]
+    },
     "2732": {
       "3224": [
         {
@@ -16047,6 +16871,18 @@
           "count": 1,
           "mapX": 42,
           "mapZ": 50
+        }
+      ],
+      "9093": [
+        {
+          "x": 2732,
+          "z": 9093,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
         }
       ]
     },
@@ -16143,6 +16979,18 @@
           "count": 1,
           "mapX": 42,
           "mapZ": 56
+        }
+      ],
+      "9097": [
+        {
+          "x": 2739,
+          "z": 9097,
+          "level": 0,
+          "id": 3187,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 42,
+          "mapZ": 142
         }
       ]
     },
@@ -16393,6 +17241,18 @@
       ]
     },
     "2761": {
+      "3845": [
+        {
+          "x": 2761,
+          "z": 3845,
+          "level": 0,
+          "id": 562,
+          "name": "Chaos rune",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 60
+        }
+      ],
       "4689": [
         {
           "x": 2761,
@@ -16508,6 +17368,18 @@
           "mapX": 43,
           "mapZ": 49
         }
+      ],
+      "3855": [
+        {
+          "x": 2767,
+          "z": 3855,
+          "level": 0,
+          "id": 532,
+          "name": "Big bones",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 60
+        }
       ]
     },
     "2768": {
@@ -16536,6 +17408,46 @@
         }
       ]
     },
+    "2769": {
+      "9203": [
+        {
+          "x": 2769,
+          "z": 9203,
+          "level": 0,
+          "id": 4034,
+          "name": "Monkey skull",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 143
+        }
+      ]
+    },
+    "2770": {
+      "4515": [
+        {
+          "x": 2770,
+          "z": 4515,
+          "level": 0,
+          "id": 1267,
+          "name": "Iron pickaxe",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 70
+        }
+      ],
+      "4516": [
+        {
+          "x": 2770,
+          "z": 4516,
+          "level": 0,
+          "id": 995,
+          "name": "Coins",
+          "count": 3,
+          "mapX": 43,
+          "mapZ": 70
+        }
+      ]
+    },
     "2771": {
       "2995": [
         {
@@ -16547,6 +17459,18 @@
           "count": 1,
           "mapX": 43,
           "mapZ": 46
+        }
+      ],
+      "4516": [
+        {
+          "x": 2771,
+          "z": 4516,
+          "level": 0,
+          "id": 995,
+          "name": "Coins",
+          "count": 10,
+          "mapX": 43,
+          "mapZ": 70
         }
       ]
     },
@@ -16561,6 +17485,44 @@
           "count": 5,
           "mapX": 43,
           "mapZ": 49
+        }
+      ],
+      "4515": [
+        {
+          "x": 2772,
+          "z": 4515,
+          "level": 0,
+          "id": 995,
+          "name": "Coins",
+          "count": 4,
+          "mapX": 43,
+          "mapZ": 70
+        }
+      ],
+      "4517": [
+        {
+          "x": 2772,
+          "z": 4517,
+          "level": 0,
+          "id": 995,
+          "name": "Coins",
+          "count": 2,
+          "mapX": 43,
+          "mapZ": 70
+        }
+      ]
+    },
+    "2776": {
+      "3781": [
+        {
+          "x": 2776,
+          "z": 3781,
+          "level": 0,
+          "id": 526,
+          "name": "Bones",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 59
         }
       ]
     },
@@ -16644,6 +17606,20 @@
         }
       ]
     },
+    "2788": {
+      "3870": [
+        {
+          "x": 2788,
+          "z": 3870,
+          "level": 0,
+          "id": 1623,
+          "name": "Uncut sapphire",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 60
+        }
+      ]
+    },
     "2790": {
       "3199": [
         {
@@ -16707,6 +17683,18 @@
           "count": 1,
           "mapX": 43,
           "mapZ": 49
+        }
+      ],
+      "4579": [
+        {
+          "x": 2795,
+          "z": 4579,
+          "level": 0,
+          "id": 1265,
+          "name": "Bronze pickaxe",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 71
         }
       ]
     },
@@ -16788,6 +17776,84 @@
         }
       ]
     },
+    "2800": {
+      "2797": [
+        {
+          "x": 2800,
+          "z": 2797,
+          "level": 0,
+          "id": 1271,
+          "name": "Adamant pickaxe",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 43
+        }
+      ],
+      "4500": [
+        {
+          "x": 2800,
+          "z": 4500,
+          "level": 0,
+          "id": 1755,
+          "name": "Chisel",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 70
+        }
+      ]
+    },
+    "2801": {
+      "4493": [
+        {
+          "x": 2801,
+          "z": 4493,
+          "level": 0,
+          "id": 1265,
+          "name": "Bronze pickaxe",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 70
+        }
+      ],
+      "4513": [
+        {
+          "x": 2801,
+          "z": 4513,
+          "level": 0,
+          "id": 1265,
+          "name": "Bronze pickaxe",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 70
+        }
+      ],
+      "4572": [
+        {
+          "x": 2801,
+          "z": 4572,
+          "level": 0,
+          "id": 1205,
+          "name": "Bronze dagger",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 71
+        }
+      ]
+    },
+    "2802": {
+      "3780": [
+        {
+          "x": 2802,
+          "z": 3780,
+          "level": 0,
+          "id": 562,
+          "name": "Chaos rune",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 59
+        }
+      ]
+    },
     "2803": {
       "3382": [
         {
@@ -16799,6 +17865,18 @@
           "count": 1,
           "mapX": 43,
           "mapZ": 52
+        }
+      ],
+      "4491": [
+        {
+          "x": 2803,
+          "z": 4491,
+          "level": 0,
+          "id": 1755,
+          "name": "Chisel",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 70
         }
       ]
     },
@@ -16825,6 +17903,18 @@
           "count": 1,
           "mapX": 43,
           "mapZ": 52
+        }
+      ],
+      "3785": [
+        {
+          "x": 2804,
+          "z": 3785,
+          "level": 0,
+          "id": 4084,
+          "name": "Sled",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 59
         }
       ]
     },
@@ -16865,6 +17955,30 @@
           "count": 1,
           "mapX": 43,
           "mapZ": 53
+        }
+      ],
+      "3770": [
+        {
+          "x": 2806,
+          "z": 3770,
+          "level": 0,
+          "id": 562,
+          "name": "Chaos rune",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 58
+        }
+      ],
+      "4569": [
+        {
+          "x": 2806,
+          "z": 4569,
+          "level": 0,
+          "id": 1205,
+          "name": "Bronze dagger",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 71
         }
       ],
       "4710": [
@@ -16942,6 +18056,18 @@
           "mapX": 43,
           "mapZ": 52
         }
+      ],
+      "4572": [
+        {
+          "x": 2808,
+          "z": 4572,
+          "level": 0,
+          "id": 1237,
+          "name": "Bronze spear",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 71
+        }
       ]
     },
     "2809": {
@@ -16993,6 +18119,46 @@
           "count": 1,
           "mapX": 43,
           "mapZ": 52
+        }
+      ]
+    },
+    "2811": {
+      "4572": [
+        {
+          "x": 2811,
+          "z": 4572,
+          "level": 0,
+          "id": 1265,
+          "name": "Bronze pickaxe",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 71
+        }
+      ]
+    },
+    "2812": {
+      "4566": [
+        {
+          "x": 2812,
+          "z": 4566,
+          "level": 0,
+          "id": 1295,
+          "name": "Steel longsword",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 71
+        }
+      ],
+      "4571": [
+        {
+          "x": 2812,
+          "z": 4571,
+          "level": 0,
+          "id": 1269,
+          "name": "Steel pickaxe",
+          "count": 1,
+          "mapX": 43,
+          "mapZ": 71
         }
       ]
     },
@@ -26597,6 +27763,46 @@
           "count": 1,
           "mapX": 54,
           "mapZ": 148
+        }
+      ]
+    },
+    "3494": {
+      "3395": [
+        {
+          "x": 3494,
+          "z": 3395,
+          "level": 0,
+          "id": 1939,
+          "name": "Swamp tar",
+          "count": 1,
+          "mapX": 54,
+          "mapZ": 53
+        }
+      ],
+      "3401": [
+        {
+          "x": 3494,
+          "z": 3401,
+          "level": 0,
+          "id": 1939,
+          "name": "Swamp tar",
+          "count": 1,
+          "mapX": 54,
+          "mapZ": 53
+        }
+      ]
+    },
+    "3502": {
+      "3401": [
+        {
+          "x": 3502,
+          "z": 3401,
+          "level": 0,
+          "id": 1939,
+          "name": "Swamp tar",
+          "count": 1,
+          "mapX": 54,
+          "mapZ": 53
         }
       ]
     }

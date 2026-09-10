@@ -8,6 +8,7 @@
   html,body{margin:0;height:100%;overflow:hidden;background:#0d1117;color:#e7e7e7;font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;}
   #mmnav{display:flex;align-items:center;gap:4px;height:38px;padding:0 12px;background:#11161c;border-bottom:1px solid #232a31;box-sizing:border-box;flex:0 0 auto;}
   #mmnav .brand{font-weight:600;color:#e7e7e7;margin-right:12px;letter-spacing:.02em;}
+  #mmnav .rev{font-weight:400;font-size:11px;color:#8b96a3;margin-left:4px;background:#1b222a;padding:1px 6px;border-radius:3px;}
   #mmnav a{color:#9aa6b2;text-decoration:none;font-size:13px;padding:5px 10px;border-radius:5px;}
   #mmnav a:hover{background:#1b222a;color:#e7e7e7;}
   #mmnav a.active{background:#21303f;color:#58a6ff;}
@@ -382,6 +383,11 @@ function showTip(hit) {
   if (hit.clusterN && hit.clusterN > 1) html += " <span class='kv'>&times; " + hit.clusterN + "</span>";
   if (e.cat && e.cat !== "place") html += " <span class='kv'>· " + esc(e.cat) + "</span>";
   if (e.sub) html += "<div class='r kv'>" + esc(e.sub) + "</div>";
+  if (e.bonuses && (e.bonuses.stabdefence !== undefined || e.bonuses.attackbonus !== undefined)) {
+    var b = e.bonuses;
+    html += "<div class='r kv'>Att: " + (b.stabattack??'-') + "/" + (b.slashattack??'-') + "/" + (b.crushattack??'-') + "  Magic: " + (b.magicattack??'-') + "  Range: " + (b.rangeattack??'-') + "  Str: +" + (b.strengthbonus??'-') + "</div>";
+    html += "<div class='r kv'>Def: " + (b.stabdefence??'-') + "/" + (b.slashdefence??'-') + "/" + (b.crushdefence??'-') + "  Magic: " + (b.magicdefence??'-') + "  Range: " + (b.rangedefence??'-') + "</div>";
+  }
   if (e.drops && e.drops.length) html += "<div class='r kv'>Drops: " + esc(e.drops.join(', ')) + "</div>";
   if (e.shop) {
     for (var si = 0; si < e.shop.shops.length; si++) {

@@ -1,6 +1,6 @@
 {
   "generation": {
-    "revisionTime": "2026-09-10T15:12:17.914Z",
+    "revisionTime": "2026-09-23T13:57:43.968Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
     "bounds": {
@@ -545,8 +545,8 @@
       "55_54",
       "56_54"
     ],
-    "spawnRecords": 7994,
-    "distinctIds": 1213,
+    "spawnRecords": 7995,
+    "distinctIds": 1214,
     "configs": 1542
   },
   "note": "keyed by NPC id; only shops/items with default stock (baseline) > 0 are included",

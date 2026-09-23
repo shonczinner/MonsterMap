@@ -7993,3 +7993,4 @@ absX	absZ	level	id	name	debug	vislevel	att	def	str	hp	rng	mage	members	size	atta
 3639	3510	0	412	Bat	small_bat	6	5	5	5	8	1	1	false	1	0	0	0	0	0	0	2	2	5	2	0	0	0	4
 3644	3498	0	1219	Leech	vampire_leech	52	80	35	20	45	1	1	false	1	0	0	0	0	0	0	0	0	0	0	0	0	0	4
 3646	3467	0	1223	Vampire	vampire_juve	61	55	55	60	40	1	40	false	1	0	0	0	0	0	0	0	0	0	0	0	0	0	4
+3478	9496	0	1160	Kalphite Queen	kalphite_flyingqueen	333	300	300	300	255	1	150	false	5	10	0	0	0	0	0	100	100	100	10	10	0	0	4

@@ -160,5 +160,8 @@ from the top nav bar. Same filter/sort UX as the monster list:
   committed here.
 - Dropped spawns: only dot spawns that fall inside a baked area's trimmed tile
   rectangle appear (~7.3k of 7.3k+; the rest sit in ocean/void tiles).
+- Phase-form spawns: multi-form bosses whose loot NPC has no static spawn
+  (e.g. `kalphite_flyingqueen`) are injected by `gen.ts` offset from the base
+  form so both appear with correct stats/drops (`docs/drops.md`).
 
 Roadmap and detailed notes: see `docs/`.

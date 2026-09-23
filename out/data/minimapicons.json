@@ -1,9 +1,9 @@
 {
   "generation": {
-    "revisionTime": "2026-09-10T15:12:18.136Z",
+    "revisionTime": "2026-09-23T13:57:44.389Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
-    "iconCount": 7047
+    "iconCount": 7048
   },
   "icons": [
     {
@@ -70672,6 +70672,16 @@
       "id": 1223,
       "x": 3646,
       "z": 3467,
+      "level": 0
+    },
+    {
+      "kind": "npc",
+      "mapfunction": -1,
+      "icon": "Kalphite Queen",
+      "name": "Kalphite Queen",
+      "id": 1160,
+      "x": 3478,
+      "z": 9496,
       "level": 0
     }
   ]

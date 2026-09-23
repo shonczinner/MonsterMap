@@ -21,6 +21,17 @@ to the other per-NPC files. This is the **kill loot** table — distinct from
 
 Only NPCs that actually have a drop table are present (no entry = no drops).
 
+## Multi-form bosses (phase NPCs not in `maps-server.zip`)
+
+Some bosses loot only after transforming (e.g. Kalphite Queen → flying queen).
+The ground form spawns in the zip but has no `[ai_queue3,...]` table; the flying
+form has the table but **zero static spawns**, so it never gets a map dot.
+
+`gen.ts` injects a presentational offset spawn for those phase forms
+(`PHASE_FORM_SPAWNS`): clone each base-form spawn, swap to the form's NPC id,
+and shift a few tiles (KQ: +4 x). Both forms then appear on the map/list with
+their own stats; the flying form carries the real drops. No Server files change.
+
 ## Source & generation
 
 - Drops are resolved by `MonsterMap/lib/drops.ts` (`DropResolver`), built as

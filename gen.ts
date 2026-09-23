@@ -55,6 +55,31 @@ const resolveObjDisplay = (token: string): string | null => {
 
 const drops = new DropResolver(config.dropScriptsDir, resolveObjDisplay);
 
+// Multi-form NPCs whose loot form never appears in maps-server.zip: plot it
+// offset from its base form so the map/list show both phases (with the form
+// that actually has the drop table). Purely presentational — Server is untouched.
+const PHASE_FORM_SPAWNS: { baseDebug: string; formDebug: string; dx: number; dz: number }[] = [
+    // ground KQ (id 1158) morphs into flyingqueen (1160) on first "death";
+    // only flyingqueen has [ai_queue3,...] loot. Offset 4 tiles east.
+    { baseDebug: 'kalphite_queen', formDebug: 'kalphite_flyingqueen', dx: 4, dz: 0 }
+];
+{
+    const idByDebug = new Map<string, number>();
+    for (let id = 0; id < NpcType.count; id++) {
+        const t = NpcType.get(id);
+        if (t?.debugname && !idByDebug.has(t.debugname)) idByDebug.set(t.debugname, id);
+    }
+    for (const rule of PHASE_FORM_SPAWNS) {
+        const baseId = idByDebug.get(rule.baseDebug);
+        const formId = idByDebug.get(rule.formDebug);
+        if (baseId === undefined || formId === undefined) continue;
+        const baseSpawns = maps.spawns.filter(s => s.id === baseId);
+        for (const s of baseSpawns) {
+            maps.spawns.push({ ...s, id: formId, x: s.x + rule.dx, z: s.z + rule.dz });
+        }
+    }
+}
+
 // --- resource classification tables (from content skill scripts)
 const miningRocks = parseMiningRocks(config.contentDir);
 const woodcutTrees = parseWoodcutTrees(config.contentDir);

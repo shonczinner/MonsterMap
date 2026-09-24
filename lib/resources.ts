@@ -16,9 +16,9 @@ import { join } from 'node:path';
 
 type TokenResolver = (token: string) => string | null;
 
-type DRowBlock = { name: string; fields: Map<string, string[]> };
+export type DRowBlock = { name: string; fields: Map<string, string[]> };
 
-function loadBlocks(path: string): DRowBlock[] {
+export function loadBlocks(path: string): DRowBlock[] {
     if (!existsSync(path)) {
         return [];
     }
@@ -52,7 +52,7 @@ function loadBlocks(path: string): DRowBlock[] {
     return blocks;
 }
 
-function dataValues(block: DRowBlock, key: string): string[] {
+export function dataValues(block: DRowBlock, key: string): string[] {
     return block.fields.get(key) ?? [];
 }
 

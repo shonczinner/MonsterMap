@@ -29,6 +29,8 @@ Three steps produce `out/monstermap.html`:
     - `out/data/itemspawns.tsv`, `out/data/itemspawns.json` — ground-item spawns (`o{}`)
     - `out/data/resources.tsv`, `out/data/resources.json` — mining rocks, woodcut
       trees, flax, and fishing spots (`l{}` + `n{}` fishing spots)
+    - `out/data/runecrafting.tsv`, `out/data/runecrafting.json` — spawned
+      runecrafting temple ruins and rune altars
     - `out/data/locationnames.tsv`, `out/data/locationnames.json` — city / area /
       POI labels (`content/maps/labels.txt`)
     - `out/data/minimapicons.tsv`, `out/data/minimapicons.json` — minimap icon
@@ -87,7 +89,7 @@ flags override: `--engine/--content/--client/--out/--maps-server <dir|path>`.
 
 - **Areas** — checkboxes to show/hide each of surface / dungeon / extra.
 - **Layers** — per-category toggles (Monsters / drops, NPCs / stores, Item
-  spawns, Mining, Woodcut, Fishing spots, Map icons, Place names).
+  spawns, Mining, Woodcut, Fishing spots, Runecrafting, Map icons, Place names).
 - **Find & flash** — type a name; the dropdown ranks exact → prefix → word-start
   → contains. Pick one and every matching dot **flashes in its layer colour**
   (other dots dim). Nearby matches collapse into one bigger disc labelled `xN`

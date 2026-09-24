@@ -13,6 +13,7 @@ export const CATEGORY_ORDER = [
     'woodcut',
     'fish',
     'flax',
+    'runecraft',
     'poi',
     'place'
 ];
@@ -25,6 +26,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
     woodcut: 'Woodcut trees',
     fish: 'Fishing spots',
     flax: 'Flax',
+    runecraft: 'Runecrafting',
     poi: 'Map icons',
     place: 'Place names'
 };
@@ -38,6 +40,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
     woodcut: '#4caf50', // green
     fish: '#2f7bff',    // blue
     flax: '#b388ff',    // light purple
+    runecraft: '#ff4fa3',
     poi: '#18c2c2',     // cyan/teal
     place: '#e7e7e7'    // white
 };

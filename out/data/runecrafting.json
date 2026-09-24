@@ -1,0 +1,735 @@
+{
+  "generation": {
+    "revisionTime": "2026-09-24T18:01:58.169Z",
+    "engine": "/home/shonc/rs2bot/Server/engine",
+    "content": "/home/shonc/rs2bot/Server/content",
+    "source": "content/scripts/skill_runecraft/configs/runecraft.{loc,dbrow}",
+    "bounds": {
+      "minX": 1884,
+      "maxX": 3646,
+      "minZ": 2694,
+      "maxZ": 10362
+    },
+    "ruins": 10,
+    "altars": 11,
+    "total": 21
+  },
+  "spawns": [
+    {
+      "kind": "altar",
+      "runeType": 1,
+      "rune": "Air rune",
+      "reqLevel": 1,
+      "members": false,
+      "talisman": "Air talisman",
+      "x": 2843,
+      "z": 4833,
+      "level": 0,
+      "id": 2478,
+      "debug": "air_altar",
+      "locName": "Altar",
+      "name": "Air rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 1,
+      "rune": "Air rune",
+      "reqLevel": 1,
+      "members": false,
+      "talisman": "Air talisman",
+      "x": 2984,
+      "z": 3291,
+      "level": 0,
+      "id": 2452,
+      "debug": "airtemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Air temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 2,
+      "rune": "Mind rune",
+      "reqLevel": 2,
+      "members": false,
+      "talisman": "Mind talisman",
+      "x": 2785,
+      "z": 4840,
+      "level": 0,
+      "id": 2479,
+      "debug": "mind_altar",
+      "locName": "Altar",
+      "name": "Mind rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 2,
+      "rune": "Mind rune",
+      "reqLevel": 2,
+      "members": false,
+      "talisman": "Mind talisman",
+      "x": 2981,
+      "z": 3513,
+      "level": 0,
+      "id": 2453,
+      "debug": "mindtemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Mind temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 3,
+      "rune": "Water rune",
+      "reqLevel": 5,
+      "members": false,
+      "talisman": "Water talisman",
+      "x": 2715,
+      "z": 4835,
+      "level": 0,
+      "id": 2480,
+      "debug": "water_altar",
+      "locName": "Altar",
+      "name": "Water rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 3,
+      "rune": "Water rune",
+      "reqLevel": 5,
+      "members": false,
+      "talisman": "Water talisman",
+      "x": 3184,
+      "z": 3164,
+      "level": 0,
+      "id": 2454,
+      "debug": "watertemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Water temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 4,
+      "rune": "Earth rune",
+      "reqLevel": 9,
+      "members": false,
+      "talisman": "Earth talisman",
+      "x": 2657,
+      "z": 4840,
+      "level": 0,
+      "id": 2481,
+      "debug": "earth_altar",
+      "locName": "Altar",
+      "name": "Earth rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 4,
+      "rune": "Earth rune",
+      "reqLevel": 9,
+      "members": false,
+      "talisman": "Earth talisman",
+      "x": 3305,
+      "z": 3473,
+      "level": 0,
+      "id": 2455,
+      "debug": "earthtemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Earth temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 5,
+      "rune": "Fire rune",
+      "reqLevel": 14,
+      "members": false,
+      "talisman": "Fire talisman",
+      "x": 2584,
+      "z": 4837,
+      "level": 0,
+      "id": 2482,
+      "debug": "fire_altar",
+      "locName": "Altar",
+      "name": "Fire rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 5,
+      "rune": "Fire rune",
+      "reqLevel": 14,
+      "members": false,
+      "talisman": "Fire talisman",
+      "x": 3312,
+      "z": 3254,
+      "level": 0,
+      "id": 2456,
+      "debug": "firetemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Fire temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 6,
+      "rune": "Body rune",
+      "reqLevel": 20,
+      "members": false,
+      "talisman": "Body talisman",
+      "x": 2524,
+      "z": 4831,
+      "level": 0,
+      "id": 2483,
+      "debug": "body_altar",
+      "locName": "Altar",
+      "name": "Body rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 6,
+      "rune": "Body rune",
+      "reqLevel": 20,
+      "members": false,
+      "talisman": "Body talisman",
+      "x": 3052,
+      "z": 3444,
+      "level": 0,
+      "id": 2457,
+      "debug": "bodytemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Body temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 7,
+      "rune": "Cosmic rune",
+      "reqLevel": 27,
+      "members": true,
+      "talisman": "Cosmic talisman",
+      "x": 2141,
+      "z": 4832,
+      "level": 0,
+      "id": 2484,
+      "debug": "cosmic_altar",
+      "locName": "Altar",
+      "name": "Cosmic rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 7,
+      "rune": "Cosmic rune",
+      "reqLevel": 27,
+      "members": true,
+      "talisman": "Cosmic talisman",
+      "x": 3175,
+      "z": 9496,
+      "level": 0,
+      "id": 2458,
+      "debug": "cosmictemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Cosmic temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 8,
+      "rune": "Chaos rune",
+      "reqLevel": 35,
+      "members": true,
+      "talisman": "Chaos talisman",
+      "x": 2270,
+      "z": 4841,
+      "level": 0,
+      "id": 2487,
+      "debug": "chaos_altar",
+      "locName": "Altar",
+      "name": "Chaos rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 8,
+      "rune": "Chaos rune",
+      "reqLevel": 35,
+      "members": true,
+      "talisman": "Chaos talisman",
+      "x": 3059,
+      "z": 3590,
+      "level": 0,
+      "id": 2461,
+      "debug": "chaostemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Chaos temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 9,
+      "rune": "Nature rune",
+      "reqLevel": 44,
+      "members": true,
+      "talisman": "Nature talisman",
+      "x": 2399,
+      "z": 4840,
+      "level": 0,
+      "id": 2486,
+      "debug": "nature_altar",
+      "locName": "Altar",
+      "name": "Nature rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 9,
+      "rune": "Nature rune",
+      "reqLevel": 44,
+      "members": true,
+      "talisman": "Nature talisman",
+      "x": 2868,
+      "z": 3018,
+      "level": 0,
+      "id": 2460,
+      "debug": "naturetemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Nature temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 10,
+      "rune": "Law rune",
+      "reqLevel": 54,
+      "members": true,
+      "talisman": "Law talisman",
+      "x": 2463,
+      "z": 4831,
+      "level": 0,
+      "id": 2485,
+      "debug": "law_altar",
+      "locName": "Altar",
+      "name": "Law rune altar"
+    },
+    {
+      "kind": "ruins",
+      "runeType": 10,
+      "rune": "Law rune",
+      "reqLevel": 54,
+      "members": true,
+      "talisman": "Law talisman",
+      "x": 2857,
+      "z": 3380,
+      "level": 0,
+      "id": 2459,
+      "debug": "lawtemple_ruined",
+      "locName": "Mysterious ruins",
+      "name": "Law temple ruins"
+    },
+    {
+      "kind": "altar",
+      "runeType": 11,
+      "rune": "Death rune",
+      "reqLevel": 65,
+      "members": true,
+      "talisman": "Death talisman",
+      "x": 2204,
+      "z": 4835,
+      "level": 0,
+      "id": 2488,
+      "debug": "death_altar",
+      "locName": "Altar",
+      "name": "Death rune altar"
+    }
+  ],
+  "byX": {
+    "2141": {
+      "4832": [
+        {
+          "kind": "altar",
+          "runeType": 7,
+          "rune": "Cosmic rune",
+          "reqLevel": 27,
+          "members": true,
+          "talisman": "Cosmic talisman",
+          "x": 2141,
+          "z": 4832,
+          "level": 0,
+          "id": 2484,
+          "debug": "cosmic_altar",
+          "locName": "Altar",
+          "name": "Cosmic rune altar"
+        }
+      ]
+    },
+    "2204": {
+      "4835": [
+        {
+          "kind": "altar",
+          "runeType": 11,
+          "rune": "Death rune",
+          "reqLevel": 65,
+          "members": true,
+          "talisman": "Death talisman",
+          "x": 2204,
+          "z": 4835,
+          "level": 0,
+          "id": 2488,
+          "debug": "death_altar",
+          "locName": "Altar",
+          "name": "Death rune altar"
+        }
+      ]
+    },
+    "2270": {
+      "4841": [
+        {
+          "kind": "altar",
+          "runeType": 8,
+          "rune": "Chaos rune",
+          "reqLevel": 35,
+          "members": true,
+          "talisman": "Chaos talisman",
+          "x": 2270,
+          "z": 4841,
+          "level": 0,
+          "id": 2487,
+          "debug": "chaos_altar",
+          "locName": "Altar",
+          "name": "Chaos rune altar"
+        }
+      ]
+    },
+    "2399": {
+      "4840": [
+        {
+          "kind": "altar",
+          "runeType": 9,
+          "rune": "Nature rune",
+          "reqLevel": 44,
+          "members": true,
+          "talisman": "Nature talisman",
+          "x": 2399,
+          "z": 4840,
+          "level": 0,
+          "id": 2486,
+          "debug": "nature_altar",
+          "locName": "Altar",
+          "name": "Nature rune altar"
+        }
+      ]
+    },
+    "2463": {
+      "4831": [
+        {
+          "kind": "altar",
+          "runeType": 10,
+          "rune": "Law rune",
+          "reqLevel": 54,
+          "members": true,
+          "talisman": "Law talisman",
+          "x": 2463,
+          "z": 4831,
+          "level": 0,
+          "id": 2485,
+          "debug": "law_altar",
+          "locName": "Altar",
+          "name": "Law rune altar"
+        }
+      ]
+    },
+    "2524": {
+      "4831": [
+        {
+          "kind": "altar",
+          "runeType": 6,
+          "rune": "Body rune",
+          "reqLevel": 20,
+          "members": false,
+          "talisman": "Body talisman",
+          "x": 2524,
+          "z": 4831,
+          "level": 0,
+          "id": 2483,
+          "debug": "body_altar",
+          "locName": "Altar",
+          "name": "Body rune altar"
+        }
+      ]
+    },
+    "2584": {
+      "4837": [
+        {
+          "kind": "altar",
+          "runeType": 5,
+          "rune": "Fire rune",
+          "reqLevel": 14,
+          "members": false,
+          "talisman": "Fire talisman",
+          "x": 2584,
+          "z": 4837,
+          "level": 0,
+          "id": 2482,
+          "debug": "fire_altar",
+          "locName": "Altar",
+          "name": "Fire rune altar"
+        }
+      ]
+    },
+    "2657": {
+      "4840": [
+        {
+          "kind": "altar",
+          "runeType": 4,
+          "rune": "Earth rune",
+          "reqLevel": 9,
+          "members": false,
+          "talisman": "Earth talisman",
+          "x": 2657,
+          "z": 4840,
+          "level": 0,
+          "id": 2481,
+          "debug": "earth_altar",
+          "locName": "Altar",
+          "name": "Earth rune altar"
+        }
+      ]
+    },
+    "2715": {
+      "4835": [
+        {
+          "kind": "altar",
+          "runeType": 3,
+          "rune": "Water rune",
+          "reqLevel": 5,
+          "members": false,
+          "talisman": "Water talisman",
+          "x": 2715,
+          "z": 4835,
+          "level": 0,
+          "id": 2480,
+          "debug": "water_altar",
+          "locName": "Altar",
+          "name": "Water rune altar"
+        }
+      ]
+    },
+    "2785": {
+      "4840": [
+        {
+          "kind": "altar",
+          "runeType": 2,
+          "rune": "Mind rune",
+          "reqLevel": 2,
+          "members": false,
+          "talisman": "Mind talisman",
+          "x": 2785,
+          "z": 4840,
+          "level": 0,
+          "id": 2479,
+          "debug": "mind_altar",
+          "locName": "Altar",
+          "name": "Mind rune altar"
+        }
+      ]
+    },
+    "2843": {
+      "4833": [
+        {
+          "kind": "altar",
+          "runeType": 1,
+          "rune": "Air rune",
+          "reqLevel": 1,
+          "members": false,
+          "talisman": "Air talisman",
+          "x": 2843,
+          "z": 4833,
+          "level": 0,
+          "id": 2478,
+          "debug": "air_altar",
+          "locName": "Altar",
+          "name": "Air rune altar"
+        }
+      ]
+    },
+    "2857": {
+      "3380": [
+        {
+          "kind": "ruins",
+          "runeType": 10,
+          "rune": "Law rune",
+          "reqLevel": 54,
+          "members": true,
+          "talisman": "Law talisman",
+          "x": 2857,
+          "z": 3380,
+          "level": 0,
+          "id": 2459,
+          "debug": "lawtemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Law temple ruins"
+        }
+      ]
+    },
+    "2868": {
+      "3018": [
+        {
+          "kind": "ruins",
+          "runeType": 9,
+          "rune": "Nature rune",
+          "reqLevel": 44,
+          "members": true,
+          "talisman": "Nature talisman",
+          "x": 2868,
+          "z": 3018,
+          "level": 0,
+          "id": 2460,
+          "debug": "naturetemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Nature temple ruins"
+        }
+      ]
+    },
+    "2981": {
+      "3513": [
+        {
+          "kind": "ruins",
+          "runeType": 2,
+          "rune": "Mind rune",
+          "reqLevel": 2,
+          "members": false,
+          "talisman": "Mind talisman",
+          "x": 2981,
+          "z": 3513,
+          "level": 0,
+          "id": 2453,
+          "debug": "mindtemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Mind temple ruins"
+        }
+      ]
+    },
+    "2984": {
+      "3291": [
+        {
+          "kind": "ruins",
+          "runeType": 1,
+          "rune": "Air rune",
+          "reqLevel": 1,
+          "members": false,
+          "talisman": "Air talisman",
+          "x": 2984,
+          "z": 3291,
+          "level": 0,
+          "id": 2452,
+          "debug": "airtemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Air temple ruins"
+        }
+      ]
+    },
+    "3052": {
+      "3444": [
+        {
+          "kind": "ruins",
+          "runeType": 6,
+          "rune": "Body rune",
+          "reqLevel": 20,
+          "members": false,
+          "talisman": "Body talisman",
+          "x": 3052,
+          "z": 3444,
+          "level": 0,
+          "id": 2457,
+          "debug": "bodytemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Body temple ruins"
+        }
+      ]
+    },
+    "3059": {
+      "3590": [
+        {
+          "kind": "ruins",
+          "runeType": 8,
+          "rune": "Chaos rune",
+          "reqLevel": 35,
+          "members": true,
+          "talisman": "Chaos talisman",
+          "x": 3059,
+          "z": 3590,
+          "level": 0,
+          "id": 2461,
+          "debug": "chaostemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Chaos temple ruins"
+        }
+      ]
+    },
+    "3175": {
+      "9496": [
+        {
+          "kind": "ruins",
+          "runeType": 7,
+          "rune": "Cosmic rune",
+          "reqLevel": 27,
+          "members": true,
+          "talisman": "Cosmic talisman",
+          "x": 3175,
+          "z": 9496,
+          "level": 0,
+          "id": 2458,
+          "debug": "cosmictemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Cosmic temple ruins"
+        }
+      ]
+    },
+    "3184": {
+      "3164": [
+        {
+          "kind": "ruins",
+          "runeType": 3,
+          "rune": "Water rune",
+          "reqLevel": 5,
+          "members": false,
+          "talisman": "Water talisman",
+          "x": 3184,
+          "z": 3164,
+          "level": 0,
+          "id": 2454,
+          "debug": "watertemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Water temple ruins"
+        }
+      ]
+    },
+    "3305": {
+      "3473": [
+        {
+          "kind": "ruins",
+          "runeType": 4,
+          "rune": "Earth rune",
+          "reqLevel": 9,
+          "members": false,
+          "talisman": "Earth talisman",
+          "x": 3305,
+          "z": 3473,
+          "level": 0,
+          "id": 2455,
+          "debug": "earthtemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Earth temple ruins"
+        }
+      ]
+    },
+    "3312": {
+      "3254": [
+        {
+          "kind": "ruins",
+          "runeType": 5,
+          "rune": "Fire rune",
+          "reqLevel": 14,
+          "members": false,
+          "talisman": "Fire talisman",
+          "x": 3312,
+          "z": 3254,
+          "level": 0,
+          "id": 2456,
+          "debug": "firetemple_ruined",
+          "locName": "Mysterious ruins",
+          "name": "Fire temple ruins"
+        }
+      ]
+    }
+  }
+}

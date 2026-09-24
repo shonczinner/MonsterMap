@@ -31,6 +31,7 @@ const needed = [
     join(dataDir, 'monsters.json'),
     join(dataDir, 'itemspawns.json'),
     join(dataDir, 'resources.json'),
+    join(dataDir, 'runecrafting.json'),
     join(dataDir, 'locationnames.json'),
     join(dataDir, 'minimapicons.json'),
     join(mapsDir, 'layout.json')
@@ -62,6 +63,7 @@ const dropsData = JSON.parse(readFileSync(join(dataDir, 'drops.json'), 'utf8'));
 const storesData = JSON.parse(readFileSync(join(dataDir, 'stores.json'), 'utf8'));
 const items = JSON.parse(readFileSync(join(dataDir, 'itemspawns.json'), 'utf8'));
 const res = JSON.parse(readFileSync(join(dataDir, 'resources.json'), 'utf8'));
+const runecraft = JSON.parse(readFileSync(join(dataDir, 'runecrafting.json'), 'utf8'));
 const locs = JSON.parse(readFileSync(join(dataDir, 'locationnames.json'), 'utf8'));
 const icons = JSON.parse(readFileSync(join(dataDir, 'minimapicons.json'), 'utf8'));
 const layout = JSON.parse(readFileSync(join(mapsDir, 'layout.json'), 'utf8')) as AreaLayout[];
@@ -105,6 +107,19 @@ for (const s of res.spawns) {
     } else if (s.kind === 'flax') {
         points.push({ x: s.x, z: s.z, level: s.level, cat: 'flax', name: s.name, sub: '', id: s.id });
     }
+}
+for (const s of runecraft.spawns) {
+    points.push({
+        x: s.x,
+        z: s.z,
+        level: s.level,
+        cat: 'runecraft',
+        name: s.name,
+        sub: 'Runecraft lvl ' + s.reqLevel,
+        id: s.id,
+        debug: s.debug,
+        members: s.members
+    });
 }
 // coords already claimed by the monster / fishing layers — those NPCs also
 // carry a minimap icon, so skip the duplicate "Map icon" dot that would paint

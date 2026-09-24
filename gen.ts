@@ -25,7 +25,9 @@ import {
     parseMiningRocks,
     parseWoodcutTrees,
     parseFishingNpcCategories,
-    parseFishingFish
+    parseFishingFish,
+    loadBlocks,
+    dataValues
 } from './lib/resources.ts';
 import { parseLabels } from './lib/labels.ts';
 import { WORLDMAP_KEY_NAMES, iconName, iconNameForLabel } from './lib/icons.ts';
@@ -90,6 +92,96 @@ const isFishingSpot = (id: number): boolean => {
     const type = NpcType.get(id);
     return !!type && type.name === 'Fishing spot';
 };
+
+type RunecraftMeta = {
+    runeType: number;
+    name: string;
+    level: number;
+    rune: string;
+    talisman: string;
+    members: boolean;
+};
+
+type RunecraftLocDef = {
+    runeType: number;
+    kind: 'ruins' | 'altar';
+};
+
+const runecraftMeta = new Map<number, RunecraftMeta>();
+for (const block of loadBlocks(join(config.contentDir, 'scripts/skill_runecraft/configs/runecraft.dbrow'))) {
+    if (dataValues(block, 'table')[0] !== 'runecraft_table') {
+        continue;
+    }
+    let runeType: number | null = null;
+    let name = '';
+    let level = 0;
+    let rune = '';
+    let talisman = '';
+    let members = false;
+    for (const entry of dataValues(block, 'data')) {
+        const comma = entry.indexOf(',');
+        if (comma < 0) {
+            continue;
+        }
+        const field = entry.slice(0, comma).trim();
+        const value = entry.slice(comma + 1).trim();
+        if (field === 'type') runeType = Number(value);
+        else if (field === 'name') name = value;
+        else if (field === 'level') level = Number(value);
+        else if (field === 'rune') rune = value;
+        else if (field === 'talisman') talisman = value;
+        else if (field === 'members') members = value === '1' || value === 'true';
+    }
+    if (runeType !== null && Number.isFinite(runeType) && name) {
+        runecraftMeta.set(runeType, { runeType, name, level, rune, talisman, members });
+    }
+}
+
+const runecraftLocDefs = new Map<string, RunecraftLocDef>();
+for (const block of loadBlocks(join(config.contentDir, 'scripts/skill_runecraft/configs/runecraft.loc'))) {
+    const category = dataValues(block, 'category')[0];
+    if (category !== 'rc_ruins' && category !== 'rc_altar') {
+        continue;
+    }
+    const param = dataValues(block, 'param').find(value => value.startsWith('rune_type,'));
+    if (!param) {
+        continue;
+    }
+    const runeType = Number(param.slice(param.indexOf(',') + 1));
+    if (!Number.isFinite(runeType) || !runecraftMeta.has(runeType)) {
+        continue;
+    }
+    runecraftLocDefs.set(block.name, { runeType, kind: category === 'rc_altar' ? 'altar' : 'ruins' });
+}
+
+const runecraftSpawns: any[] = [];
+for (const spawn of maps.locSpawns) {
+    const type = LocType.get(spawn.id);
+    const definition = type?.debugname ? runecraftLocDefs.get(type.debugname) : undefined;
+    if (!type || !definition) {
+        continue;
+    }
+    const meta = runecraftMeta.get(definition.runeType);
+    if (!meta) {
+        continue;
+    }
+    runecraftSpawns.push({
+        kind: definition.kind,
+        runeType: meta.runeType,
+        rune: resolveObjDisplay(meta.rune) ?? `${meta.name} rune`,
+        reqLevel: meta.level,
+        members: meta.members,
+        talisman: meta.talisman ? resolveObjDisplay(meta.talisman) : '',
+        x: spawn.x,
+        z: spawn.z,
+        level: spawn.level,
+        id: spawn.id,
+        debug: type.debugname,
+        locName: type.name ?? type.debugname ?? `loc_${spawn.id}`,
+        name: `${meta.name} ${definition.kind === 'altar' ? 'rune altar' : 'temple ruins'}`
+    });
+}
+runecraftSpawns.sort((a, b) => a.runeType - b.runeType || a.name.localeCompare(b.name) || a.x - b.x || a.z - b.z);
 
 // =====================================================================
 // monsters (everything except fishing spots)
@@ -418,6 +510,28 @@ writeFileSync(join(dataDir, 'resources.json'), JSON.stringify({
     byX: byX(resourceSpawns)
 }, null, 2));
 
+const runecraftTsvHeader = ['kind', 'rune', 'runeType', 'reqLevel', 'members', 'talisman', 'absX', 'absZ', 'level', 'id', 'debug', 'locName', 'name'];
+const runecraftTsv = [runecraftTsvHeader.join('\t'), ...runecraftSpawns.map(s => [
+    s.kind, s.rune, s.runeType, s.reqLevel, s.members, s.talisman, s.x, s.z, s.level, s.id, s.debug, s.locName, s.name
+].join('\t'))].join('\n') + '\n';
+writeFileSync(join(dataDir, 'runecrafting.tsv'), runecraftTsv);
+const runecraftRuinsCount = runecraftSpawns.filter(s => s.kind === 'ruins').length;
+const runecraftAltarCount = runecraftSpawns.length - runecraftRuinsCount;
+writeFileSync(join(dataDir, 'runecrafting.json'), JSON.stringify({
+    generation: {
+        revisionTime: new Date().toISOString(),
+        engine: config.engineDir,
+        content: config.contentDir,
+        source: 'content/scripts/skill_runecraft/configs/runecraft.{loc,dbrow}',
+        bounds,
+        ruins: runecraftRuinsCount,
+        altars: runecraftAltarCount,
+        total: runecraftSpawns.length
+    },
+    spawns: runecraftSpawns,
+    byX: byX(runecraftSpawns)
+}, null, 2));
+
 // ---- location names
 const placeTsvHeader = ['name', 'type', 'absX', 'absZ'];
 const placeTsv = [placeTsvHeader.join('\t'), ...places.map(p => [p.name, p.type, p.x, p.z].join('\t'))].join('\n') + '\n';
@@ -452,6 +566,7 @@ writeFileSync(join(dataDir, 'minimapicons.json'), JSON.stringify({
 console.log(`monsters: spawns=${stats.spawned} distinct=${stats.distinctIds} configs=${monsterRecords.length} withDrops=${stats.dropped}`);
 console.log(`items:    ${itemSpawns.length}`);
 console.log(`resources: mining=${miningCount} woodcut=${woodcutCount} flax=${flaxCount} fishing=${fishingCount} total=${resourceSpawns.length}`);
+console.log(`runecraft: ruins=${runecraftRuinsCount} altars=${runecraftAltarCount} total=${runecraftSpawns.length}`);
 console.log(`places:   ${places.length}  minimap icons: ${iconLocations.length} (legend ${WORLDMAP_KEY_NAMES.length})`);
 console.log(`bounds: ${bounds.minX},${bounds.minZ} .. ${bounds.maxX},${bounds.maxZ}`);
-console.log(`wrote monsters/itemspawns/resources/locationnames/minimapicons .tsv + .json to ${dataDir}`);
+console.log(`wrote monsters/itemspawns/resources/runecrafting/locationnames/minimapicons .tsv + .json to ${dataDir}`);

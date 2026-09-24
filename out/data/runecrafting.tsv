@@ -1,0 +1,22 @@
+kind	rune	runeType	reqLevel	members	talisman	absX	absZ	level	id	debug	locName	name
+altar	Air rune	1	1	false	Air talisman	2843	4833	0	2478	air_altar	Altar	Air rune altar
+ruins	Air rune	1	1	false	Air talisman	2984	3291	0	2452	airtemple_ruined	Mysterious ruins	Air temple ruins
+altar	Mind rune	2	2	false	Mind talisman	2785	4840	0	2479	mind_altar	Altar	Mind rune altar
+ruins	Mind rune	2	2	false	Mind talisman	2981	3513	0	2453	mindtemple_ruined	Mysterious ruins	Mind temple ruins
+altar	Water rune	3	5	false	Water talisman	2715	4835	0	2480	water_altar	Altar	Water rune altar
+ruins	Water rune	3	5	false	Water talisman	3184	3164	0	2454	watertemple_ruined	Mysterious ruins	Water temple ruins
+altar	Earth rune	4	9	false	Earth talisman	2657	4840	0	2481	earth_altar	Altar	Earth rune altar
+ruins	Earth rune	4	9	false	Earth talisman	3305	3473	0	2455	earthtemple_ruined	Mysterious ruins	Earth temple ruins
+altar	Fire rune	5	14	false	Fire talisman	2584	4837	0	2482	fire_altar	Altar	Fire rune altar
+ruins	Fire rune	5	14	false	Fire talisman	3312	3254	0	2456	firetemple_ruined	Mysterious ruins	Fire temple ruins
+altar	Body rune	6	20	false	Body talisman	2524	4831	0	2483	body_altar	Altar	Body rune altar
+ruins	Body rune	6	20	false	Body talisman	3052	3444	0	2457	bodytemple_ruined	Mysterious ruins	Body temple ruins
+altar	Cosmic rune	7	27	true	Cosmic talisman	2141	4832	0	2484	cosmic_altar	Altar	Cosmic rune altar
+ruins	Cosmic rune	7	27	true	Cosmic talisman	3175	9496	0	2458	cosmictemple_ruined	Mysterious ruins	Cosmic temple ruins
+altar	Chaos rune	8	35	true	Chaos talisman	2270	4841	0	2487	chaos_altar	Altar	Chaos rune altar
+ruins	Chaos rune	8	35	true	Chaos talisman	3059	3590	0	2461	chaostemple_ruined	Mysterious ruins	Chaos temple ruins
+altar	Nature rune	9	44	true	Nature talisman	2399	4840	0	2486	nature_altar	Altar	Nature rune altar
+ruins	Nature rune	9	44	true	Nature talisman	2868	3018	0	2460	naturetemple_ruined	Mysterious ruins	Nature temple ruins
+altar	Law rune	10	54	true	Law talisman	2463	4831	0	2485	law_altar	Altar	Law rune altar
+ruins	Law rune	10	54	true	Law talisman	2857	3380	0	2459	lawtemple_ruined	Mysterious ruins	Law temple ruins
+altar	Death rune	11	65	true	Death talisman	2204	4835	0	2488	death_altar	Altar	Death rune altar

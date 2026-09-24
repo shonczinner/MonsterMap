@@ -25,27 +25,56 @@ await page.screenshot({ path: 'out/smoke.png' });
 // filter to zombie -> exact flash (name 'Zombie')
 async function setFilter(v: string): Promise<string> {
     await page.evaluate((val) => {
-        const t = document.getElementById('filter') as HTMLInputElement;
+        const t = document.getElementById('search') as HTMLInputElement;
         t.value = val;
         t.dispatchEvent(new Event('input'));
     }, v);
+    await page.waitForTimeout(100);
+    await page.evaluate(() => {
+        const first = document.querySelector('#suggest div') as HTMLElement | null;
+        first?.click();
+    });
     await page.waitForTimeout(500);
     return page.evaluate(() => document.getElementById('stats')!.textContent);
 }
+
+async function shownDotCount(): Promise<number> {
+    const text = await page.evaluate(() => document.getElementById('stats')!.textContent ?? '');
+    return Number(/(\d+) dots/.exec(text)?.[1] ?? Number.NaN);
+}
+
+const runecraftData = await page.evaluate(() => {
+    const data = JSON.parse(document.getElementById('mmdata')!.textContent ?? '{}');
+    const points = data.pts.filter((p: { cat: string }) => p.cat === 'runecraft');
+    return {
+        total: points.length,
+        ruins: points.filter((p: { name: string }) => p.name.endsWith('temple ruins')).length,
+        altars: points.filter((p: { name: string }) => p.name.endsWith('rune altar')).length,
+        layer: data.cats.find((c: { key: string }) => c.key === 'runecraft')?.label
+    };
+});
+if (runecraftData.total === 0 || runecraftData.ruins === 0 || runecraftData.altars === 0 || runecraftData.layer !== 'Runecrafting') {
+    throw new Error('runecrafting map data is incomplete: ' + JSON.stringify(runecraftData));
+}
+
+const beforeToggle = await shownDotCount();
+await page.evaluate(() => (document.querySelector('#cats input[data-cat="runecraft"]') as HTMLInputElement).click());
+await page.waitForTimeout(300);
+const hiddenToggle = await shownDotCount();
+await page.evaluate(() => (document.querySelector('#cats input[data-cat="runecraft"]') as HTMLInputElement).click());
+if (beforeToggle - hiddenToggle !== runecraftData.total) {
+    throw new Error(`runecrafting toggle removed ${beforeToggle - hiddenToggle} dots, expected ${runecraftData.total}`);
+}
+
 const before = await setFilter('');
+const runecraftFiltered = await setFilter('Air temple ruins');
+if (!runecraftFiltered?.includes('flashing Air temple ruins') || !runecraftFiltered.includes('1 flashing')) {
+    throw new Error('runecrafting search did not flash Air temple ruins: ' + runecraftFiltered);
+}
 await page.screenshot({ path: 'out/smoke-filtered.png' });
 const filtered = await setFilter('zombie');
 await page.screenshot({ path: 'out/smoke-zombie.png' });
 await setFilter('');
-
-// min level slider
-await page.evaluate(() => {
-    const s = document.getElementById('minlevel') as HTMLInputElement;
-    s.value = '41';
-    s.dispatchEvent(new Event('input'));
-});
-await page.waitForTimeout(300);
-const minLev = await page.evaluate(() => document.getElementById('stats')!.textContent);
 
 // hide the dungeon area
 await page.evaluate(() => {
@@ -70,6 +99,7 @@ await page.screenshot({ path: 'out/smoke-zoom.png' });
 const zoomed = await page.evaluate(() => document.getElementById('stats')!.textContent);
 
 console.log('boot:', JSON.stringify(boot));
-console.log('before:', before, '| zombie:', filtered, '| min level 41:', minLev, '| dungeons hidden:', hidden, '| zoomed:', zoomed);
+console.log('runecraft:', JSON.stringify(runecraftData), '| search:', runecraftFiltered);
+console.log('before:', before, '| zombie:', filtered, '| dungeons hidden:', hidden, '| zoomed:', zoomed);
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no page errors');
 await browser.close();

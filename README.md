@@ -128,7 +128,9 @@ and it appears in the bar on every page.
 A flat, filterable table of every item from the engine `ObjType` cache, linked
 from the top nav bar. Same filter/sort UX as the monster list:
 
-- Text columns (`debug`, `name`, `examine`) match by substring.
+- Text columns (`debug`, `name`, `slot`, `examine`) match by substring. `slot`
+  uses the content's wear-slot names (`hat`, `torso`, `hands`, …) and is `null`
+  for items that aren't equippable.
 - Numeric columns (`id`, `noted`, `dummy`, `weight`, `value`) filter by optional
   `min`/`max` range.
 - Boolean-ish columns (`stackable`, `members`, `lendable`, `tradeable`) are
@@ -143,6 +145,7 @@ from the top nav bar. Same filter/sort UX as the monster list:
 | `lib/config.ts` | Env + CLI-flag loader; expands `${VAR}` refs; validates required paths. |
 | `lib/tiles.ts` | Unzips `maps-server.zip`, parses `n{mapX}_{mapZ}` spawn blocks. |
 | `lib/drops.ts` | Drop-table parser (`[ai_queue3,…]` blocks, recursive `~proc` subtables, `npc_param(death_drop)`) + joiner to NPCs. |
+| `lib/wearpos.ts` | Parses content `equip.constant` → packed `wearpos` int to slot name. |
 | `lib/maps/bake.ts` | Bundles `bakeSource.ts` (`#/…` aliases rewritten to `Server/webclient`'s absolute source paths) and runs it with `JAG`/`OUT` env. |
 | `lib/maps/bakeSource.ts` | Headless bake entry: `BakeMapView` (real `MapView` subclass) renders each area, crops, encodes PNGs + `layout.json`. |
 | `lib/maps/domShim.ts` | Fake DOM/canvas for running the real game `MapView` under Node. |

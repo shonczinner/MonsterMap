@@ -20,6 +20,7 @@ import { pathToFileURL } from 'node:url';
 
 import { loadConfig } from './lib/config.ts';
 import { buildListPage } from './lib/listpage.ts';
+import { loadWearSlots } from './lib/wearpos.ts';
 
 const config = loadConfig();
 
@@ -27,6 +28,7 @@ const { default: ObjType } = await import(
     pathToFileURL(join(config.engineDir, 'src/cache/config/ObjType.ts')).href
 );
 ObjType.load(join(config.engineDir, 'data/pack'));
+const wearSlots = loadWearSlots(config.contentDir);
 
 // combat bonus param IDs (from combat.param)
 const PARAM_IDS: Record<string, { id: number; def?: number }> = {
@@ -39,6 +41,7 @@ type ItemRecord = {
     id: number;
     debug: string;
     name: string;
+    slot: string;
     stackable: string;
     members: string;
     noted: number;
@@ -59,6 +62,7 @@ for (let id = 0; id < ObjType.count; id++) {
         id,
         debug: obj.debugname,
         name: obj.name ?? '',
+        slot: obj.wearpos >= 0 ? (wearSlots[obj.wearpos] ?? String(obj.wearpos)) : 'null',
         stackable: obj.stackable ? 'yes' : 'no',
         members: obj.members ? 'yes' : 'no',
         noted: obj.certtemplate ?? -1,
@@ -82,7 +86,7 @@ for (let id = 0; id < ObjType.count; id++) {
 items.sort((a, b) => a.id - b.id);
 
 const bonusCols = Object.keys(PARAM_IDS);
-const header = ['id', 'debug', 'name', 'stackable', 'members', 'noted', 'dummy', 'weight', 'value', 'lendable', 'tradeable', 'examine', ...bonusCols];
+const header = ['id', 'debug', 'name', 'slot', 'stackable', 'members', 'noted', 'dummy', 'weight', 'value', 'lendable', 'tradeable', 'examine', ...bonusCols];
 const tsv = [header.join('\t'), ...items.map((it) =>
     header.map(c => String(it[c] ?? '')).join('\t')
 )].join('\n') + '\n';

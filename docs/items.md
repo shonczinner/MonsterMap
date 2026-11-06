@@ -35,11 +35,32 @@ ObjType.load(join(config.engineDir, 'data/pack'));
 | `value` | High alchemy value |
 | `tradeable` | Tradeable flag |
 | `examine` | Examine text |
-| `wearpos` | Equipment slot: 0=hat, 3=weapon, 4=torso, 5=shield, 7=legs, 10=feet, 12=ring, 13=quiver |
+| `wearpos` | Primary equipment slot as a packed int (see below) |
+| `wearpos2`, `wearpos3` | Extra slots the item also occupies (-1 = none) |
 | `params` | Key-value param map (combat bonuses, etc.) |
 
 Only items with a `debugname` are included — unnamed items (id-only) are
 excluded.
+
+### Wear-slot names — `equip.constant` (content source)
+
+`obj.dat` packs the wear slot as an integer (`ObjType.decode` codes 13/14/27).
+The int → name mapping comes from the Server content source:
+
+`Server/content/scripts/player/configs/equip.constant`
+
+```
+^wearpos_hat = 0      ^wearpos_torso = 4     ^wearpos_hands = 9
+^wearpos_back = 1     ^wearpos_lhand = 5     ^wearpos_feet = 10
+^wearpos_front = 2    ^wearpos_arms = 6      ^wearpos_jaw = 11
+^wearpos_rhand = 3    ^wearpos_legs = 7      ^wearpos_ring = 12
+                      ^wearpos_head = 8      ^wearpos_quiver = 13
+```
+
+`lib/wearpos.ts` parses that file programmatically (no hardcoded slot table, no
+rs2b0t dependency) and `items.ts` joins it to `ObjType.wearpos`. The `slot`
+column therefore uses the content's own names (`hat`, `torso`, `hands`, `feet`,
+`front`, `quiver`, …) and is `null` when `wearpos === -1`.
 
 ### Combat bonus params — `ObjType.params`
 
@@ -90,7 +111,8 @@ So scimitars show `attackrate: 4` (default), staves with explicit
 
 ```
 ObjType (obj.dat) ──→  for each item with a debugname:
-                          read base properties (name, stackable, weight, etc.)
+                          read base properties (name, slot, stackable, weight, etc.)
+                          decode wearpos via content equip.constant
                           extract combat params from ObjType.params
                           apply attackrate default for weapons (wearpos 3)
                               │
@@ -105,6 +127,7 @@ ObjType (obj.dat) ──→  for each item with a debugname:
 | `id` | ObjType id | Item config id |
 | `debug` | `ObjType.debugname` | Internal name |
 | `name` | `ObjType.name` | Display name |
+| `slot` | `ObjType.wearpos` + `equip.constant` | Primary worn slot name (`hat`, `torso`, …), or `null` if not equippable |
 | `stackable` | `ObjType.stackable` | `yes`/`no` |
 | `members` | `ObjType.members` | `yes`/`no` |
 | `noted` | `ObjType.certtemplate` | Certificate template id (-1 = not noted) |

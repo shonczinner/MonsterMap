@@ -444,11 +444,16 @@ function showTip(hit) {
   if (hit.clusterN && hit.clusterN > 1) html += " <span class='kv'>&times; " + hit.clusterN + "</span>";
   if (e.cat && e.cat !== "place") html += " <span class='kv'>· " + esc(e.cat) + "</span>";
   if (e.sub) html += "<div class='r kv'>" + esc(e.sub) + "</div>";
-  if (e.hp) html += "<div class='r kv'>HP: " + e.hp + "</div>";
-  if (e.bonuses && (e.bonuses.stabdefence !== undefined || e.bonuses.attackbonus !== undefined)) {
+  if (e.stats && e.stats.length >= 6) {
+    var s = e.stats;
+    html += "<div class='r kv'>Att " + s[0] + " &middot; Def " + s[1] + " &middot; Str " + s[2] + " &middot; HP " + s[3] + " &middot; Magic " + s[5] + " &middot; Range " + s[4] + "</div>";
+  }
+  if (e.bonuses) {
     var b = e.bonuses;
-    html += "<div class='r kv'>Att: " + (b.stabattack??'-') + "/" + (b.slashattack??'-') + "/" + (b.crushattack??'-') + "  Magic: " + (b.magicattack??'-') + "  Range: " + (b.rangeattack??'-') + "  Str: +" + (b.strengthbonus??'-') + "</div>";
-    html += "<div class='r kv'>Def: " + (b.stabdefence??'-') + "/" + (b.slashdefence??'-') + "/" + (b.crushdefence??'-') + "  Magic: " + (b.magicdefence??'-') + "  Range: " + (b.rangedefence??'-') + "</div>";
+    function sgn(v) { v = v || 0; return (v > 0 ? "+" : "") + v; }
+    // NPCs only have one melee attack bonus (no per-style attack params).
+    html += "<div class='r kv'>Bonus: Atk " + sgn(b.attackbonus) + " &middot; Str " + sgn(b.strengthbonus) + " &middot; Speed " + (b.attackrate ?? 4) + "t</div>";
+    html += "<div class='r kv'>Def: stab " + (b.stabdefence ?? 0) + " &middot; slash " + (b.slashdefence ?? 0) + " &middot; crush " + (b.crushdefence ?? 0) + " &middot; magic " + (b.magicdefence ?? 0) + " &middot; range " + (b.rangedefence ?? 0) + "</div>";
   }
   if (e.drops && e.drops.length) html += "<div class='r kv'>Drops: " + esc(e.drops.join(', ')) + "</div>";
   if (e.shop) {

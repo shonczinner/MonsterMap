@@ -163,11 +163,15 @@ render time by `map.ts`.
 3. Attaches `point.drops` from `dropsData.drops[id]` (with per-spawn conditional
    resolution for the `randomjewel` talisman via `lib/conddrops.ts`)
 4. Attaches `point.shop` from `storesData.stores[id]`
-5. Attaches `point.bonuses` from the monster record's `bonuses` field and
-   `point.hp` from `stats[3]` (used by the map's Min HP filter)
-6. The hover tooltip (`template.html`) renders: name, level, HP, combat bonuses
-   (Att: X/X/X Magic:X Range:X Str:+X / Def: X/X/X Magic:X Range:X), drops,
-   and shop stock
+5. Attaches `point.bonuses` from the monster record's `bonuses` field, plus
+   `point.stats` (base combat stats) and `point.hp` (`stats[3]`, used by the
+   map's Min HP filter)
+6. The hover tooltip (`template.html`) renders: name, level, base stats
+   (Att / Def / Str / HP / Magic / Range), NPC combat bonuses (single Atk
+   bonus, Str bonus, attack speed, and stab/slash/crush/magic/range defence),
+   drops, and shop stock. NPCs have no per-style attack bonuses in this engine
+   (`npc_combat_melee.rs2`: "npcs only have one attackbonus"), so the tooltip
+   shows `attackbonus` rather than the (always-zero) stab/slash/crush params.
 
 ## How `list.ts` uses it
 

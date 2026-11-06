@@ -59,6 +59,15 @@ if (runecraftData.total === 0 || runecraftData.ruins === 0 || runecraftData.alta
     throw new Error('runecrafting map data is incomplete: ' + JSON.stringify(runecraftData));
 }
 
+const zombieStats = await page.evaluate(() => {
+    const data = JSON.parse(document.getElementById('mmdata')!.textContent ?? '{}');
+    const z = data.pts.find((p: { cat: string; name: string }) => p.cat === 'monster' && p.name === 'Zombie');
+    return z ? { stats: z.stats, hp: z.hp, bonuses: z.bonuses } : null;
+});
+if (!zombieStats || !Array.isArray(zombieStats.stats) || zombieStats.stats.length !== 6 || !zombieStats.hp || !zombieStats.bonuses) {
+    throw new Error('monster points are missing combat stats/bonuses: ' + JSON.stringify(zombieStats));
+}
+
 const beforeToggle = await shownDotCount();
 await page.evaluate(() => (document.querySelector('#cats input[data-cat="runecraft"]') as HTMLInputElement).click());
 await page.waitForTimeout(300);

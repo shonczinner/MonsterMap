@@ -163,8 +163,9 @@ render time by `map.ts`.
 3. Attaches `point.drops` from `dropsData.drops[id]` (with per-spawn conditional
    resolution for the `randomjewel` talisman via `lib/conddrops.ts`)
 4. Attaches `point.shop` from `storesData.stores[id]`
-5. Attaches `point.bonuses` from the monster record's `bonuses` field
-6. The hover tooltip (`template.html`) renders: name, level, combat bonuses
+5. Attaches `point.bonuses` from the monster record's `bonuses` field and
+   `point.hp` from `stats[3]` (used by the map's Min HP filter)
+6. The hover tooltip (`template.html`) renders: name, level, HP, combat bonuses
    (Att: X/X/X Magic:X Range:X Str:+X / Def: X/X/X Magic:X Range:X), drops,
    and shop stock
 

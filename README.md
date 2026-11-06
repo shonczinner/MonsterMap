@@ -90,16 +90,20 @@ flags override: `--engine/--content/--client/--out/--maps-server <dir|path>`.
 - **Areas** — checkboxes to show/hide each of surface / dungeon / extra.
 - **Layers** — per-category toggles (Monsters / drops, NPCs / stores, Item
   spawns, Mining, Woodcut, Fishing spots, Runecrafting, Map icons, Place names).
+- **Filters** — **Min HP** hides monster dots below that hitpoints (0 = off,
+  monsters only), **Min cluster size** hides clusters with fewer spawns
+  (1 = off, applies to both search-flash clusters and cluster-everything), and
+  **Cluster everything** groups every visible same-name spawn into camps on the
+  map without needing a search. The **Cluster radius** box sets the shared
+  clustering / min-stop spacing in tiles (default 32).
 - **Find & flash** — type a name; the dropdown ranks exact → prefix → word-start
   → contains. Pick one and every matching dot **flashes in its layer colour**
   (other dots dim). Nearby matches collapse into one bigger disc labelled `xN`
   so clumps are easy to count.
 - **Selection navigation** — a `‹ n / total ›` bar steps through the distinct
-  matches; the `r` box sets the min tile spacing (default 32) used to collapse
-  same-layer clumps for both the nav list and the flashing discs.
-- **Min level** — slider hides monsters below a vislevel.
-- **Hover** — tooltip with name, id, combat level, stats, area, tile, drops,
-  and (for shops) stock.
+  matches (using the same cluster radius).
+- **Hover** — tooltip with name, id, combat level, HP, stats, area, tile, drops,
+  and (for shops) stock. Clustered discs report their `xN` count.
 - **Drag** to pan, **scroll** to zoom (pivots at the cursor).
 
 ## Monster list page controls (`out/monsters.html`)

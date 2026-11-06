@@ -3,6 +3,7 @@ node_modules
 
 # output (built site is tracked & published via GitHub Pages; only the bake scratch dir is ignored)
 out/build
+out/smoke*.png
 dist
 *.tgz
 

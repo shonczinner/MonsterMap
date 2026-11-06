@@ -20,6 +20,9 @@
   h2{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8b96a3;margin:14px 0 6px;}
   label{display:block;margin:4px 0;}
   input[type=text]{width:100%;box-sizing:border-box;margin-top:3px;background:#161b22;border:1px solid #30363d;color:#e6edf3;padding:5px 7px;border-radius:4px;}
+  input[type=number]{background:#161b22;border:1px solid #30363d;color:#e6edf3;padding:4px 6px;border-radius:4px;width:72px;font-family:inherit;}
+  .filters label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 0;}
+  .filters label.chk{justify-content:flex-start;}
   .hint{color:#6b7683;font-size:11px;margin-top:5px;}
   .legend{display:grid;grid-template-columns:14px 1fr;gap:4px 9px;align-items:center;}
   .sw{width:14px;height:12px;border-radius:2px;border:1px solid rgba(255,255,255,.08);}
@@ -65,6 +68,14 @@ __MM_NAV__
       <div class="areas" id="areas"></div>
       <h2>Layers</h2>
       <div id="cats"></div>
+      <h2>Filters</h2>
+      <div class="filters">
+        <label title="hide monsters below this hitpoints (0 = off)"><span>Min HP</span><input id="minhp" type="number" min="0" max="255" step="1" value="0"></label>
+        <label title="hide clusters with fewer spawns (1 = off)"><span>Min cluster size</span><input id="mincluster" type="number" min="1" max="500" step="1" value="1"></label>
+        <label title="cluster radius / min spacing between stops (tiles)"><span>Cluster radius</span><input id="snapdist" type="number" min="0" max="300" value="32"></label>
+        <label class="chk" title="group every visible dot into same-name camps"><input id="clusterall" type="checkbox"> <span>Cluster everything</span></label>
+      </div>
+      <div class="hint">cluster everything groups same-name spawns on the map without a search; cluster radius is shared with the search stops</div>
       <h2>Find &amp; flash</h2>
       <div class="searchwrap">
         <input type="text" id="search" placeholder="name e.g. goblin, copper, Bank, Lumbridge" autocomplete="off">
@@ -74,7 +85,6 @@ __MM_NAV__
           <button id="selprev" title="Previous match">&#8249;</button>
           <span id="selcount" class="kv"></span>
           <button id="selnext" title="Next match">&#8250;</button>
-          <label class="kv" title="min spacing between stops (tiles)">r<input id="snapdist" type="number" min="0" max="300" value="32" style="width:44px;background:#0d1117;color:#cfd8e0;border:1px solid #2a323b;border-radius:3px;margin-left:2px;"></label>
         </div>
       </div>
       <div class="hint">type to list matches; click one to flash those dots; &times; clears it</div>
@@ -151,6 +161,8 @@ for (var ci = 0; ci < cats.length; ci++) shownCats[cats[ci].key] = true;
 var ppt = 1, ox = 0, oy = 0;
 var dragging = false, lastX = 0, lastY = 0;
 var animId = 0, exactName = "";
+var minHp = 0, minCluster = 1, clusterAll = false;
+var allClusters = [], allClustersKey = "";
 var suggestEl = document.getElementById("suggest");
 var suggestSel = -1;
 
@@ -164,6 +176,30 @@ function spawnAreaIndex(x, z) {
 }
 function areaScreenX(a, x) { return ox + (x - a.tileX0) * ppt; }
 function areaScreenY(a) { return oy + a.yOff * ppt; }
+// does point `p` survive the layer/area/HP filters?
+function pointShown(p) {
+  if (!shownCats[p.cat]) return false;
+  var ai = spawnAreaIndex(p.x, p.z);
+  if (ai < 0 || !shownAreas[ai]) return false;
+  if (minHp > 0 && p.cat === "monster" && (p.hp || 0) < minHp) return false;
+  return true;
+}
+function screenOf(p) {
+  var ai = spawnAreaIndex(p.x, p.z);
+  if (ai < 0) return null;
+  var a = stack[ai];
+  return { x: areaScreenX(a, p.x), y: areaScreenY(a) + (a.tileZTop - p.z) * ppt };
+}
+// all-name clusters for the current filters, cached until a filter changes
+function getAllClusters() {
+  var key = JSON.stringify([minHp, SNAP_MIN_DIST, shownCats, shownAreas]);
+  if (key === allClustersKey) return allClusters;
+  var vis = [];
+  for (var i = 0; i < pts.length; i++) if (pointShown(pts[i])) vis.push(pts[i]);
+  allClusters = buildAllClusters(vis, SNAP_MIN_DIST);
+  allClustersKey = key;
+  return allClusters;
+}
 
 function fit() {
   ppt = Math.min((W - 24) / stackW, (H - 24) / stackH);
@@ -212,68 +248,86 @@ function draw() {
     return "rgba(" + r + "," + g + "," + b + "," + a + ")";
   }
 
-  // dots
-  for (var k = 0; k < pts.length; k++) {
-    var p = pts[k];
-    if (!shownCats[p.cat]) continue;
-    var ai = spawnAreaIndex(p.x, p.z);
-    if (ai < 0 || !shownAreas[ai]) continue;
-    var a2 = stack[ai];
-    var px = areaScreenX(a2, p.x), py = areaScreenY(a2) + (a2.tileZTop - p.z) * ppt;
-    if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
-    var kind = flashKind(p, exactName);
-    if (kind) {
-      flashing++;
-      flashPts.push({ p: p, px: px, py: py, cat: p.cat });
-      continue;
-    } else {
-      ctx.globalAlpha = exactName ? 0.30 : 1;
-      ctx.fillStyle = colorOf[p.cat] || "#ffffff";
-      ctx.beginPath();
-      ctx.arc(px, py, dot, 0, Math.PI * 2);
-      ctx.fill();
+  var clusterMode = clusterAll && !exactName;
+
+  // dots (cluster-everything replaces them with the discs below)
+  if (!clusterMode) {
+    for (var k = 0; k < pts.length; k++) {
+      var p = pts[k];
+      if (!pointShown(p)) continue;
+      var ai = spawnAreaIndex(p.x, p.z);
+      var a2 = stack[ai];
+      var px = areaScreenX(a2, p.x), py = areaScreenY(a2) + (a2.tileZTop - p.z) * ppt;
+      if (px < -40 || py < -40 || px > W + 40 || py > H + 40) continue;
+      var kind = flashKind(p, exactName);
+      if (kind) {
+        flashing++;
+        flashPts.push({ p: p, px: px, py: py, cat: p.cat });
+        continue;
+      } else {
+        ctx.globalAlpha = exactName ? 0.30 : 1;
+        ctx.fillStyle = colorOf[p.cat] || "#ffffff";
+        ctx.beginPath();
+        ctx.arc(px, py, dot, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      shown++;
     }
-    shown++;
   }
   ctx.globalAlpha = 1;
 
-  // clustered flashing markers — one bigger disc per clump, labelled xN
+  // clustered markers — one bigger disc per same-name clump, labelled xN.
+  // Search clusters only the flashing points; cluster-everything clusters
+  // every visible point. Min cluster size hides undersized discs in both.
   flashClusters = [];
-  if (flashPts.length) {
-    var clusters = buildClusters(flashPts, SNAP_MIN_DIST);
-    for (var cj = 0; cj < clusters.length; cj++) {
-      var c = clusters[cj], n = c.pts.length, cx = c.pts[0].px, cy = c.pts[0].py;
-      if (n > 1) {
-        var sx = 0, sy = 0;
-        for (var pi = 0; pi < n; pi++) { sx += c.pts[pi].px; sy += c.pts[pi].py; }
-        cx = sx / n; cy = sy / n;
+  var camps = 0, clusterDots = 0;
+  var clusters = exactName
+    ? buildClusters(flashPts, SNAP_MIN_DIST)
+    : (clusterMode ? getAllClusters() : []);
+  clusters = visibleClusters(clusters, minCluster);
+  for (var cj = 0; cj < clusters.length; cj++) {
+    var c = clusters[cj], n = c.pts.length, cx = 0, cy = 0, screenPts = [], ok = n > 0;
+    for (var pi = 0; pi < n; pi++) {
+      var e = c.pts[pi], cp = e.p || e, ex, ey;
+      if (e.px !== undefined) { ex = e.px; ey = e.py; }
+      else {
+        var sc = screenOf(cp);
+        if (!sc) { ok = false; break; }
+        ex = sc.x; ey = sc.y;
       }
-      var fc = colorOf[c.cat] || "#ffffff";
-      var R = Math.max(dot + 7, 9);
-      ctx.fillStyle = hexA(fc, 0.25 + 0.4 * pulse);
-      ctx.beginPath();
-      ctx.arc(cx, cy, R + 4 + (1 - pulse) * 10, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = fc;
-      ctx.beginPath();
-      ctx.arc(cx, cy, R, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = fc;
-      ctx.beginPath();
-      ctx.arc(cx, cy, R + 2, 0, Math.PI * 2);
-      ctx.stroke();
-      if (n > 1) {
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.font = Math.max(9, R | 0) + "px ui-monospace,monospace";
-        ctx.fillStyle = "#0d1117";
-        ctx.fillText("x" + n, cx, cy + 0.5);
-      }
-      flashClusters.push({ name: c.name, cat: c.cat, n: n, cx: cx, cy: cy, R: R, pts: c.pts });
+      screenPts.push({ p: cp, px: ex, py: ey });
+      cx += ex; cy += ey;
     }
+    if (!ok) continue;
+    cx /= n; cy /= n;
+    if (cx < -60 || cy < -60 || cx > W + 60 || cy > H + 60) continue;
+    var fc = colorOf[c.cat] || "#ffffff";
+    var R = Math.max(dot + 7, 9);
+    ctx.fillStyle = hexA(fc, 0.25 + 0.4 * pulse);
+    ctx.beginPath();
+    ctx.arc(cx, cy, R + 4 + (1 - pulse) * 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = fc;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = fc;
+    ctx.beginPath();
+    ctx.arc(cx, cy, R + 2, 0, Math.PI * 2);
+    ctx.stroke();
+    if (n > 1) {
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = Math.max(9, R | 0) + "px ui-monospace,monospace";
+      ctx.fillStyle = "#0d1117";
+      ctx.fillText("x" + n, cx, cy + 0.5);
+    }
+    flashClusters.push({ name: c.name, cat: c.cat, n: n, cx: cx, cy: cy, R: R, pts: screenPts });
+    camps++; clusterDots += n;
   }
+  if (clusterMode) shown = clusterDots;
 
   // place labels (text)
   if (shownCats.place) {
@@ -297,8 +351,13 @@ function draw() {
     }
   }
 
-  statsEl.textContent = shown + " dots" + (shownCats.place ? " + " + lbls.length + " labels" : "") +
+  var statsTxt = shown + " dots";
+  if (clusterMode) statsTxt += " in " + camps + " camps";
+  statsTxt += (shownCats.place ? " + " + lbls.length + " labels" : "") +
     (exactName ? "  · flashing " + exactName : "") + "  (" + flashing + " flashing)";
+  if (minHp > 0) statsTxt += "  · HP \u2265 " + minHp;
+  if (minCluster > 1) statsTxt += "  · cluster \u2265 " + minCluster;
+  statsEl.textContent = statsTxt;
 
   // pinned tile marker
   if (pinned) {
@@ -350,15 +409,17 @@ function nearest(sx, sy) {
     }
   }
   var best = null, bestD = 26 * 26, bestLabel = false;
-  for (var k = 0; k < pts.length; k++) {
-    var p = pts[k];
-    if (!shownCats[p.cat]) continue;
-    var ai = spawnAreaIndex(p.x, p.z);
-    if (ai < 0 || !shownAreas[ai]) continue;
-    var a = stack[ai];
-    var dx = areaScreenX(a, p.x) - sx, dy = (areaScreenY(a) + (a.tileZTop - p.z) * ppt) - sy;
-    var d = dx * dx + dy * dy;
-    if (d < bestD) { bestD = d; best = p; bestLabel = false; }
+  // in cluster-everything mode the discs are the only hit target for dots
+  if (!(clusterAll && !exactName)) {
+    for (var k = 0; k < pts.length; k++) {
+      var p = pts[k];
+      if (!pointShown(p)) continue;
+      var ai = spawnAreaIndex(p.x, p.z);
+      var a = stack[ai];
+      var dx = areaScreenX(a, p.x) - sx, dy = (areaScreenY(a) + (a.tileZTop - p.z) * ppt) - sy;
+      var d = dx * dx + dy * dy;
+      if (d < bestD) { bestD = d; best = p; bestLabel = false; }
+    }
   }
   if (shownCats.place) {
     for (var li = 0; li < lbls.length; li++) {
@@ -383,6 +444,7 @@ function showTip(hit) {
   if (hit.clusterN && hit.clusterN > 1) html += " <span class='kv'>&times; " + hit.clusterN + "</span>";
   if (e.cat && e.cat !== "place") html += " <span class='kv'>· " + esc(e.cat) + "</span>";
   if (e.sub) html += "<div class='r kv'>" + esc(e.sub) + "</div>";
+  if (e.hp) html += "<div class='r kv'>HP: " + e.hp + "</div>";
   if (e.bonuses && (e.bonuses.stabdefence !== undefined || e.bonuses.attackbonus !== undefined)) {
     var b = e.bonuses;
     html += "<div class='r kv'>Att: " + (b.stabattack??'-') + "/" + (b.slashattack??'-') + "/" + (b.crushattack??'-') + "  Magic: " + (b.magicattack??'-') + "  Range: " + (b.rangeattack??'-') + "  Str: +" + (b.strengthbonus??'-') + "</div>";
@@ -485,7 +547,7 @@ var SNAP_MIN_DIST = Number(snapInput && snapInput.value) || 32; // min tile spac
 function rebuildSelection() {
   selection = [];
   if (exactName) {
-    var raw = collectMatches(pts, exactName, shownCats, shownAreas, spawnAreaIndex);
+    var raw = collectMatches(pts, exactName, shownCats, shownAreas, spawnAreaIndex).filter(pointShown);
     selection = dedupeByCluster(raw, SNAP_MIN_DIST);
   }
   if (selIndex >= selection.length) selIndex = selection.length - 1;
@@ -513,7 +575,7 @@ function stepSel(dir) {
 }
 var lastMatches = [];
 function renderSuggest(q) {
-  if (!q) { suggestEl.style.display = "none"; suggestSel = -1; lastMatches = []; return; }
+  if (!q) { suggestEl.style.display = "none"; suggestEl.innerHTML = ""; suggestSel = -1; lastMatches = []; return; }
   var lower = q.toLowerCase();
   var matches = [];
   for (var i = 0; i < ALL_NAMES.length; i++) {
@@ -527,7 +589,7 @@ function renderSuggest(q) {
     else score = 3;                                       // mid-word contains
     matches.push({ n: n, score: score });
   }
-  if (matches.length === 0) { suggestEl.style.display = "none"; return; }
+  if (matches.length === 0) { suggestEl.style.display = "none"; suggestEl.innerHTML = ""; return; }
   matches.sort(function (a, b) { return a.score - b.score || a.n.localeCompare(b.n); });
   if (matches.length > 200) matches.length = 200;
   lastMatches = matches.map(function (m) { return m.n; });
@@ -542,6 +604,7 @@ function renderSuggest(q) {
   suggestSel = -1;
 }
 function pickName(nm) {
+  if (nm == null) return;
   document.getElementById("search").value = nm;
   selIndex = 0;
   setExact(nm);
@@ -587,6 +650,26 @@ document.getElementById("selprev").addEventListener("click", function () { stepS
 document.getElementById("selnext").addEventListener("click", function () { stepSel(1); });
 if (snapInput) snapInput.addEventListener("input", function () {
   SNAP_MIN_DIST = Number(snapInput.value) || 0;
+  if (exactName) rebuildSelection();
+  requestDraw();
+});
+
+// ---- HP / cluster filters
+var minHpInput = document.getElementById("minhp");
+var minClusterInput = document.getElementById("mincluster");
+var clusterAllInput = document.getElementById("clusterall");
+if (minHpInput) minHpInput.addEventListener("input", function () {
+  minHp = Math.max(0, Number(minHpInput.value) || 0);
+  requestDraw();
+  if (exactName) rebuildSelection();
+});
+if (minClusterInput) minClusterInput.addEventListener("input", function () {
+  minCluster = Math.max(1, Number(minClusterInput.value) || 1);
+  requestDraw();
+});
+if (clusterAllInput) clusterAllInput.addEventListener("change", function () {
+  clusterAll = clusterAllInput.checked;
+  requestDraw();
   if (exactName) rebuildSelection();
 });
 

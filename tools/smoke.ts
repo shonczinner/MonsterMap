@@ -30,11 +30,13 @@ async function setFilter(v: string): Promise<string> {
         t.dispatchEvent(new Event('input'));
     }, v);
     await page.waitForTimeout(100);
-    await page.evaluate(() => {
-        const first = document.querySelector('#suggest div') as HTMLElement | null;
-        first?.click();
-    });
-    await page.waitForTimeout(500);
+    if (v) {
+        await page.evaluate(() => {
+            const first = document.querySelector('#suggest div') as HTMLElement | null;
+            first?.click();
+        });
+        await page.waitForTimeout(500);
+    }
     return page.evaluate(() => document.getElementById('stats')!.textContent);
 }
 
@@ -75,6 +77,52 @@ await page.screenshot({ path: 'out/smoke-filtered.png' });
 const filtered = await setFilter('zombie');
 await page.screenshot({ path: 'out/smoke-zombie.png' });
 await setFilter('');
+const allDots = await shownDotCount();
+
+// min HP hides low-HP monsters
+await page.evaluate(() => {
+    const i = document.getElementById('minhp') as HTMLInputElement;
+    i.value = '100';
+    i.dispatchEvent(new Event('input'));
+});
+await page.waitForTimeout(300);
+const hpDots = await shownDotCount();
+if (!(hpDots < allDots)) {
+    throw new Error(`min HP did not hide monsters: ${allDots} -> ${hpDots}`);
+}
+await page.evaluate(() => {
+    const i = document.getElementById('minhp') as HTMLInputElement;
+    i.value = '0';
+    i.dispatchEvent(new Event('input'));
+});
+
+// cluster everything (no search) -> camps; min cluster size drops small camps
+await page.evaluate(() => (document.getElementById('clusterall') as HTMLInputElement).click());
+await page.waitForTimeout(600);
+const clustered = await page.evaluate(() => document.getElementById('stats')!.textContent ?? '');
+const campsBefore = Number(/(\d+) camps/.exec(clustered)?.[1] ?? Number.NaN);
+if (!clustered.includes('camps') || !(campsBefore > 0)) {
+    throw new Error('cluster-everything produced no camps: ' + clustered);
+}
+await page.screenshot({ path: 'out/smoke-clusters.png' });
+await page.evaluate(() => {
+    const i = document.getElementById('mincluster') as HTMLInputElement;
+    i.value = '2';
+    i.dispatchEvent(new Event('input'));
+});
+await page.waitForTimeout(300);
+const clustered2 = await page.evaluate(() => document.getElementById('stats')!.textContent ?? '');
+const campsAfter = Number(/(\d+) camps/.exec(clustered2)?.[1] ?? Number.NaN);
+if (!(campsAfter < campsBefore)) {
+    throw new Error(`min cluster size did not drop camps: ${campsBefore} -> ${campsAfter}`);
+}
+await page.evaluate(() => {
+    const i = document.getElementById('mincluster') as HTMLInputElement;
+    i.value = '1';
+    i.dispatchEvent(new Event('input'));
+    (document.getElementById('clusterall') as HTMLInputElement).click();
+});
+await page.waitForTimeout(300);
 
 // hide the dungeon area
 await page.evaluate(() => {
@@ -101,5 +149,6 @@ const zoomed = await page.evaluate(() => document.getElementById('stats')!.textC
 console.log('boot:', JSON.stringify(boot));
 console.log('runecraft:', JSON.stringify(runecraftData), '| search:', runecraftFiltered);
 console.log('before:', before, '| zombie:', filtered, '| dungeons hidden:', hidden, '| zoomed:', zoomed);
+console.log('filters: hp', allDots, '->', hpDots, '| camps', campsBefore, '->', campsAfter);
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no page errors');
 await browser.close();

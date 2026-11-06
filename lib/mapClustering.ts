@@ -78,3 +78,54 @@ function buildClusters(flashPts, minDist) {
   }
   return clusters;
 }
+
+// Same grouping rule as buildClusters (same category + name within minDist
+// tiles), but for the whole map (~30k points) rather than a search result.
+// Points are bucketed by `cat|name` and then by spatial cell, so each point
+// only checks the clusters in the 3x3 cells around it instead of every cluster.
+function buildAllClusters(points, minDist) {
+  var r2 = minDist * minDist;
+  var cell = Math.max(1, minDist);
+  var buckets = {}, keys = [];
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i], key = p.cat + '\u0000' + p.name;
+    if (!buckets[key]) { buckets[key] = { pts: [], cells: {}, out: [] }; keys.push(key); }
+    buckets[key].pts.push(p);
+  }
+  var out = [];
+  for (var ki = 0; ki < keys.length; ki++) {
+    var b = buckets[keys[ki]], list = b.pts, cells = b.cells;
+    for (var pi = 0; pi < list.length; pi++) {
+      var pp = list[pi];
+      var cx = Math.floor(pp.x / cell), cz = Math.floor(pp.z / cell), placed = false;
+      for (var dz = -1; dz <= 1 && !placed; dz++) {
+        for (var dx = -1; dx <= 1 && !placed; dx++) {
+          var arr = cells[(cx + dx) + ',' + (cz + dz)];
+          if (!arr) continue;
+          for (var ci = 0; ci < arr.length; ci++) {
+            var cl = arr[ci];
+            var ddx = pp.x - cl.x, ddz = pp.z - cl.z;
+            if (ddx * ddx + ddz * ddz <= r2) { cl.pts.push(pp); placed = true; break; }
+          }
+        }
+      }
+      if (!placed) {
+        var ncl = { x: pp.x, z: pp.z, cat: pp.cat, name: pp.name, pts: [pp] };
+        b.out.push(ncl); out.push(ncl);
+        var ck = cx + ',' + cz;
+        (cells[ck] || (cells[ck] = [])).push(ncl);
+      }
+    }
+  }
+  return out;
+}
+
+// Drop clusters smaller than `minSize` (both cluster views honour this).
+function visibleClusters(clusters, minSize) {
+  if (!minSize || minSize <= 1) return clusters;
+  var out = [];
+  for (var i = 0; i < clusters.length; i++) {
+    if (clusters[i].pts.length >= minSize) out.push(clusters[i]);
+  }
+  return out;
+}

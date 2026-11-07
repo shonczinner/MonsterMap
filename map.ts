@@ -82,6 +82,81 @@ const areaIndexOf = (x: number, z: number): number => {
     return -1;
 };
 
+// --- multi-combat zones from Server content/maps/multiway.csv
+// Each data line is `level_mapX_mapZ_localX_localZ`, covering an 8x8 tile zone.
+// `//` lines name the region that follows. Adjacent zones are merged into
+// rectangles (per region + baked area) so the overlay is a few hundred rects
+// instead of ~4.7k 8px squares.
+type MultiRect = { x0: number; z0: number; x1: number; z1: number; region: string };
+
+function mergeMultiZones(region: string, zones: Map<string, { x: number; z: number }>): MultiRect[] {
+    const rows = new Map<number, number[]>();
+    for (const { x, z } of zones.values()) {
+        const xs = rows.get(z);
+        if (xs) xs.push(x);
+        else rows.set(z, [x]);
+    }
+    const runs = new Map<number, { x0: number; x1: number }[]>();
+    for (const [z, xs] of rows) {
+        xs.sort((a, b) => a - b);
+        const out: { x0: number; x1: number }[] = [];
+        let start = xs[0]!, prev = xs[0]!;
+        for (let i = 1; i < xs.length; i++) {
+            const x = xs[i]!;
+            if (x === prev + 8) { prev = x; continue; }
+            out.push({ x0: start, x1: prev + 8 });
+            start = x; prev = x;
+        }
+        out.push({ x0: start, x1: prev + 8 });
+        runs.set(z, out);
+    }
+    const rects: MultiRect[] = [];
+    const open = new Map<string, MultiRect>();
+    for (const z of [...runs.keys()].sort((a, b) => a - b)) {
+        const next = new Map<string, MultiRect>();
+        for (const r of runs.get(z)!) {
+            const key = r.x0 + ':' + r.x1;
+            const prev = open.get(key);
+            if (prev && prev.z1 === z) {
+                prev.z1 = z + 8;
+                next.set(key, prev);
+            } else {
+                const nr: MultiRect = { x0: r.x0, z0: z, x1: r.x1, z1: z + 8, region };
+                rects.push(nr);
+                next.set(key, nr);
+            }
+        }
+        open.clear();
+        for (const [k, v] of next) open.set(k, v);
+    }
+    return rects;
+}
+
+const multiRects: MultiRect[] = [];
+const multiwayPath = join(config.contentDir, 'maps', 'multiway.csv');
+if (existsSync(multiwayPath)) {
+    const groups = new Map<string, { region: string; zones: Map<string, { x: number; z: number }> }>();
+    let region = 'Multi-combat area';
+    for (const raw of readFileSync(multiwayPath, 'utf8').split(/\r?\n/)) {
+        const line = raw.trim();
+        if (!line) continue;
+        if (line.startsWith('//')) {
+            region = line.replace(/^\/\/\s*/, '') || region;
+            continue;
+        }
+        const [level, mx, mz, lx, lz] = line.split('_').map(Number);
+        if ([level, mx, mz, lx, lz].some(n => !Number.isFinite(n))) continue;
+        const x = (mx! << 6) + lx!, z = (mz! << 6) + lz!;
+        const ai = areaIndexOf(x, z);
+        if (ai < 0) continue; // zone lies outside the baked areas
+        const key = region + '|' + ai;
+        let g = groups.get(key);
+        if (!g) { g = { region, zones: new Map() }; groups.set(key, g); }
+        g.zones.set(x + ',' + z, { x, z });
+    }
+    for (const g of groups.values()) multiRects.push(...mergeMultiZones(g.region, g.zones));
+}
+
 // --- build a unified point list (dots) + place labels (text)
 const points: any[] = [];
 for (const s of monsters.spawns) {
@@ -173,9 +248,9 @@ const cats = CATEGORY_ORDER.map(k => ({ key: k, label: CATEGORY_LABELS[k]!, colo
 const colorOf: Record<string, string> = {};
 for (const k of CATEGORY_ORDER) colorOf[k] = CATEGORY_COLORS[k]!;
 
-const html = render({ pts, lbls, stack, stackWidth, stackHeight, cats, colorOf, allNames: ALL_NAMES });
+const html = render({ pts, lbls, stack, stackWidth, stackHeight, cats, colorOf, allNames: ALL_NAMES, multi: multiRects });
 writeFileSync(join(config.outDir, 'monstermap.html'), html);
-console.log(`wrote ${join(config.outDir, 'monstermap.html')} (${pts.length} dots, ${lbls.length} labels, ${stack.length} areas)`);
+console.log(`wrote ${join(config.outDir, 'monstermap.html')} (${pts.length} dots, ${lbls.length} labels, ${stack.length} areas, ${multiRects.length} multi zones)`);
 
 function render(payload: {
     pts: any[];
@@ -186,6 +261,7 @@ function render(payload: {
     cats: { key: string; label: string; color: string }[];
     colorOf: Record<string, string>;
     allNames: string[];
+    multi: MultiRect[];
 }): string {
     const json = JSON.stringify(payload);
     const tpl = readFileSync(join(import.meta.dir, "template.html"), "utf8");

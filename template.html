@@ -68,6 +68,10 @@ __MM_NAV__
       <div class="areas" id="areas"></div>
       <h2>Layers</h2>
       <div id="cats"></div>
+      <h2>Overlays</h2>
+      <div class="filters">
+        <label class="chk" title="show multi-combat zones"><input id="multiway" type="checkbox"> <span class="sw" style="display:inline-block;background:#ff5252"></span> <span>Multi-combat zones</span></label>
+      </div>
       <h2>Filters</h2>
       <div class="filters">
         <label title="hide monsters below this hitpoints (0 = off)"><span>Min HP</span><input id="minhp" type="number" min="0" max="255" step="1" value="0"></label>
@@ -105,6 +109,8 @@ var pts = data.pts;
 // screen-space flash clusters, refreshed every draw, so hover can hit-test them
 var flashClusters = [];
 var lbls = data.lbls;
+var multi = data.multi || [];
+var showMulti = false;
 var stack = data.stack;
 var stackW = data.stackWidth, stackH = data.stackHeight;
 var cats = data.cats, colorOf = data.colorOf, ALL_NAMES = data.allNames;
@@ -237,6 +243,27 @@ function draw() {
     ctx.fillRect(dx + 2, dy + 2, tw + 8, 16);
     ctx.fillStyle = "#0d1117";
     ctx.fillText(lbl, dx + 6, dy + 14);
+  }
+
+  // multi-combat overlay (drawn under the dots)
+  if (showMulti && multi.length) {
+    ctx.fillStyle = "rgba(255, 82, 82, 0.16)";
+    ctx.strokeStyle = "rgba(255, 120, 120, 0.45)";
+    ctx.lineWidth = 1;
+    for (var mi = 0; mi < multi.length; mi++) {
+      var mr = multi[mi];
+      var mai = spawnAreaIndex(mr.x0, mr.z0);
+      if (mai < 0 || !shownAreas[mai]) continue;
+      var ma = stack[mai];
+      var mx0 = Math.max(mr.x0, ma.tileX0), mx1 = Math.min(mr.x1, ma.tileX1);
+      var mz0 = Math.max(mr.z0, ma.tileZBot), mz1 = Math.min(mr.z1, ma.tileZTop);
+      if (mx1 <= mx0 || mz1 <= mz0) continue;
+      var msx = areaScreenX(ma, mx0), msy = areaScreenY(ma) + (ma.tileZTop - mz1) * ppt;
+      var mw = (mx1 - mx0) * ppt, mh = (mz1 - mz0) * ppt;
+      if (msx > W || msy > H || msx + mw < 0 || msy + mh < 0) continue;
+      ctx.fillRect(msx, msy, mw, mh);
+      ctx.strokeRect(msx + 0.5, msy + 0.5, mw - 1, mh - 1);
+    }
   }
 
   var dot = Math.max(2.2, Math.min(18, ppt * 0.9));
@@ -432,6 +459,18 @@ function nearest(sx, sy) {
       if (d2 < bestD) { bestD = d2; best = L; bestLabel = true; }
     }
   }
+  if (!best && showMulti && multi.length) {
+    var mt = screenToTile(sx, sy);
+    if (mt) {
+      for (var mri = 0; mri < multi.length; mri++) {
+        var mrr = multi[mri];
+        var mrai = spawnAreaIndex(mrr.x0, mrr.z0);
+        if (mrai === mt.ai && mt.x >= mrr.x0 && mt.x < mrr.x1 && mt.z >= mrr.z0 && mt.z < mrr.z1) {
+          return { el: { name: mrr.region, cat: "multi", sub: "multi-combat zone", x: mt.x, z: mt.z, level: 0 }, isLabel: false };
+        }
+      }
+    }
+  }
   return best ? { el: best, isLabel: bestLabel } : null;
 }
 function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
@@ -440,7 +479,7 @@ function esc(s) { return String(s).replace(/[&<>"']/g, function (c) {
 function showTip(hit) {
   if (!hit) { tip.style.display = "none"; return; }
   var e = hit.el;
-  var html = "<b>" + esc(e.name) + "</b> <span class='kv'>#" + e.id + "</span>";
+  var html = "<b>" + esc(e.name) + "</b>" + (e.id !== undefined && e.id !== null ? " <span class='kv'>#" + e.id + "</span>" : "");
   if (hit.clusterN && hit.clusterN > 1) html += " <span class='kv'>&times; " + hit.clusterN + "</span>";
   if (e.cat && e.cat !== "place") html += " <span class='kv'>· " + esc(e.cat) + "</span>";
   if (e.sub) html += "<div class='r kv'>" + esc(e.sub) + "</div>";
@@ -676,6 +715,11 @@ if (clusterAllInput) clusterAllInput.addEventListener("change", function () {
   clusterAll = clusterAllInput.checked;
   requestDraw();
   if (exactName) rebuildSelection();
+});
+var multiToggle = document.getElementById("multiway");
+if (multiToggle) multiToggle.addEventListener("change", function () {
+  showMulti = multiToggle.checked;
+  requestDraw();
 });
 
 (function boot() {

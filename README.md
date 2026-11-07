@@ -90,6 +90,9 @@ flags override: `--engine/--content/--client/--out/--maps-server <dir|path>`.
 - **Areas** — checkboxes to show/hide each of surface / dungeon / extra.
 - **Layers** — per-category toggles (Monsters / drops, NPCs / stores, Item
   spawns, Mining, Woodcut, Fishing spots, Runecrafting, Map icons, Place names).
+- **Overlays** — **Multi-combat zones** paints the server's `multiway.csv`
+  areas as translucent red rectangles under the dots; hovering a zone shows its
+  region name. Sourced from `Server/content/maps/multiway.csv`.
 - **Filters** — **Min HP** hides monster dots below that hitpoints (0 = off,
   monsters only), **Min cluster size** hides clusters with fewer spawns
   (1 = off, applies to both search-flash clusters and cluster-everything), and

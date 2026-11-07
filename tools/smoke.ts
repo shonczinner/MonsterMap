@@ -68,6 +68,14 @@ if (!zombieStats || !Array.isArray(zombieStats.stats) || zombieStats.stats.lengt
     throw new Error('monster points are missing combat stats/bonuses: ' + JSON.stringify(zombieStats));
 }
 
+const multiwayData = await page.evaluate(() => {
+    const data = JSON.parse(document.getElementById('mmdata')!.textContent ?? '{}');
+    return { total: data.multi?.length ?? 0, regions: [...new Set((data.multi ?? []).map((r: { region: string }) => r.region))].length };
+});
+if (multiwayData.total === 0 || multiwayData.regions === 0) {
+    throw new Error('multi-combat overlay data is empty: ' + JSON.stringify(multiwayData));
+}
+
 const beforeToggle = await shownDotCount();
 await page.evaluate(() => (document.querySelector('#cats input[data-cat="runecraft"]') as HTMLInputElement).click());
 await page.waitForTimeout(300);
@@ -133,6 +141,18 @@ await page.evaluate(() => {
 });
 await page.waitForTimeout(300);
 
+// multi-combat overlay toggle (does not change the dot set, just paints zones)
+const multiBefore = await shownDotCount();
+await page.evaluate(() => (document.getElementById('multiway') as HTMLInputElement).click());
+await page.waitForTimeout(300);
+await page.screenshot({ path: 'out/smoke-multiway.png' });
+const multiAfter = await shownDotCount();
+if (multiAfter !== multiBefore) {
+    throw new Error(`multiway overlay changed the dot count: ${multiBefore} -> ${multiAfter}`);
+}
+await page.evaluate(() => (document.getElementById('multiway') as HTMLInputElement).click());
+await page.waitForTimeout(200);
+
 // hide the dungeon area
 await page.evaluate(() => {
     const cb = document.querySelector('#areas input[data-area="1"]') as HTMLInputElement;
@@ -157,6 +177,7 @@ const zoomed = await page.evaluate(() => document.getElementById('stats')!.textC
 
 console.log('boot:', JSON.stringify(boot));
 console.log('runecraft:', JSON.stringify(runecraftData), '| search:', runecraftFiltered);
+console.log('multiway:', JSON.stringify(multiwayData));
 console.log('before:', before, '| zombie:', filtered, '| dungeons hidden:', hidden, '| zoomed:', zoomed);
 console.log('filters: hp', allDots, '->', hpDots, '| camps', campsBefore, '->', campsAfter);
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no page errors');

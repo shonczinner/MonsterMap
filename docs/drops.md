@@ -78,6 +78,41 @@ Note `bones.obj` (`Server/content/scripts/skill_prayer/configs/bones.obj`) and
 path above is what feeds the kill-loot `drops.json`; the others are prayer/xp
 config (bone burial xp) and a debug bank, not monster drop tables.
 
+## Clue scroll drops
+
+Clue scrolls are not `obj_add` tokens, so they need a synthetic entry. NPC drop
+scripts call one of these procs from
+`Server/content/scripts/minigames/game_trail/scripts/trail_clue_drop.rs2`:
+
+```rs2
+~trail_easycluedrop(128, npc_coord);
+~trail_mediumcluedrop(128, npc_coord);
+~trail_hardcluedrop(64, npc_coord);
+```
+
+The proc rolls `random(rarity) = 0`, so the effective per-kill rate is
+`1/rarity` (when the player is a member and not already holding a clue). The
+proc then picks a random clue of that tier from the matching `trail_*_enum`.
+
+`lib/drops.ts` scans every resolved drop block (including `@label` and category
+blocks like `[ai_queue3,_viking_citizen]`) for those calls and appends a
+synthetic drop name, collapsed by tier:
+
+```
+Clue scroll (easy)
+Clue scroll (medium)
+Clue scroll (hard)
+```
+
+The rarity argument is only used to find the proc call; it is not displayed, so
+different rates merge into a single tier entry per NPC.
+
+This covers both the shared `content/scripts/drop tables/**` scripts and the
+quest/area scripts that define their own `[ai_queue3,...]` blocks (e.g.
+Mort'ton Afflicted, Regicide Elf warriors, Fremennik citizens, Vampires).
+There is no single generic "clue scroll" item — each tier is an enum of many
+individual clue objects — so the tier is the useful display value.
+
 ## Relationship to the other per-NPC files
 
 All three are keyed by the same **NPC id** and merged in `map.ts` by id:

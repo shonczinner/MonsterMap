@@ -155,6 +155,14 @@ export class DropResolver {
             tokens.push(`~label${m[1]}`);
         }
 
+        // Clue-scroll drops are procs, not obj tokens:
+        //   ~trail_easycluedrop(128, npc_coord)
+        // `random(rarity) = 0`, so the effective rate is 1/rarity. Keep the
+        // tier + rarity as a marker and render it as a synthetic drop below.
+        for (const m of block.body.matchAll(/~trail_(easy|medium|hard)cluedrop\s*\(\s*(\d+)/g)) {
+            out.add(`clue:${m[1]}:${Number(m[2])}`);
+        }
+
         for (const tok of tokens) {
             if (tok.startsWith('~label')) {
                 for (const it of this.itemsIn(`label:${tok.slice('~label'.length)}`, deathDrop, seen)) {
@@ -213,6 +221,13 @@ export class DropResolver {
         }
         const display = new Set<string>();
         for (const item of items) {
+            if (item.startsWith('clue:')) {
+                const [, tier] = item.split(':');
+                // Collapse by tier: rates vary per NPC but the useful drop
+                // entry is just the clue tier.
+                display.add(`Clue scroll (${tier})`);
+                continue;
+            }
             display.add(this.toDisplay(item) ?? item);
         }
         return [...display].sort((a, b) => a.localeCompare(b));

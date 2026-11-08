@@ -76,6 +76,15 @@ if (multiwayData.total === 0 || multiwayData.regions === 0) {
     throw new Error('multi-combat overlay data is empty: ' + JSON.stringify(multiwayData));
 }
 
+const clueDrops = await page.evaluate(() => {
+    const data = JSON.parse(document.getElementById('mmdata')!.textContent ?? '{}');
+    const goblin = data.pts.find((p: { cat: string; name: string; drops?: string[] }) => p.cat === 'monster' && p.name === 'Goblin' && p.drops?.some((d: string) => d.startsWith('Clue scroll')));
+    return { goblin: goblin?.drops?.filter((d: string) => d.startsWith('Clue scroll')) ?? [], tiers: [...new Set(data.pts.flatMap((p: { drops?: string[] }) => (p.drops ?? []).filter((d: string) => d.startsWith('Clue scroll')).map((d: string) => d.replace(/ 1\/\d+$/, ''))))].sort() };
+});
+if (clueDrops.goblin.length === 0 || clueDrops.tiers.length < 3) {
+    throw new Error('clue scroll drops are missing from the map data: ' + JSON.stringify(clueDrops));
+}
+
 const beforeToggle = await shownDotCount();
 await page.evaluate(() => (document.querySelector('#cats input[data-cat="runecraft"]') as HTMLInputElement).click());
 await page.waitForTimeout(300);
@@ -178,6 +187,7 @@ const zoomed = await page.evaluate(() => document.getElementById('stats')!.textC
 console.log('boot:', JSON.stringify(boot));
 console.log('runecraft:', JSON.stringify(runecraftData), '| search:', runecraftFiltered);
 console.log('multiway:', JSON.stringify(multiwayData));
+console.log('clues:', JSON.stringify(clueDrops));
 console.log('before:', before, '| zombie:', filtered, '| dungeons hidden:', hidden, '| zoomed:', zoomed);
 console.log('filters: hp', allDots, '->', hpDots, '| camps', campsBefore, '->', campsAfter);
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no page errors');

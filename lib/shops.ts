@@ -111,6 +111,119 @@ export function parseObjDefs(text: string): Record<string, ParsedObj> {
     return out;
 }
 
+// ---------------------------------------------------------------------------
+// Script-opened shops
+//
+// Not every keeper uses `param=owned_shop` (which the engine's generic
+// `~openshop_activenpc` reads). Some trade options bypass it and call
+// `~openshop(<inv>, <sell>, <buy>, <delta>, "<title>")` directly, often from a
+// proc or label reached from the `[opnpcN,<npc>]` block. Example: Zaff.
+// ---------------------------------------------------------------------------
+
+export interface ParsedScriptShop {
+    npc: string;
+    inv: string;
+    title: string;
+    sell: number;
+    buy: number;
+    delta: number;
+}
+
+type ScriptBlock = { type: string; name: string; body: string };
+
+function loadScriptBlocks(root: string): ScriptBlock[] {
+    const out: ScriptBlock[] = [];
+    for (const file of filesUnder(root, '.rs2')) {
+        let cur: ScriptBlock | null = null;
+        const lines: string[] = [];
+        const flush = (): void => {
+            if (cur) {
+                cur.body = lines.join('\n');
+                out.push(cur);
+                lines.length = 0;
+            }
+        };
+        for (const raw of readFileSync(file, 'utf8').split('\n')) {
+            const line = raw.trim();
+            const head = /^\[([a-z0-9_]+)\s*,\s*([a-z0-9_]+)\]/.exec(line);
+            if (head) {
+                flush();
+                cur = { type: head[1]!, name: head[2]!, body: '' };
+                const rest = line.slice(head[0].length);
+                if (rest.trim()) lines.push(rest);
+            } else if (cur) {
+                lines.push(line);
+            }
+        }
+        flush();
+    }
+    return out;
+}
+
+/** `~openshop(inv, sell, buy, delta, "title")` calls keyed by NPC debugname. */
+export function parseScriptShops(scriptsDir: string): ParsedScriptShop[] {
+    const blocks = loadScriptBlocks(scriptsDir);
+    const procs = new Map<string, string>();
+    const labels = new Map<string, string>();
+    const npcBodies = new Map<string, string[]>();
+
+    for (const b of blocks) {
+        if (b.type === 'proc') {
+            procs.set(b.name, b.body);
+        } else if (b.type === 'label') {
+            labels.set(b.name, b.body);
+        } else if (b.type.startsWith('opnpc')) {
+            const bodies = npcBodies.get(b.name);
+            if (bodies) bodies.push(b.body);
+            else npcBodies.set(b.name, [b.body]);
+        }
+    }
+
+    const callRe = /~openshop\s*\(\s*([a-z0-9_]+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*,\s*"([^"]*)"/g;
+    const procRe = /~([a-z0-9_]+)/g;
+    const labelRe = /@([a-z0-9_]+)/g;
+    const out: ParsedScriptShop[] = [];
+
+    const walk = (body: string, npc: string, seen: Set<string>, found: ParsedScriptShop[]): void => {
+        for (const m of body.matchAll(callRe)) {
+            found.push({
+                npc,
+                inv: m[1]!,
+                sell: Number(m[2]),
+                buy: Number(m[3]),
+                delta: Number(m[4]),
+                title: m[5]!
+            });
+        }
+        for (const m of body.matchAll(procRe)) {
+            const name = m[1]!;
+            if (name === 'openshop') continue; // the call itself was handled above
+            const key = `proc:${name}`;
+            if (seen.has(key)) continue;
+            const proc = procs.get(name);
+            if (proc === undefined) continue;
+            seen.add(key);
+            walk(proc, npc, seen, found);
+        }
+        for (const m of body.matchAll(labelRe)) {
+            const key = `label:${m[1]}`;
+            if (seen.has(key)) continue;
+            const label = labels.get(m[1]!);
+            if (label === undefined) continue;
+            seen.add(key);
+            walk(label, npc, seen, found);
+        }
+    };
+
+    for (const [npc, bodies] of npcBodies) {
+        const seen = new Set<string>();
+        const found: ParsedScriptShop[] = [];
+        for (const body of bodies) walk(body, npc, seen, found);
+        out.push(...found);
+    }
+    return out;
+}
+
 /**
  * Build the NPC-id-keyed store map.
  * Only shops (and NPCs) with at least one item whose default stock `baseline > 0`
@@ -155,5 +268,55 @@ export function buildStores(scriptsDir: string, NpcType: AnyConfig, ObjType: Any
             if (!rec.shops.some(sh => sh.inv === inv)) rec.shops.push(shop);
         }
     }
+
+    // Script-opened shops (no `owned_shop` param): e.g. Zaff's trade option
+    // calls ~openshop(staffshop/memberstaffshop, ...). Join those inventories
+    // the same way and merge them into the NPC's store record.
+    const invByName = new Map(invs.map(i => [i.inv, i]));
+    const shopFor = (
+        invName: string,
+        title: string,
+        sell: number,
+        buy: number,
+        delta: number,
+        owners: string[]
+    ): any | null => {
+        const inv = invByName.get(invName);
+        if (!inv) return null;
+        const items = inv.stock
+            .filter(s => s.baseline > 0)
+            .map(s => {
+                const o = objs[s.obj] ?? { name: s.obj, cost: 1 };
+                return { obj: s.obj, name: o.name, baseline: s.baseline, cost: o.cost, restockTicks: s.restockTicks };
+            });
+        if (items.length === 0) return null;
+        return { inv: invName, title: title || invName, sell, buy, delta, items, keepers: owners };
+    };
+
+    const scriptByNpc = new Map<string, ParsedScriptShop[]>();
+    for (const s of parseScriptShops(scriptsDir)) {
+        const list = scriptByNpc.get(s.npc);
+        if (list) list.push(s);
+        else scriptByNpc.set(s.npc, [s]);
+    }
+    for (const [npc, opens] of scriptByNpc) {
+        const id = NpcType.getId(npc);
+        if (id < 0) continue;
+        // Member/free variants share a title (memberstaffshop vs staffshop);
+        // keep the richest stock for that title.
+        const byTitle = new Map<string, any>();
+        for (const s of opens) {
+            const shop = shopFor(s.inv, s.title, s.sell, s.buy, s.delta, [npc]);
+            if (!shop) continue;
+            const prev = byTitle.get(shop.title);
+            if (!prev || shop.items.length > prev.items.length) byTitle.set(shop.title, shop);
+        }
+        if (byTitle.size === 0) continue;
+        const rec = (stores[id] ??= { name: NpcType.get(id)?.name ?? npc, shops: [] });
+        for (const shop of byTitle.values()) {
+            if (!rec.shops.some(sh => sh.inv === shop.inv)) rec.shops.push(shop);
+        }
+    }
+
     return stores;
 }

@@ -85,6 +85,15 @@ if (clueDrops.goblin.length === 0 || clueDrops.tiers.length < 3) {
     throw new Error('clue scroll drops are missing from the map data: ' + JSON.stringify(clueDrops));
 }
 
+const zaffShop = await page.evaluate(() => {
+    const data = JSON.parse(document.getElementById('mmdata')!.textContent ?? '{}');
+    const zaff = data.pts.find((p: { name: string; shop?: { shops: { title: string; items: unknown[] }[] } }) => p.name === 'Zaff');
+    return zaff?.shop?.shops?.map((s: { title: string; items: unknown[] }) => ({ title: s.title, items: s.items.length })) ?? [];
+});
+if (!zaffShop.some((s: { title: string }) => s.title.includes("Zaff's Superior Staffs"))) {
+    throw new Error('Zaff is not linked to his staff shop: ' + JSON.stringify(zaffShop));
+}
+
 const beforeToggle = await shownDotCount();
 await page.evaluate(() => (document.querySelector('#cats input[data-cat="runecraft"]') as HTMLInputElement).click());
 await page.waitForTimeout(300);
@@ -188,6 +197,7 @@ console.log('boot:', JSON.stringify(boot));
 console.log('runecraft:', JSON.stringify(runecraftData), '| search:', runecraftFiltered);
 console.log('multiway:', JSON.stringify(multiwayData));
 console.log('clues:', JSON.stringify(clueDrops));
+console.log('zaff shop:', JSON.stringify(zaffShop));
 console.log('before:', before, '| zombie:', filtered, '| dungeons hidden:', hidden, '| zoomed:', zoomed);
 console.log('filters: hp', allDots, '->', hpDots, '| camps', campsBefore, '->', campsAfter);
 console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'no page errors');

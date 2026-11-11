@@ -1,6 +1,6 @@
 {
   "generation": {
-    "revisionTime": "2026-11-08T02:39:49.587Z",
+    "revisionTime": "2026-11-11T16:27:15.617Z",
     "engine": "/home/shonc/rs2bot/Server/engine",
     "content": "/home/shonc/rs2bot/Server/content",
     "bounds": {
@@ -2697,6 +2697,72 @@
           ],
           "keepers": [
             "Dommik"
+          ]
+        }
+      ]
+    },
+    "546": {
+      "name": "Zaff",
+      "shops": [
+        {
+          "inv": "memberstaffshop",
+          "title": "Zaff's Superior Staffs!",
+          "sell": 550,
+          "buy": 1000,
+          "delta": 20,
+          "items": [
+            {
+              "obj": "battlestaff",
+              "name": "Battlestaff",
+              "baseline": 5,
+              "cost": 7000,
+              "restockTicks": 100
+            },
+            {
+              "obj": "plainstaff",
+              "name": "Staff",
+              "baseline": 5,
+              "cost": 15,
+              "restockTicks": 100
+            },
+            {
+              "obj": "magic_staff",
+              "name": "Magic staff",
+              "baseline": 5,
+              "cost": 200,
+              "restockTicks": 200
+            },
+            {
+              "obj": "staff_of_air",
+              "name": "Staff of air",
+              "baseline": 2,
+              "cost": 1500,
+              "restockTicks": 1000
+            },
+            {
+              "obj": "staff_of_water",
+              "name": "Staff of water",
+              "baseline": 2,
+              "cost": 1500,
+              "restockTicks": 1000
+            },
+            {
+              "obj": "staff_of_earth",
+              "name": "Staff of earth",
+              "baseline": 2,
+              "cost": 1500,
+              "restockTicks": 1000
+            },
+            {
+              "obj": "staff_of_fire",
+              "name": "Staff of fire",
+              "baseline": 2,
+              "cost": 1500,
+              "restockTicks": 1000
+            }
+          ],
+          "keepers": [
+            "zaff"
           ]
         }
       ]
@@ -8473,6 +8539,133 @@
           ],
           "keepers": [
             "Quartermaster"
+          ]
+        }
+      ]
+    },
+    "1254": {
+      "name": "Razmire Keelgan",
+      "shops": [
+        {
+          "inv": "razmiregeneralstore",
+          "title": "Razmire General Store.",
+          "sell": 400,
+          "buy": 1300,
+          "delta": 30,
+          "items": [
+            {
+              "obj": "pot_empty",
+              "name": "Pot",
+              "baseline": 3,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "jug_empty",
+              "name": "Jug",
+              "baseline": 2,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "shears",
+              "name": "Shears",
+              "baseline": 2,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "bucket_empty",
+              "name": "Bucket",
+              "baseline": 2,
+              "cost": 2,
+              "restockTicks": 100
+            },
+            {
+              "obj": "tinderbox",
+              "name": "Tinderbox",
+              "baseline": 2,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "chisel",
+              "name": "Chisel",
+              "baseline": 2,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "hammer",
+              "name": "Hammer",
+              "baseline": 5,
+              "cost": 1,
+              "restockTicks": 100
+            },
+            {
+              "obj": "oliveoil3",
+              "name": "Olive oil(3)",
+              "baseline": 150,
+              "cost": 20,
+              "restockTicks": 10
+            },
+            {
+              "obj": "vial_water",
+              "name": "Vial of water",
+              "baseline": 100,
+              "cost": 2,
+              "restockTicks": 100
+            },
+            {
+              "obj": "pot_flour",
+              "name": "Pot of flour",
+              "baseline": 100,
+              "cost": 10,
+              "restockTicks": 10
+            },
+            {
+              "obj": "flamtaer_hammer",
+              "name": "Flamtaer hammer",
+              "baseline": 3,
+              "cost": 10000,
+              "restockTicks": 10
+            }
+          ],
+          "keepers": [
+            "razmire_keelgan"
+          ]
+        },
+        {
+          "inv": "razmirebuildingstore",
+          "title": "Razmire Builders Merchants.",
+          "sell": 950,
+          "buy": 1050,
+          "delta": 40,
+          "items": [
+            {
+              "obj": "woodplank",
+              "name": "Plank",
+              "baseline": 1000,
+              "cost": 1,
+              "restockTicks": 10
+            },
+            {
+              "obj": "limestonebrick",
+              "name": "Limestone brick",
+              "baseline": 1000,
+              "cost": 20,
+              "restockTicks": 10
+            },
+            {
+              "obj": "swamppaste",
+              "name": "Swamp paste",
+              "baseline": 1000,
+              "cost": 30,
+              "restockTicks": 10
+            }
+          ],
+          "keepers": [
+            "razmire_keelgan"
           ]
         }
       ]

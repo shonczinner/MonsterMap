@@ -89,6 +89,33 @@ At runtime the keeper's dialogue script opens that shared inventory as the shop
 interface (`InvType.scope === SCOPE_SHARED` → `World.getInventory(inv)`), and the
 player trades against its `stockobj`/`stockcount` baseline.
 
+### Script-opened shops (no `owned_shop` param)
+
+Some keepers bypass the params and call the shop opener directly from their
+trade option, often through a proc or label:
+
+```rs2
+[opnpc3,zaff]
+~openshop_zaff;
+
+[proc,openshop_zaff]
+if(map_members = ^true) {
+    ~openshop(memberstaffshop, 550, 1000, 20, "Zaff's Superior Staffs!");
+} else {
+    ~openshop(staffshop, 550, 1000, 20, "Zaff's Superior Staffs!");
+}
+```
+
+Here the link is `~openshop(<inv>, <sell>, <buy>, <delta>, "<title>")`, not
+`param=owned_shop`. MonsterMap handles both styles (`lib/shops.ts` →
+`parseScriptShops`): it scans `.rs2` `[opnpc*,<npc>]` blocks, follows `~proc`
+and `@label` references, and joins the resulting inv names to the `.inv` stock.
+When an NPC has member/free variants under the same title (e.g.
+`memberstaffshop` vs `staffshop`), the richer stock is used.
+
+Known script-opened NPC shops: `zaff`, `dommik`, `rommik`,
+`regicidegeneralshopkeeper`, `razmire_keelgan` (two titles).
+
 ### Quick map of the files
 
 | What | Packed (engine) | Source (content) |
@@ -116,6 +143,11 @@ NPC spawn positions (already plotted as the `monster` category).
   `buildStores` resolves each keeper's `[block]` id (the NPC `debugname`) to its
   id via `NpcType.getId`, and emits a map **keyed by NPC id**. It has no
   build-time dependency on the client.
+- `parseScriptShops` covers the other binding style: `.rs2` `[opnpc*]` blocks
+  that reach `~openshop(<inv>, …)` directly or via `~proc`/`@label`. Those
+  inventories are merged into the same per-NPC store record, so script-opened
+  shops (Zaff, Dommik, Rommik, Razmire, the Regicide quartermaster) appear on
+  the map too.
 - `gen.ts` writes `out/data/stores.json`:
   ```jsonc
   { "generation": { ... }, "note": "...", "stores": { "<npcId>": { "name": "Tiadeche", "shops": [ { "inv": "...", "title": "...", "sell": 550, "buy": 60, "delta": 10, "items": [ { "obj": "raw_karambwan", "name": "Raw karambwan", "baseline": 5, "restockTicks": 100, "cost": 1 } ] } ] } } }
